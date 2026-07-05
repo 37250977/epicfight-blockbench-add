@@ -1,0 +1,14 @@
+{
+  "name": "epicfight-blockbench-json-addon",
+  "version": "0.1.0",
+  "description": "Export BlockBench meshes and animations to EpicFight JSON format",
+  "author": "thorn-dev",
+  "license": "MIT",
+  "main": "epicfight_export.js",
+  "scripts": {
+    "dev": "echo 'Copy epicfight_export.js to BlockBench plugins folder'"
+  },
+  "devDependencies": {
+    "pngjs": "^7.0.0"
+  }
+}
