@@ -52,6 +52,15 @@
   - 可选择导出：
   - `attributes`
   - `matrix`
+- `Batch Export EpicFight Animations`
+  - 把当前项目中所有动画分别导出为独立 JSON 文件
+  - 同样可选择 `attributes` 或 `matrix` 格式
+  - 适合一次性导出整套动画资产
+- `Export as EpicFight Entity JSON`
+  - 把 mesh、armature 和所有动画打包导出到同一个 JSON 文件
+  - 可分别选择 armature 和 animation 的格式（`attributes` / `matrix`）
+  - 可勾选 `Optimize keyframes` 去除冗余关键帧
+  - 这种结构最接近 EpicFight 官方 `entity` 模型文件
 
 ## 导出说明
 
@@ -79,6 +88,50 @@
 - `matrix`
   - 导出为 16 项矩阵数组
   - 更接近 EpicFight 原生矩阵动画表现
+
+### 批量导出动画
+
+`Batch Export EpicFight Animations` 会把当前项目里**所有动画**分别导出为独立的 JSON 文件，适合一次性产出整套动画资产。
+
+弹窗选项：
+
+- `Format`：`attributes` 或 `matrix`，与单个动画导出一致
+- `Optimize keyframes`：勾选后去除连续相同的冗余关键帧
+
+输出规则：
+
+- 每个动画一个文件，文件名为 `{动画名}_{格式}.json`
+  - 例如 `idle_attributes.json`、`walk_matrix.json`
+- 动画名中的 `<>:"/\|?*` 等非法字符会被替换为 `_`
+- 没有可导出关键帧的动画会被跳过，并在最终汇总中列出
+- 导出完成后会弹出 toast 提示成功 / 跳过 / 失败数量，必要时弹出详细列表
+
+### Entity 导出
+
+`Export as EpicFight Entity JSON` 会把 **mesh + armature + 全部动画**打包到同一个 JSON 文件中，结构最接近 EpicFight 官方 `animmodels/entity/*.json`。
+
+弹窗选项：
+
+- `Armature Format`：骨架部分使用 `attributes` 或 `matrix`
+- `Animation Format`：动画部分使用 `attributes` 或 `matrix`
+  - 两种格式可以独立选择，例如骨架用 `matrix`、动画用 `attributes`
+- `Optimize keyframes`：去除动画中连续相同的冗余关键帧
+
+输出结构：
+
+```json
+{
+    "vertices": { ... },
+    "armature": { "joints": [...], "hierarchy": [...] },
+    "armature_format": "attributes",
+    "animation": [ ... ],
+    "format": "attributes",
+    "fps": 20
+}
+```
+
+- 当项目里没有任何动画时，`animation` 和 `format` 字段会被省略
+- 当动画格式为 `matrix` 时，顶层 `format` 字段会被省略（EpicFight 约定 matrix 格式不带 `format` 字段）
 
 ## 典型工作流
 
@@ -168,6 +221,8 @@
 - 已支持动画 `matrix / attributes` 双格式导入
 - 已支持模型导出时把 `mesh` 和 `armature` 合并到一个文件
 - 已支持动画导出时选择 `matrix` 或 `attributes`
+- 已支持批量导出所有动画为独立文件
+- 已支持把 mesh + armature + 动画打包为单个 entity JSON
 
 ## 当前限制
 

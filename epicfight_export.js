@@ -875,10 +875,12 @@ function quaternionToEulerDegrees(quaternion) {
 
 function makeQuaternionFromRotationValue(rot) {
     if (Array.isArray(rot) && rot.length >= 4) {
+        // EpicFight attributes 格式: JSON rot = (w, x, y, z), 加载时对 x/y/z 取负
+        // 参考: JsonAssetLoader.java:538-541, 792-795 (对 rotArray 1/2/3 取负)
         return new THREE.Quaternion(
-            Number(rot[1]) || 0,
-            Number(rot[2]) || 0,
-            Number(rot[3]) || 0,
+            -(Number(rot[1]) || 0),
+            -(Number(rot[2]) || 0),
+            -(Number(rot[3]) || 0),
             rot[0] === undefined ? 1 : (Number(rot[0]) || 0)
         );
     }
@@ -1495,6 +1497,18 @@ function quaternionToEFArray(quaternion) {
     ];
 }
 
+// EpicFight attributes 格式约定: JSON rot = negate(q_minecraft) = (w, -x, -y, -z)
+// EpicFight 加载时对 x/y/z 取负, 得到原始 Minecraft 四元数
+// 参考: JsonAssetLoader.java:788-799 (fromPrimitives 对 rotArray 1/2/3 取负)
+function quaternionToEFAttributesArray(quaternion) {
+    return [
+        roundNumber(quaternion.w, 6),
+        roundNumber(-quaternion.x, 6),
+        roundNumber(-quaternion.y, 6),
+        roundNumber(-quaternion.z, 6)
+    ];
+}
+
 function composeTransformMatrix(loc, rotDeg, sca) {
     const rotation = rotDeg || [0, 0, 0];
     const scale = sca || [1, 1, 1];
@@ -1531,6 +1545,10 @@ function decomposeBoneLocalRestMatrixToEFTransform(matrix, bone) {
 
     pos.multiplyScalar(1 / GLTF_IMPORT_UNIT_SCALE);
 
+    // attributes 格式 root bone: 对 pos 和 quat 都做 invRootAxis
+    // EpicFight 加载: 对 rot 取负 (attributes 约定) + 对 root bone 的 matrix 做 BLENDER_TO_MINECRAFT_COORD (rotX(-90°))
+    // 反推: M_json = rotX(+90°) · M_mc, 即 loc = invRootAxis·loc_mc, quat = invRootAxis·q_mc
+    // 与 localPoseMatrixToEFMatrixArray (matrix 格式) 保持对称
     const isRootBone = !(bone && bone.parent instanceof ArmatureBone);
     if (isRootBone) {
         const inverseRootAxisCorrection = EF_MATRIX_ROOT_AXIS_CORRECTION.clone().invert();
@@ -1540,7 +1558,7 @@ function decomposeBoneLocalRestMatrixToEFTransform(matrix, bone) {
 
     return {
         loc: toFixedArray([pos.x, pos.y, pos.z]),
-        rot: quaternionToEFArray(quat),
+        rot: quaternionToEFAttributesArray(quat),
         sca: toFixedArray([scale.x, scale.y, scale.z])
     };
 }
@@ -1560,7 +1578,7 @@ function decomposeAnimatedMatrixToEFAttributesTransform(matrix, bone) {
             pos.y - rest.position.y,
             pos.z - rest.position.z
         ]),
-        rot: quaternionToEFArray(deltaQuat),
+        rot: quaternionToEFAttributesArray(deltaQuat),
         sca: toFixedArray([scale.x, scale.y, scale.z])
     };
 }
