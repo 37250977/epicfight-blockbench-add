@@ -229,34 +229,37 @@ function buildEFMeshObjects(vertices, vertexWeights, fileName) {
         ];
     }
 
-    const meshes = [];
+    // 所有 parts 合并到单个 Mesh, 与导出逻辑保持对称
+    // EpicFight 的 parts 共享同一套 positions/uvs/normals, 只是按 vertex group 分组的三角形索引
+    const localVertexMap = {};
+    const localPositions = [];
+    const localPolygons = [];
+    const localVertexWeights = {};
+    var texW = (typeof Project !== 'undefined' && Project.texture_width) || 16;
+    var texH = (typeof Project !== 'undefined' && Project.texture_height) || 16;
+
+    function ensureLocalVertex(globalIndex) {
+        if (localVertexMap[globalIndex] !== undefined) {
+            return localVertexMap[globalIndex];
+        }
+        const localIndex = localPositions.length / 3;
+        const corrected = correctedPositions[globalIndex];
+        if (!corrected) {
+            throw new Error('Mesh references invalid position index: ' + globalIndex);
+        }
+        localVertexMap[globalIndex] = localIndex;
+        localPositions.push(corrected[0], corrected[1], corrected[2]);
+        if (vertexWeights[globalIndex]) {
+            localVertexWeights[localIndex] = vertexWeights[globalIndex].map(entry => ({
+                boneName: entry.boneName,
+                weight: entry.weight
+            }));
+        }
+        return localIndex;
+    }
+
     for (const [partName, partData] of Object.entries(parts)) {
         if (!partData || !Array.isArray(partData.array) || partData.array.length < 9) continue;
-
-        const localVertexMap = {};
-        const localPositions = [];
-        const localPolygons = [];
-        const localVertexWeights = {};
-
-        function ensureLocalVertex(globalIndex) {
-            if (localVertexMap[globalIndex] !== undefined) {
-                return localVertexMap[globalIndex];
-            }
-            const localIndex = localPositions.length / 3;
-            const corrected = correctedPositions[globalIndex];
-            if (!corrected) {
-                throw new Error('Part "' + partName + '" references invalid position index: ' + globalIndex);
-            }
-            localVertexMap[globalIndex] = localIndex;
-            localPositions.push(corrected[0], corrected[1], corrected[2]);
-            if (vertexWeights[globalIndex]) {
-                localVertexWeights[localIndex] = vertexWeights[globalIndex].map(entry => ({
-                    boneName: entry.boneName,
-                    weight: entry.weight
-                }));
-            }
-            return localIndex;
-        }
 
         const array = partData.array;
         const triangleCount = Math.floor(array.length / 9);
@@ -273,10 +276,12 @@ function buildEFMeshObjects(vertices, vertexWeights, fileName) {
 
                 const u = uvs[uvIndex * 2];
                 const v = uvs[uvIndex * 2 + 1];
-                // EpicFight JSON V=0 在顶部, Blockbench V=0 也在顶部, 不需翻转
+                // EpicFight JSON: 归一化 UV (0-1), V=0 在顶部
+                // Blockbench MeshFace: 像素 UV (0 ~ texture_width/height), V=0 在顶部
+                // 两者 V 方向一致, 只需把归一化坐标乘以纹理尺寸转换为像素坐标
                 faceUvs.push([
-                    roundNumber(u === undefined ? 0 : Number(u) || 0, 6),
-                    roundNumber(v === undefined ? 0 : Number(v) || 0, 6)
+                    roundNumber(u === undefined ? 0 : (Number(u) || 0) * texW, 6),
+                    roundNumber(v === undefined ? 0 : (Number(v) || 0) * texH, 6)
                 ]);
             }
 
@@ -285,18 +290,18 @@ function buildEFMeshObjects(vertices, vertexWeights, fileName) {
                 uvs: faceUvs
             });
         }
-
-        meshes.push({
-            name: partName === 'mesh' ? fileName + '_Mesh' : partName,
-            positions: localPositions,
-            polygons: localPolygons,
-            vertexWeights: localVertexWeights
-        });
     }
 
-    if (!meshes.length) {
+    if (!localPolygons.length) {
         throw new Error('EpicFight mesh JSON contains no importable parts.');
     }
+
+    const meshes = [{
+        name: fileName + '_Mesh',
+        positions: localPositions,
+        polygons: localPolygons,
+        vertexWeights: localVertexWeights
+    }];
 
     return meshes;
 }
