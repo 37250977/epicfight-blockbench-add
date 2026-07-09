@@ -1090,9 +1090,10 @@ function importEpicFightAnimationData(data, fileName, animationNameOverride) {
         const bone = boneByName[String(entry.name).toLowerCase()];
         if (!bone) continue;
         const animator = animation.getBoneAnimator(bone);
-        if (animator && typeof animator.quaternion_interpolation === 'boolean') {
-            animator.quaternion_interpolation = true;
-        }
+        // 注意: 不设置 quaternion_interpolation = true
+        // ArmatureBoneAnimator 的 doRender() 只设 this.element 不设 this.group,
+        // 而 Keyframe.getFixed() 硬编码用 this.animator.group.mesh.fix_rotation,
+        // quaternion_interpolation=true 会触发 getFixed 导致 TypeError
     }
 
     // Estimate animation length upfront so the timeline doesn't resize during keyframe creation
@@ -1185,34 +1186,42 @@ function importEpicFightAnimationData(data, fileName, animationNameOverride) {
 
         // Batch-create all Keyframe objects and push to animator channel arrays
         // NOTE: animator.keyframes is a getter that concatenates channel arrays — we push to channel arrays only
-        for (const uuid of Object.keys(perAnimatorKeyframes)) {
+        // 关键优化: 用 push(...batch) 批量添加, 避免逐个 push 触发 Vue 响应式重渲染
+        // Timeline.vue 模板有 v-for="keyframe in animator[channel]", 每次 push 都会触发时间轴重渲染
+        // 逐个 push: N骨骼 × M关键帧 × 2通道 = 数千次 Vue 重渲染 (卡顿根源)
+        // 批量 push: 每个通道只触发 1 次 Vue 更新
+        const animatorUuids = Object.keys(perAnimatorKeyframes);
+
+        for (const uuid of animatorUuids) {
             const entry = perAnimatorKeyframes[uuid];
             const animator = entry.animator;
             if (!animator.position) animator.position = [];
             if (!animator.rotation) animator.rotation = [];
 
-            for (const pos of entry.positions) {
-                const kf = new Blockbench.Keyframe({
+            // 先在临时数组中构建所有 Keyframe 对象, 再一次性 push
+            const posKfs = entry.positions.map(function(pos) {
+                return new Blockbench.Keyframe({
                     channel: 'position',
                     x: pos.x, y: pos.y, z: pos.z,
                     time: pos.t
                 }, null, animator);
-                animator.position.push(kf);
-                createdKeyframes.push(kf);
-            }
-            for (const rot of entry.rotations) {
-                const kf = new Blockbench.Keyframe({
+            });
+            const rotKfs = entry.rotations.map(function(rot) {
+                return new Blockbench.Keyframe({
                     channel: 'rotation',
                     x: rot.x, y: rot.y, z: rot.z,
                     time: rot.t
                 }, null, animator);
-                animator.rotation.push(kf);
-                createdKeyframes.push(kf);
-            }
+            });
+
+            // 批量 push: 每个通道只触发 1 次 Vue 响应式更新
+            if (posKfs.length) animator.position.push.apply(animator.position, posKfs);
+            if (rotKfs.length) animator.rotation.push.apply(animator.rotation, rotKfs);
+            createdKeyframes.push.apply(createdKeyframes, posKfs);
+            createdKeyframes.push.apply(createdKeyframes, rotKfs);
 
             animator.position.sort((a, b) => a.time - b.time);
             animator.rotation.sort((a, b) => a.time - b.time);
-            // Pre-initialize pointer cache for both channels so first preview is fast
             if (!animator._efInterpPtr) animator._efInterpPtr = {};
             animator._efInterpPtr.position = 0;
             animator._efInterpPtr.rotation = 0;
@@ -1226,10 +1235,9 @@ function importEpicFightAnimationData(data, fileName, animationNameOverride) {
 
         animation.setLength(maxTime);
 
-        // Force a preview warm-up so the user can scrub/play instantly
-        if (typeof Animator !== 'undefined' && Animator && typeof Animator.preview === 'function') {
-            Animator.preview();
-        }
+        // 方案 A: 不再在此处立即调用 Animator.preview()
+        // 改由上层 importEpicFightAnimation 在所有文件导入完成后统一延迟预览
+        // 这样: (1) 多文件导入时只预览一次; (2) UI 先更新时间轴/toast, 避免界面冻结
     } catch (e) {
         console.error('Animation import error:', e);
         animation.remove(false, false);
@@ -1243,7 +1251,8 @@ function importEpicFightAnimationData(data, fileName, animationNameOverride) {
         keyframeCount: createdKeyframes.length,
         fps: fps,
         hasCoordPreview: !!coordEntry,
-        ignoredCoord: ignoreCoordForPreview
+        ignoredCoord: ignoreCoordForPreview,
+        needPreview: true
     };
 }
 
@@ -1257,10 +1266,17 @@ function importEpicFightAnimation() {
         title: 'Select EpicFight animation JSON'
     }, function(files) {
         if (!files || !files.length) return;
+
+        // 方案 B: 导入开始时显示进度提示
+        if (typeof Blockbench !== 'undefined' && Blockbench.showQuickMessage) {
+            Blockbench.showQuickMessage('Importing EpicFight animation' + (files.length > 1 ? ' (' + files.length + ' files)' : '') + '...', 3000);
+        }
+
         yieldToUI(function() {
             const importedResults = [];
             const errors = [];
             let hadIgnoredCoord = false;
+            let needPreview = false;
 
             for (const file of files) {
                 try {
@@ -1272,6 +1288,7 @@ function importEpicFightAnimation() {
                         result: result
                     });
                     if (result.ignoredCoord) hadIgnoredCoord = true;
+                    if (result.needPreview) needPreview = true;
                 } catch (e) {
                     errors.push({
                         fileName: file && file.name ? file.name : 'Unknown File',
@@ -1322,6 +1339,60 @@ function importEpicFightAnimation() {
                     icon: errors.length ? 'warning' : 'info',
                     message: detailLines.join('\n')
                 });
+            }
+
+            // 预览第 0 帧, 让 3D 视图立即显示动画起始姿势
+            if (needPreview && typeof Animator !== 'undefined' && Animator && typeof Animator.preview === 'function') {
+                try {
+                    Animator.preview();
+                } catch (e) {
+                    console.error('Preview error:', e);
+                }
+            }
+            // 自动播放: 多文件导入时每个动画都 addToTimeline, 导致 Timeline.animators 堆积。
+            // 保留最后一个动画的 animators, 移除其他的, 避免播放时多动画叠加。
+            if (needPreview && typeof Timeline !== 'undefined' && Timeline && typeof Timeline.start === 'function') {
+                var lastAnimation = importedResults.length
+                    ? importedResults[importedResults.length - 1].result.animation
+                    : null;
+                var startPlayback = function() {
+                    try {
+                        // 重置所有动画的 playing 状态
+                        if (typeof Animation !== 'undefined' && Animation.all) {
+                            Animation.all.forEach(function(a) { a.playing = false; });
+                        }
+                        // 清空 Timeline.animators 后只重新加入最后一个动画的 animator
+                        // 不能用 uuid 过滤: 不同动画的同骨骼 animator 共享同一 group.uuid, 无法区分
+                        if (lastAnimation) {
+                            Timeline.animators.length = 0;  // 清空数组
+                            if (lastAnimation.animators) {
+                                for (var k in lastAnimation.animators) {
+                                    var an = lastAnimation.animators[k];
+                                    if (an && typeof an.addToTimeline === 'function') {
+                                        an.addToTimeline();
+                                    }
+                                }
+                            }
+                            Animation.all.forEach(function(a) { a.selected = false; });
+                            lastAnimation.selected = true;
+                            Animation.selected = lastAnimation;
+                            lastAnimation.playing = true;
+                        }
+                        if (typeof Timeline.setTime === 'function') Timeline.setTime(0);
+                        try {
+                            Timeline.start();
+                        } catch (startErr) {
+                            console.error('Autoplay start error:', startErr);
+                        }
+                    } catch (e) {
+                        console.error('Autoplay error:', e);
+                    }
+                };
+                if (typeof Vue !== 'undefined' && Vue.nextTick) {
+                    Vue.nextTick(function() { setTimeout(startPlayback, 50); });
+                } else {
+                    setTimeout(startPlayback, 100);
+                }
             }
         });
     });
