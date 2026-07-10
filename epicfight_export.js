@@ -654,7 +654,7 @@ function importEpicFightMesh() {
         extensions: ['json'],
         readtype: 'text',
         resource_id: 'epicfight_mesh',
-        title: 'Select EpicFight mesh JSON'
+        title: tl('ef.select_mesh')
     }, function(files) {
         if (!files || !files.length) return;
         const file = files[0];
@@ -665,9 +665,9 @@ function importEpicFightMesh() {
             parsed = JSON.parse(content);
         } catch (e) {
             Blockbench.showMessageBox({
-                title: 'Mesh Import Error',
+                title: tl('ef.err.mesh_import'),
                 icon: 'error',
-                message: 'Failed to parse mesh JSON: ' + (e.message || String(e))
+                message: tl('ef.err.parse_mesh') + ': ' + (e.message || String(e))
             });
             console.error(e);
             return;
@@ -683,13 +683,13 @@ function importEpicFightMesh() {
                     ? (' ' + meta.weightedVertexCount + ' weighted vertices.')
                     : ' No vertex weights found.';
                 Blockbench.showToastNotification({
-                    text: 'Mesh imported: ' + file.name + ' (' + (meta.partCount || 0) + ' parts, ' + (meta.boneCount || 0) + ' bones).' + weightInfo,
+                    text: tl('ef.msg.mesh_imported') + ': ' + file.name + ' (' + (meta.partCount || 0) + ' parts, ' + (meta.boneCount || 0) + ' bones).' + weightInfo,
                     color: meta.boneCount ? 'green' : 'orange',
                     icon: meta.boneCount ? 'check' : 'warning'
                 });
             } catch (e) {
                 Blockbench.showMessageBox({
-                    title: 'Mesh Import Error',
+                    title: tl('ef.err.mesh_import'),
                     icon: 'error',
                     message: e.message || String(e)
                 });
@@ -705,7 +705,7 @@ function importEpicFightArmature() {
         extensions: ['json'],
         readtype: 'text',
         resource_id: 'epicfight_armature',
-        title: 'Select EpicFight armature JSON'
+        title: tl('ef.select_armature')
     }, function(files) {
         if (!files || !files.length) return;
         const file = files[0];
@@ -716,9 +716,9 @@ function importEpicFightArmature() {
             parsed = JSON.parse(content);
         } catch (e) {
             Blockbench.showMessageBox({
-                title: 'Armature Import Error',
+                title: tl('ef.err.armature_import'),
                 icon: 'error',
-                message: 'Failed to parse armature JSON: ' + (e.message || String(e))
+                message: tl('ef.err.parse_armature') + ': ' + (e.message || String(e))
             });
             console.error(e);
             return;
@@ -731,13 +731,13 @@ function importEpicFightArmature() {
                 createBlockBenchFromImportData(importData, baseName);
                 const meta = importData.metadata || {};
                 Blockbench.showToastNotification({
-                    text: 'Armature imported: ' + file.name + ' (' + (meta.boneCount || 0) + ' bones).',
+                    text: tl('ef.msg.armature_imported') + ': ' + file.name + ' (' + (meta.boneCount || 0) + ' bones).',
                     color: 'green',
                     icon: 'check'
                 });
             } catch (e) {
                 Blockbench.showMessageBox({
-                    title: 'Armature Import Error',
+                    title: tl('ef.err.armature_import'),
                     icon: 'error',
                     message: e.message || String(e)
                 });
@@ -1268,13 +1268,13 @@ function importEpicFightAnimation() {
         readtype: 'text',
         multiple: true,
         resource_id: 'epicfight_animation',
-        title: 'Select EpicFight animation JSON'
+        title: tl('ef.select_animation')
     }, function(files) {
         if (!files || !files.length) return;
 
         // 方案 B: 导入开始时显示进度提示
         if (typeof Blockbench !== 'undefined' && Blockbench.showQuickMessage) {
-            Blockbench.showQuickMessage('Importing EpicFight animation' + (files.length > 1 ? ' (' + files.length + ' files)' : '') + '...', 3000);
+            Blockbench.showQuickMessage(tl('ef.msg.importing_anim') + (files.length > 1 ? ' (' + files.length + ' ' + tl('ef.msg.files') + ')' : '') + '...', 3000);
         }
 
         yieldToUI(function() {
@@ -1305,11 +1305,11 @@ function importEpicFightAnimation() {
 
             if (!importedResults.length) {
                 Blockbench.showMessageBox({
-                    title: 'Animation Import Error',
+                    title: tl('ef.err.anim_import'),
                     icon: 'error',
                     message: errors.length
                         ? errors.map(error => error.fileName + ': ' + error.message).join('\n')
-                        : 'No animation files were imported.'
+                        : tl('ef.err.no_anim_files')
                 });
                 return;
             }
@@ -1317,9 +1317,9 @@ function importEpicFightAnimation() {
             const totalKeyframes = importedResults.reduce((sum, item) => sum + (item.result.keyframeCount || 0), 0);
             const filesWithMissingBones = importedResults.filter(item => item.result.missingBones && item.result.missingBones.length);
             Blockbench.showToastNotification({
-                text: importedResults.length + ' animation(s) imported (' + totalKeyframes + ' keyframes).' +
-                    (filesWithMissingBones.length ? ' ' + filesWithMissingBones.length + ' file(s) have missing bones.' : '') +
-                    (errors.length ? ' ' + errors.length + ' file(s) failed.' : ''),
+                text: importedResults.length + ' ' + tl('ef.msg.anim_imported') + ' (' + totalKeyframes + ' ' + tl('ef.msg.keyframes') + ').' +
+                    (filesWithMissingBones.length ? ' ' + filesWithMissingBones.length + ' ' + tl('ef.msg.have_missing_bones') + '.' : '') +
+                    (errors.length ? ' ' + errors.length + ' ' + tl('ef.msg.file_failed') + '.' : ''),
                 color: filesWithMissingBones.length || errors.length ? 'orange' : 'green',
                 icon: filesWithMissingBones.length || errors.length ? 'warning' : 'check'
             });
@@ -1328,19 +1328,19 @@ function importEpicFightAnimation() {
                 const detailLines = [];
                 importedResults.forEach(item => {
                     const missingInfo = item.result.missingBones.length
-                        ? ' Missing bones: ' + item.result.missingBones.slice(0, 6).join(', ') + (item.result.missingBones.length > 6 ? '...' : '')
+                        ? ' ' + tl('ef.msg.missing_bones') + ': ' + item.result.missingBones.slice(0, 6).join(', ') + (item.result.missingBones.length > 6 ? '...' : '')
                         : '';
-                    const coordInfo = item.result.ignoredCoord ? ' Coord ignored.' : '';
+                    const coordInfo = item.result.ignoredCoord ? ' ' + tl('ef.msg.coord_ignored') : '';
                     detailLines.push(item.fileName + ': ' + item.result.keyframeCount + ' keyframes.' + missingInfo + coordInfo);
                 });
                 errors.forEach(error => {
                     detailLines.push(error.fileName + ': ' + error.message);
                 });
                 if (hadIgnoredCoord) {
-                    detailLines.push('Coord files are still imported in preview mode.');
+                    detailLines.push(tl('ef.msg.coord_preview_mode'));
                 }
                 Blockbench.showMessageBox({
-                    title: 'Animation Import Summary',
+                    title: tl('ef.summary.anim_import'),
                     icon: errors.length ? 'warning' : 'info',
                     message: detailLines.join('\n')
                 });
@@ -1868,9 +1868,9 @@ function buildMeshExportPayload() {
     const elements = getAllElements();
     if (!elements.length) {
         Blockbench.showMessageBox({
-            title: 'No Mesh',
+            title: tl('ef.err.no_mesh'),
             icon: 'info',
-            message: 'No mesh elements or cubes found in the project.'
+            message: tl('ef.err.no_mesh_elements')
         });
         return null;
     }
@@ -2158,9 +2158,9 @@ function buildArmatureExportPayloadWithFormat(exportFormat = 'attributes') {
     const armature = getArmature();
     if (!armature) {
         Blockbench.showMessageBox({
-            title: 'No Armature',
+            title: tl('ef.err.no_armature'),
             icon: 'info',
-            message: 'No armature found in the project.'
+            message: tl('ef.err.no_armature_project')
         });
         return null;
     }
@@ -2349,9 +2349,9 @@ function exportAnimationJson(exportFormat, optimizeKeyframes) {
     const armature = getArmature();
     if (!armature) {
         Blockbench.showMessageBox({
-            title: 'No Armature',
+            title: tl('ef.err.no_armature'),
             icon: 'info',
-            message: 'Animation export requires an armature.'
+            message: tl('ef.err.anim_needs_armature')
         });
         return null;
     }
@@ -2359,9 +2359,9 @@ function exportAnimationJson(exportFormat, optimizeKeyframes) {
     const anims = Animation.all;
     if (!anims || !anims.length) {
         Blockbench.showMessageBox({
-            title: 'No Animations',
+            title: tl('ef.err.no_animations'),
             icon: 'info',
-            message: 'No animations found in the project.'
+            message: tl('ef.err.no_animations_project')
         });
         return null;
     }
@@ -2370,9 +2370,9 @@ function exportAnimationJson(exportFormat, optimizeKeyframes) {
     const output = buildAnimationData(anim, exportFormat, optimizeKeyframes, armature);
     if (!output) {
         Blockbench.showMessageBox({
-            title: 'No Animation Data',
+            title: tl('ef.err.no_anim_data'),
             icon: 'info',
-            message: 'No keyframe data found for any bone.'
+            message: tl('ef.err.no_keyframe_data')
         });
         return null;
     }
@@ -2388,9 +2388,9 @@ function exportAnimationBatchJson(exportFormat, optimizeKeyframes) {
     const armature = getArmature();
     if (!armature) {
         Blockbench.showMessageBox({
-            title: 'No Armature',
+            title: tl('ef.err.no_armature'),
             icon: 'info',
-            message: 'Animation export requires an armature.'
+            message: tl('ef.err.anim_needs_armature')
         });
         return null;
     }
@@ -2398,9 +2398,9 @@ function exportAnimationBatchJson(exportFormat, optimizeKeyframes) {
     const anims = Animation.all;
     if (!anims || !anims.length) {
         Blockbench.showMessageBox({
-            title: 'No Animations',
+            title: tl('ef.err.no_animations'),
             icon: 'info',
-            message: 'No animations found in the project.'
+            message: tl('ef.err.no_animations_project')
         });
         return null;
     }
@@ -2427,9 +2427,9 @@ function exportAnimationBatchJson(exportFormat, optimizeKeyframes) {
 
     if (!results.length) {
         Blockbench.showMessageBox({
-            title: 'No Animation Data',
+            title: tl('ef.err.no_anim_data'),
             icon: 'info',
-            message: 'No keyframe data found for any animation.'
+            message: tl('ef.err.no_keyframe_data_batch')
         });
         return null;
     }
@@ -2441,9 +2441,9 @@ function exportEntityJson(armatureFormat, animationFormat, optimizeKeyframes) {
     const armature = getArmature();
     if (!armature) {
         Blockbench.showMessageBox({
-            title: 'No Armature',
+            title: tl('ef.err.no_armature'),
             icon: 'info',
-            message: 'Entity export requires an armature.'
+            message: tl('ef.err.entity_needs_armature')
         });
         return null;
     }
@@ -2496,14 +2496,14 @@ function doExport(name, exportFn) {
             resource_id: 'epicfight_export'
         }, function(path) {
             Blockbench.showToastNotification({
-                text: 'Exported: ' + path,
+                text: tl('ef.msg.exported') + ': ' + path,
                 color: 'green',
                 icon: 'check'
             });
         });
     } catch (e) {
         Blockbench.showMessageBox({
-            title: 'Export Error',
+            title: tl('ef.err.export'),
             icon: 'error',
             message: e.message || String(e)
         });
@@ -2513,11 +2513,11 @@ function doExport(name, exportFn) {
 function exportAnimationWithFormatChoice() {
     new Dialog({
         id: 'ef_export_animation_format',
-        title: 'Export Animation Format',
+        title: tl('ef.dlg.export_anim_format'),
         form: {
             format: {
                 type: 'select',
-                label: 'Format',
+                label: tl('ef.label.format'),
                 value: 'attributes',
                 options: {
                     attributes: 'attributes',
@@ -2526,7 +2526,7 @@ function exportAnimationWithFormatChoice() {
             },
             optimize: {
                 type: 'checkbox',
-                label: 'Optimize keyframes',
+                label: tl('ef.label.optimize'),
                 value: true
             }
         },
@@ -2544,21 +2544,21 @@ function exportAnimationWithFormatChoice() {
 function exportModelWithContentChoice() {
     new Dialog({
         id: 'ef_export_model_content',
-        title: 'Export Model Options',
+        title: tl('ef.dlg.export_model'),
         form: {
             content: {
                 type: 'select',
-                label: 'Content',
+                label: tl('ef.label.content'),
                 value: 'both',
                 options: {
-                    both: 'Mesh + Armature',
-                    mesh: 'Mesh Only',
-                    armature: 'Armature Only'
+                    both: tl('ef.opt.both'),
+                    mesh: tl('ef.opt.mesh_only'),
+                    armature: tl('ef.opt.armature_only')
                 }
             },
             armature_format: {
                 type: 'select',
-                label: 'Armature Format',
+                label: tl('ef.label.armature_format'),
                 value: 'attributes',
                 options: {
                     attributes: 'attributes',
@@ -2567,7 +2567,7 @@ function exportModelWithContentChoice() {
             },
             note: {
                 type: 'info',
-                text: 'Mesh Only ignores Armature Format.'
+                text: tl('ef.note.mesh_only_ignores')
             }
         },
         onConfirm(result) {
@@ -2588,11 +2588,11 @@ function exportModelWithContentChoice() {
 function exportAnimationBatchWithChoice() {
     new Dialog({
         id: 'ef_export_animation_batch',
-        title: 'Batch Export Animations',
+        title: tl('ef.dlg.batch_export'),
         form: {
             format: {
                 type: 'select',
-                label: 'Format',
+                label: tl('ef.label.format'),
                 value: 'attributes',
                 options: {
                     attributes: 'attributes',
@@ -2601,7 +2601,7 @@ function exportAnimationBatchWithChoice() {
             },
             optimize: {
                 type: 'checkbox',
-                label: 'Optimize keyframes',
+                label: tl('ef.label.optimize'),
                 value: true
             }
         },
@@ -2632,27 +2632,27 @@ function exportAnimationBatchWithChoice() {
                     }
                 }
                 Blockbench.showToastNotification({
-                    text: batchResult.results.length + ' animation(s) exported.' +
-                        (batchResult.skipped.length ? ' ' + batchResult.skipped.length + ' skipped.' : '') +
-                        (errors.length ? ' ' + errors.length + ' error(s).' : ''),
+                    text: batchResult.results.length + ' ' + tl('ef.msg.batch_exported') + '.' +
+                        (batchResult.skipped.length ? ' ' + batchResult.skipped.length + ' ' + tl('ef.msg.skipped') + '.' : '') +
+                        (errors.length ? ' ' + errors.length + ' ' + tl('ef.msg.error_count') + '.' : ''),
                     color: errors.length || batchResult.skipped.length ? 'orange' : 'green',
                     icon: errors.length ? 'warning' : 'check'
                 });
                 if (batchResult.skipped.length || errors.length) {
                     const lines = [];
                     if (batchResult.skipped.length) {
-                        lines.push('Skipped (no data): ' + batchResult.skipped.join(', '));
+                        lines.push(tl('ef.msg.skipped_no_data') + ': ' + batchResult.skipped.join(', '));
                     }
                     errors.forEach(function(err) { lines.push(err); });
                     Blockbench.showMessageBox({
-                        title: 'Batch Export Summary',
+                        title: tl('ef.summary.batch_export'),
                         icon: 'warning',
                         message: lines.join('\n')
                     });
                 }
             } catch (e) {
                 Blockbench.showMessageBox({
-                    title: 'Export Error',
+                    title: tl('ef.err.export'),
                     icon: 'error',
                     message: e.message || String(e)
                 });
@@ -2664,11 +2664,11 @@ function exportAnimationBatchWithChoice() {
 function exportEntityWithChoice() {
     new Dialog({
         id: 'ef_export_entity',
-        title: 'Export EpicFight Entity',
+        title: tl('ef.dlg.export_entity'),
         form: {
             armature_format: {
                 type: 'select',
-                label: 'Armature Format',
+                label: tl('ef.label.armature_format'),
                 value: 'attributes',
                 options: {
                     attributes: 'attributes',
@@ -2677,7 +2677,7 @@ function exportEntityWithChoice() {
             },
             animation_format: {
                 type: 'select',
-                label: 'Animation Format',
+                label: tl('ef.label.animation_format'),
                 value: 'attributes',
                 options: {
                     attributes: 'attributes',
@@ -2686,7 +2686,7 @@ function exportEntityWithChoice() {
             },
             optimize: {
                 type: 'checkbox',
-                label: 'Optimize keyframes',
+                label: tl('ef.label.optimize'),
                 value: true
             }
         },
@@ -2699,6 +2699,174 @@ function exportEntityWithChoice() {
             });
         }
     }).show();
+}
+
+// ============================================================
+//  i18n - Internationalization
+// ============================================================
+
+const EF_I18N = {
+    en: {
+        // Actions
+        'ef.import_mesh': 'Import EpicFight Mesh JSON',
+        'ef.import_mesh.desc': 'Import official EpicFight mesh JSON with armature and vertex weights',
+        'ef.import_armature': 'Import EpicFight Armature JSON',
+        'ef.import_armature.desc': 'Import EpicFight armature JSON into Blockbench',
+        'ef.import_animation': 'Import EpicFight Animation JSON',
+        'ef.import_animation.desc': 'Import EpicFight animation JSON into the current Blockbench armature',
+        'ef.export_model': 'Export as EpicFight Model JSON',
+        'ef.export_model.desc': 'Export mesh, armature, or both to EpicFight JSON format',
+        'ef.export_animation': 'Export as EpicFight Animation JSON',
+        'ef.export_animation.desc': 'Export animation as EpicFight matrix or attributes JSON',
+        'ef.export_animation_batch': 'Batch Export EpicFight Animations',
+        'ef.export_animation_batch.desc': 'Export all animations as separate EpicFight JSON files',
+        'ef.export_entity': 'Export as EpicFight Entity JSON',
+        'ef.export_entity.desc': 'Export mesh, armature, and all animations into a single JSON file',
+        // File dialog titles
+        'ef.select_mesh': 'Select EpicFight mesh JSON',
+        'ef.select_armature': 'Select EpicFight armature JSON',
+        'ef.select_animation': 'Select EpicFight animation JSON',
+        // Dialog titles
+        'ef.dlg.export_anim_format': 'Export Animation Format',
+        'ef.dlg.export_model': 'Export Model Options',
+        'ef.dlg.batch_export': 'Batch Export Animations',
+        'ef.dlg.export_entity': 'Export EpicFight Entity',
+        // Form labels
+        'ef.label.format': 'Format',
+        'ef.label.content': 'Content',
+        'ef.label.armature_format': 'Armature Format',
+        'ef.label.animation_format': 'Animation Format',
+        'ef.label.optimize': 'Optimize keyframes',
+        // Options
+        'ef.opt.both': 'Mesh + Armature',
+        'ef.opt.mesh_only': 'Mesh Only',
+        'ef.opt.armature_only': 'Armature Only',
+        'ef.note.mesh_only_ignores': 'Mesh Only ignores Armature Format.',
+        // Toast / messages
+        'ef.msg.importing_anim': 'Importing EpicFight animation',
+        'ef.msg.mesh_imported': 'Mesh imported',
+        'ef.msg.armature_imported': 'Armature imported',
+        'ef.msg.anim_imported': 'animation(s) imported',
+        'ef.msg.keyframes': 'keyframes',
+        'ef.msg.exported': 'Exported',
+        'ef.msg.batch_exported': 'animation(s) exported',
+        'ef.msg.skipped': 'skipped',
+        'ef.msg.error_count': 'error(s)',
+        'ef.msg.files': 'files',
+        'ef.msg.file_failed': 'file(s) failed',
+        'ef.msg.have_missing_bones': 'file(s) have missing bones',
+        // Error titles
+        'ef.err.mesh_import': 'Mesh Import Error',
+        'ef.err.armature_import': 'Armature Import Error',
+        'ef.err.anim_import': 'Animation Import Error',
+        'ef.err.export': 'Export Error',
+        'ef.err.no_mesh': 'No Mesh',
+        'ef.err.no_armature': 'No Armature',
+        'ef.err.no_animations': 'No Animations',
+        'ef.err.no_anim_data': 'No Animation Data',
+        // Error messages
+        'ef.err.parse_mesh': 'Failed to parse mesh JSON',
+        'ef.err.parse_armature': 'Failed to parse armature JSON',
+        'ef.err.no_mesh_elements': 'No mesh elements or cubes found in the project.',
+        'ef.err.no_armature_project': 'No armature found in the project.',
+        'ef.err.anim_needs_armature': 'Animation export requires an armature.',
+        'ef.err.entity_needs_armature': 'Entity export requires an armature.',
+        'ef.err.no_animations_project': 'No animations found in the project.',
+        'ef.err.no_keyframe_data': 'No keyframe data found for any bone.',
+        'ef.err.no_keyframe_data_batch': 'No keyframe data found for any animation.',
+        'ef.err.no_anim_files': 'No animation files were imported.',
+        // Summary
+        'ef.summary.anim_import': 'Animation Import Summary',
+        'ef.summary.batch_export': 'Batch Export Summary',
+        'ef.msg.missing_bones': 'Missing bones',
+        'ef.msg.coord_ignored': 'Coord ignored.',
+        'ef.msg.coord_preview_mode': 'Coord files are still imported in preview mode.',
+        'ef.msg.skipped_no_data': 'Skipped (no data)'
+    },
+    zh: {
+        // Actions
+        'ef.import_mesh': '导入 EpicFight 模型 JSON',
+        'ef.import_mesh.desc': '导入 EpicFight 官方模型 JSON（含骨架和顶点权重）',
+        'ef.import_armature': '导入 EpicFight 骨架 JSON',
+        'ef.import_armature.desc': '导入 EpicFight 独立骨架 JSON 到 Blockbench',
+        'ef.import_animation': '导入 EpicFight 动画 JSON',
+        'ef.import_animation.desc': '导入 EpicFight 动画 JSON 到当前 Blockbench 骨架',
+        'ef.export_model': '导出 EpicFight 模型 JSON',
+        'ef.export_model.desc': '导出模型、骨架或两者到 EpicFight JSON 格式',
+        'ef.export_animation': '导出 EpicFight 动画 JSON',
+        'ef.export_animation.desc': '导出动画为 EpicFight matrix 或 attributes JSON',
+        'ef.export_animation_batch': '批量导出 EpicFight 动画',
+        'ef.export_animation_batch.desc': '将所有动画分别导出为独立 EpicFight JSON 文件',
+        'ef.export_entity': '导出 EpicFight 实体 JSON',
+        'ef.export_entity.desc': '将模型、骨架和所有动画打包导出为单个 JSON 文件',
+        // File dialog titles
+        'ef.select_mesh': '选择 EpicFight 模型 JSON',
+        'ef.select_armature': '选择 EpicFight 骨架 JSON',
+        'ef.select_animation': '选择 EpicFight 动画 JSON',
+        // Dialog titles
+        'ef.dlg.export_anim_format': '导出动画格式',
+        'ef.dlg.export_model': '导出模型选项',
+        'ef.dlg.batch_export': '批量导出动画',
+        'ef.dlg.export_entity': '导出 EpicFight 实体',
+        // Form labels
+        'ef.label.format': '格式',
+        'ef.label.content': '内容',
+        'ef.label.armature_format': '骨架格式',
+        'ef.label.animation_format': '动画格式',
+        'ef.label.optimize': '优化关键帧',
+        // Options
+        'ef.opt.both': '模型 + 骨架',
+        'ef.opt.mesh_only': '仅模型',
+        'ef.opt.armature_only': '仅骨架',
+        'ef.note.mesh_only_ignores': '仅模型时忽略骨架格式。',
+        // Toast / messages
+        'ef.msg.importing_anim': '正在导入 EpicFight 动画',
+        'ef.msg.mesh_imported': '模型已导入',
+        'ef.msg.armature_imported': '骨架已导入',
+        'ef.msg.anim_imported': '个动画已导入',
+        'ef.msg.keyframes': '个关键帧',
+        'ef.msg.exported': '已导出',
+        'ef.msg.batch_exported': '个动画已导出',
+        'ef.msg.skipped': '已跳过',
+        'ef.msg.error_count': '个错误',
+        'ef.msg.files': '个文件',
+        'ef.msg.file_failed': '个文件失败',
+        'ef.msg.have_missing_bones': '个文件缺少骨骼',
+        // Error titles
+        'ef.err.mesh_import': '模型导入错误',
+        'ef.err.armature_import': '骨架导入错误',
+        'ef.err.anim_import': '动画导入错误',
+        'ef.err.export': '导出错误',
+        'ef.err.no_mesh': '无模型',
+        'ef.err.no_armature': '无骨架',
+        'ef.err.no_animations': '无动画',
+        'ef.err.no_anim_data': '无动画数据',
+        // Error messages
+        'ef.err.parse_mesh': '解析模型 JSON 失败',
+        'ef.err.parse_armature': '解析骨架 JSON 失败',
+        'ef.err.no_mesh_elements': '项目中未找到模型元素或方块。',
+        'ef.err.no_armature_project': '项目中未找到骨架。',
+        'ef.err.anim_needs_armature': '动画导出需要骨架。',
+        'ef.err.entity_needs_armature': '实体导出需要骨架。',
+        'ef.err.no_animations_project': '项目中未找到动画。',
+        'ef.err.no_keyframe_data': '未找到任何骨骼的关键帧数据。',
+        'ef.err.no_keyframe_data_batch': '未找到任何动画的关键帧数据。',
+        'ef.err.no_anim_files': '未导入任何动画文件。',
+        // Summary
+        'ef.summary.anim_import': '动画导入摘要',
+        'ef.summary.batch_export': '批量导出摘要',
+        'ef.msg.missing_bones': '缺失骨骼',
+        'ef.msg.coord_ignored': 'Coord 已忽略。',
+        'ef.msg.coord_preview_mode': 'Coord 文件仍以预览模式导入。',
+        'ef.msg.skipped_no_data': '已跳过（无数据）'
+    }
+};
+
+function efRegisterTranslations() {
+    if (typeof Language === 'undefined' || typeof Language.addTranslations !== 'function') return;
+    for (var lang in EF_I18N) {
+        Language.addTranslations(lang, EF_I18N[lang]);
+    }
 }
 
 // ============================================================
@@ -2715,6 +2883,7 @@ Plugin.register('epicfight_export', {
     tags: ['Minecraft: Java Edition'],
 
     onload() {
+        efRegisterTranslations();
         // Patch ArmatureBoneAnimator.interpolate with pointer-based search for faster playback
         // Strategy: use a sequential pointer to find before/after O(1), then temporarily replace
         // the keyframe array with just those 2 items so the original scan runs in O(1) too.
@@ -2763,48 +2932,48 @@ Plugin.register('epicfight_export', {
             }
         }
         const actImportMesh = new Action('ef_import_mesh', {
-            name: 'Import EpicFight Mesh JSON',
-            description: 'Import official EpicFight mesh JSON with armature and vertex weights',
+            name: tl('ef.import_mesh'),
+            description: tl('ef.import_mesh.desc'),
             icon: 'view_in_ar',
             click: importEpicFightMesh
         });
         const actImportArmature = new Action('ef_import_armature', {
-            name: 'Import EpicFight Armature JSON',
-            description: 'Import EpicFight armature JSON into Blockbench',
+            name: tl('ef.import_armature'),
+            description: tl('ef.import_armature.desc'),
             icon: 'account_tree',
             click: importEpicFightArmature
         });
         const actImportAnim = new Action('ef_import_animation', {
-            name: 'Import EpicFight Animation JSON',
-            description: 'Import EpicFight animation JSON into the current Blockbench armature',
+            name: tl('ef.import_animation'),
+            description: tl('ef.import_animation.desc'),
             icon: 'movie',
             click: importEpicFightAnimation
         });
 
         const actModel = new Action('ef_export_model', {
-            name: 'Export as EpicFight Model JSON',
-            description: 'Export mesh, armature, or both to EpicFight JSON format',
+            name: tl('ef.export_model'),
+            description: tl('ef.export_model.desc'),
             icon: 'account_tree',
             click: exportModelWithContentChoice
         });
 
         const actAnim = new Action('ef_export_animation', {
-            name: 'Export as EpicFight Animation JSON',
-            description: 'Export animation as EpicFight matrix or attributes JSON',
+            name: tl('ef.export_animation'),
+            description: tl('ef.export_animation.desc'),
             icon: 'movie',
             click: exportAnimationWithFormatChoice
         });
 
         const actAnimBatch = new Action('ef_export_animation_batch', {
-            name: 'Batch Export EpicFight Animations',
-            description: 'Export all animations as separate EpicFight JSON files',
+            name: tl('ef.export_animation_batch'),
+            description: tl('ef.export_animation_batch.desc'),
             icon: 'movie_filter',
             click: exportAnimationBatchWithChoice
         });
 
         const actEntity = new Action('ef_export_entity', {
-            name: 'Export as EpicFight Entity JSON',
-            description: 'Export mesh, armature, and all animations into a single JSON file',
+            name: tl('ef.export_entity'),
+            description: tl('ef.export_entity.desc'),
             icon: 'box',
             click: exportEntityWithChoice
         });
