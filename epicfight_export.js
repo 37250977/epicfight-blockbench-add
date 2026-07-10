@@ -1095,10 +1095,12 @@ function importEpicFightAnimationData(data, fileName, animationNameOverride) {
         const bone = boneByName[String(entry.name).toLowerCase()];
         if (!bone) continue;
         const animator = animation.getBoneAnimator(bone);
-        // 注意: 不设置 quaternion_interpolation = true
-        // ArmatureBoneAnimator 的 doRender() 只设 this.element 不设 this.group,
-        // 而 Keyframe.getFixed() 硬编码用 this.animator.group.mesh.fix_rotation,
-        // quaternion_interpolation=true 会触发 getFixed 导致 TypeError
+        // 启用四元数 slerp 插值, 避免欧拉角线性插值在 gimbal lock 附近产生抽搐旋转
+        animator.quaternion_interpolation = true;
+        // ArmatureBoneAnimator.doRender() 只设 this.element 不设 this.group,
+        // 但 quaternion_interpolation=true 时, interpolate()/getFixed() 访问 this.group
+        // 直接设 animator.group = bone (ArmatureBone 节点), 不依赖 doRender() 或 patch
+        if (!animator.group) animator.group = bone;
     }
 
     // Estimate animation length upfront so the timeline doesn't resize during keyframe creation
