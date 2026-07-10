@@ -235,8 +235,13 @@ function buildEFMeshObjects(vertices, vertexWeights, fileName) {
     const localPositions = [];
     const localPolygons = [];
     const localVertexWeights = {};
-    var texW = (typeof Project !== 'undefined' && Project.texture_width) || 16;
-    var texH = (typeof Project !== 'undefined' && Project.texture_height) || 16;
+    // 用 Project.getUVWidth/Height 代替 Project.texture_width/height
+    // per_texture_uv_size 格式下, getBoundingRect() 用 texture.getUVWidth() 作为 min_x 初始值
+    // 如果 texW 和 texture.uv_width 不一致, UV 超出范围时 min_x 会被钳制, 导致 UV 框大小异常
+    var texW = (typeof Project !== 'undefined' && typeof Project.getUVWidth === 'function')
+        ? Project.getUVWidth() : ((typeof Project !== 'undefined' && Project.texture_width) || 16);
+    var texH = (typeof Project !== 'undefined' && typeof Project.getUVHeight === 'function')
+        ? Project.getUVHeight() : ((typeof Project !== 'undefined' && Project.texture_height) || 16);
 
     function ensureLocalVertex(globalIndex) {
         if (localVertexMap[globalIndex] !== undefined) {

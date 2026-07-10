@@ -1,6 +1,6 @@
 # EpicFight Blockbench JSON Plugin
 
-> **下载插件**：[epicfight_export.js](https://raw.githubusercontent.com/37250977/epicfight-blockbench-add/main/epicfight_export.js)（右键 → 链接另存为）
+> **下载插件**：[epicfight_export.js](https://raw.githubusercontent.com/37250977/epicfight-blockbench-add/main/epicfight_export.js)（右键 → 链接复制后再用「URL加载插件」导入 Blockbench）
 
 这是一个面向 **EpicFight** 的 Blockbench 插件，用来在 Blockbench 中导入、编辑、再导出 EpicFight 使用的 `mesh / armature / animation` JSON 资源。
 
