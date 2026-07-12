@@ -950,6 +950,15 @@ function getBoneRestEulerDegrees(bone) {
 }
 
 function transformToAnimationChannels(transform, bone, options) {
+    // keyframe 存储 euler(source) - euler(rest) (欧拉角相减).
+    // Blockbench interpolate() (quaternion_interpolation=true) 流程:
+    //   getFixed() = rest × setFromEuler(keyframe)  →  Q1
+    //   interpolate() = euler(Q1) - rest_euler       →  arr
+    //   displayRotation() = rest_euler + arr          →  bone.rotation
+    // 最终 bone.rotation = rest_euler + euler(rest × setFromEuler(keyframe)) - rest_euler
+    //                     = euler(rest × setFromEuler(keyframe))
+    // 用欧拉角相减时, setFromEuler(euler(source) - euler(rest)) ≈ rest⁻¹ × source (非 gimbal lock 区域),
+    // 因此 bone.rotation ≈ euler(rest × rest⁻¹ × source) = euler(source), 预览正确.
     const rest = getBoneRestTransform(bone);
     const restEuler = getBoneRestEulerDegrees(bone);
     if (Array.isArray(transform) || transform instanceof THREE.Matrix4) {
@@ -1655,12 +1664,19 @@ function decomposeAnimatedMatrixToEFAttributesTransform(matrix, bone) {
     const rest = getBoneRestTransform(bone);
     const deltaQuat = rest.rotation.clone().invert().multiply(quat).normalize();
 
+    // translation offset 必须从 parent space 旋转到 rest local space
+    // offset_pos = R(rest_rot)⁻¹ × (source_pos - rest_pos)
+    // 在左右镜像骨骼 (rest_rot = R(180°Y)) 上, 缺少此变换会导致 X/Z 分量未翻转, 左右手方向相反
+    const deltaPos = new THREE.Vector3(
+        pos.x - rest.position.x,
+        pos.y - rest.position.y,
+        pos.z - rest.position.z
+    );
+    deltaPos.applyQuaternion(rest.rotation.clone().invert());
+    deltaPos.multiplyScalar(1 / GLTF_IMPORT_UNIT_SCALE);
+
     return {
-        loc: toFixedArray([
-            pos.x - rest.position.x,
-            pos.y - rest.position.y,
-            pos.z - rest.position.z
-        ]),
+        loc: toFixedArray([deltaPos.x, deltaPos.y, deltaPos.z]),
         rot: quaternionToEFAttributesArray(deltaQuat),
         sca: toFixedArray([scale.x, scale.y, scale.z])
     };
@@ -1699,24 +1715,62 @@ function getBoneLocalRestMatrix(bone) {
 }
 
 function getBoneAnimatedLocalMatrixAtTime(bone, animator, time) {
-    const restPosition = getBoneRestTransform(bone).position;
-    const restEuler = getBoneRestEulerDegrees(bone);
+    const rest = getBoneRestTransform(bone);
     const position = sampleAnimatorChannel(animator, time, 'position', [0, 0, 0]);
-    const rotation = sampleAnimatorChannel(animator, time, 'rotation', [0, 0, 0]);
     const scale = sampleAnimatorChannel(animator, time, 'scale', [1, 1, 1]);
-    return composeTransformMatrix(
-        [
-            restPosition.x + position[0],
-            restPosition.y + position[1],
-            restPosition.z + position[2]
-        ],
-        [
-            restEuler[0] + rotation[0],
-            restEuler[1] + rotation[1],
-            restEuler[2] + rotation[2]
-        ],
-        scale
+
+    // 重建 source 旋转: keyframe 存储 euler(source) - euler(rest) (见 transformToAnimationChannels).
+    // 两种数据来源, 都用欧拉角相加重建: source = setFromEuler(rest_euler + keyframe) = setFromEuler(euler(source)).
+    // 必须用欧拉角相加而非四元数相乘 rest × setFromEuler(keyframe), 因为
+    // setFromEuler(euler(source) - euler(rest)) ≠ rest⁻¹ × source (gimbal lock 区域, 如镜像骨骼 Y=180°),
+    // 用四元数相乘会在左右镜像骨骼上产生方向反转.
+    const restEuler = getBoneRestEulerDegrees(bone);
+    let rotation;
+    const rawRotation = getRawKeyframeRotationAtTime(animator, time);
+    if (rawRotation) {
+        // keyframe 时间点: 直接读取原始值 euler(source) - euler(rest), 避免 interpolate() 转换
+        rotation = rawRotation;
+    } else {
+        // 非 keyframe 时间点: interpolate() 返回 euler(rest × interpolated_offset) - rest_euler
+        // (slerp 插值后的结果), 加 rest_euler 得到 euler(rest × interpolated_offset) = euler(source_at_t)
+        rotation = sampleAnimatorChannel(animator, time, 'rotation', [0, 0, 0]);
+    }
+    const sourceQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+        THREE.MathUtils.degToRad((restEuler[0] || 0) + (rotation[0] || 0)),
+        THREE.MathUtils.degToRad((restEuler[1] || 0) + (rotation[1] || 0)),
+        THREE.MathUtils.degToRad((restEuler[2] || 0) + (rotation[2] || 0)),
+        getEulerOrder()
+    ));
+
+    return new THREE.Matrix4().compose(
+        new THREE.Vector3(
+            rest.position.x + position[0],
+            rest.position.y + position[1],
+            rest.position.z + position[2]
+        ),
+        sourceQuat,
+        new THREE.Vector3(
+            scale[0] === undefined ? 1 : scale[0],
+            scale[1] === undefined ? 1 : scale[1],
+            scale[2] === undefined ? 1 : scale[2]
+        )
     );
+}
+
+// 直接读取 keyframe 时间点的原始 offset 旋转值, 绕过 interpolate 的欧拉角转换
+function getRawKeyframeRotationAtTime(animator, time) {
+    if (!animator || !animator.rotation || !animator.rotation.length) return null;
+    const epsilon = 1e-4;
+    for (const kf of animator.rotation) {
+        if (Math.abs(kf.time - time) <= epsilon) {
+            return [
+                Number(kf.calc('x', 0)) || 0,
+                Number(kf.calc('y', 0)) || 0,
+                Number(kf.calc('z', 0)) || 0
+            ];
+        }
+    }
+    return null;
 }
 
 function sampleAnimatorChannel(animator, time, channel, fallback) {
