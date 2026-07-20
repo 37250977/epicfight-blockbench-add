@@ -486,6 +486,7 @@ function createBlockBenchFromImportData(importData, fileName) {
             }
             // #endregion
             bone.addTo(parent).init();
+
             secondPassCount++;
             // #region debug-point C:bone-after-init
             if (secondPassCount <= 3 || secondPassCount % 10 === 0) {
@@ -962,7 +963,7 @@ function transformToAnimationChannels(transform, bone, options) {
     const rest = getBoneRestTransform(bone);
     const restEuler = getBoneRestEulerDegrees(bone);
     if (Array.isArray(transform) || transform instanceof THREE.Matrix4) {
-        const matrix = transform instanceof THREE.Matrix4 ? transform.clone() : parseEFMatrix(transform);
+        let matrix = transform instanceof THREE.Matrix4 ? transform.clone() : parseEFMatrix(transform);
         const pos = new THREE.Vector3();
         const quat = new THREE.Quaternion();
         const scale = new THREE.Vector3();
@@ -996,8 +997,15 @@ function transformToAnimationChannels(transform, bone, options) {
             roundNumber(targetEuler[1] - restEuler[1], 6),
             roundNumber(targetEuler[2] - restEuler[2], 6)
         ];
+        // EpicFight ATTRIBUTES loc = rest local space delta, EpicFight 单位
+        // 转换到 Blockbench parent space delta: loc × rest.rotation × GLTF_UNIT
+        // 与导出 decomposeAnimatedMatrixToEFAttributesTransform 对称
+        const locArr = Array.isArray(transform.loc) ? transform.loc.map(v => Number(v) || 0) : [0, 0, 0];
+        const locVec = new THREE.Vector3(locArr[0], locArr[1], locArr[2])
+            .applyQuaternion(rest.rotation)
+            .multiplyScalar(GLTF_IMPORT_UNIT_SCALE);
         return {
-            position: toFixedArray(Array.isArray(transform.loc) ? transform.loc.map(v => Number(v) || 0) : [0, 0, 0]),
+            position: [roundNumber(locVec.x, 6), roundNumber(locVec.y, 6), roundNumber(locVec.z, 6)],
             rotation: deltaEuler,
             scale: toFixedArray(Array.isArray(transform.sca) ? transform.sca.map(v => Number(v) || 0) : [1, 1, 1])
         };
@@ -1093,6 +1101,20 @@ function importEpicFightAnimationData(data, fileName, animationNameOverride) {
     Animation.selected = animation;
     animation.selected = true;
 
+    // 保存 Coord 原始数据到 animation 属性, 供导出时根据目标格式转换输出
+    // Coord 骨骼存在于动画文件但不存在于 armature 文件, 导入时被跳过,
+    // 导出时需保留 (time + transform 数组), 并根据目标格式 (matrix/attributes) 转换
+    if (coordEntry) {
+        const coordTimes = Array.isArray(coordEntry.time) ? coordEntry.time.slice() : [];
+        const coordTransforms = Array.isArray(coordEntry.transform) ? coordEntry.transform.slice() : [];
+        animation._ef_coord_data = {
+            time: coordTimes,
+            transform: coordTransforms
+        };
+    } else {
+        animation._ef_coord_data = null;
+    }
+
     const createdKeyframes = [];
     const missingBones = [];
     let coordBasePosition = null;
@@ -1174,11 +1196,7 @@ function importEpicFightAnimationData(data, fileName, animationNameOverride) {
 
             for (let i = 0; i < count; i++) {
                 const t = roundNumber(Number(times[i]) || 0, 4);
-                const channels = transformToAnimationChannels(transforms[i], bone, {
-                    rootAxisCorrection: coordEntry && !(bone && bone.parent instanceof ArmatureBone)
-                        ? EF_COORD_FILE_ROOT_AXIS_CORRECTION
-                        : null
-                });
+                const channels = transformToAnimationChannels(transforms[i], bone, {});
                 if (prevRot) {
                     channels.rotation = unwrapEulerDegrees(prevRot, channels.rotation);
                 }
@@ -2368,7 +2386,7 @@ function buildAnimationData(anim, exportFormat, optimizeKeyframes, armature) {
             if (!(boneSheet.keyedTimes.has(time) || time === 0 || time === lastTime)) {
                 continue;
             }
-            const localPoseMatrix = getBoneAnimatedLocalMatrixAtTime(bone, animator, time);
+            let localPoseMatrix = getBoneAnimatedLocalMatrixAtTime(bone, animator, time);
             boneSheet.time.push(roundNumber(time, 4));
             boneSheet.transform.push(exportFormat === 'matrix'
                 ? localPoseMatrixToEFMatrixArray(localPoseMatrix, bone)
@@ -2398,7 +2416,78 @@ function buildAnimationData(anim, exportFormat, optimizeKeyframes, armature) {
         }
     }
 
+    // 追加 Coord 条目 (Coord 骨骼不存在于 armature, 导入时保存原始数据, 导出时根据目标格式转换)
+    // Coord 是 root bone (无 parent), EpicFight 加载时会应用 BLENDER_TO_MINECRAFT_COORD (左乘)
+    // 但 Coord 数据本身已经是 EpicFight 原始格式, 转换时不需要应用 rootAxisCorrection (仅格式转换, 不涉及坐标系)
+    if (anim._ef_coord_data && anim._ef_coord_data.time && anim._ef_coord_data.time.length) {
+        const coordOutput = convertCoordTransforms(anim._ef_coord_data.transform, exportFormat);
+        output.push({
+            name: 'Coord',
+            time: anim._ef_coord_data.time.slice(),
+            transform: coordOutput
+        });
+    }
+
     return output;
+}
+
+// Coord 数据格式转换: 根据目标格式 (matrix/attributes) 转换 Coord transform 数组
+// 输入可能是 matrix 数组 (16 数字) 或 attributes 对象 ({loc, rot, sca})
+function convertCoordTransforms(transforms, targetFormat) {
+    if (!Array.isArray(transforms)) return [];
+    const result = [];
+    for (const t of transforms) {
+        const isMatrix = Array.isArray(t);
+        const isAttributes = t && typeof t === 'object' && !Array.isArray(t);
+        if (targetFormat === 'matrix') {
+            if (isMatrix) {
+                // 原样保留
+                result.push(t);
+            } else if (isAttributes) {
+                // attributes -> matrix
+                const rotArr = Array.isArray(t.rot) ? t.rot : [1, 0, 0, 0];
+                const locArr = Array.isArray(t.loc) ? t.loc : [0, 0, 0];
+                const scaArr = Array.isArray(t.sca) ? t.sca : [1, 1, 1];
+                const quat = new THREE.Quaternion(
+                    -(Number(rotArr[1]) || 0),
+                    -(Number(rotArr[2]) || 0),
+                    -(Number(rotArr[3]) || 0),
+                    rotArr[0] === undefined ? 1 : (Number(rotArr[0]) || 0)
+                );
+                const pos = new THREE.Vector3(Number(locArr[0]) || 0, Number(locArr[1]) || 0, Number(locArr[2]) || 0);
+                const scale = new THREE.Vector3(
+                    scaArr[0] === undefined ? 1 : Number(scaArr[0]) || 0,
+                    scaArr[1] === undefined ? 1 : Number(scaArr[1]) || 0,
+                    scaArr[2] === undefined ? 1 : Number(scaArr[2]) || 0
+                );
+                const m = new THREE.Matrix4().compose(pos, quat, scale);
+                result.push(matrixToEFArray(m));
+            } else {
+                result.push(t);
+            }
+        } else {
+            // targetFormat === 'attributes'
+            if (isAttributes) {
+                // 原样保留
+                result.push(t);
+            } else if (isMatrix) {
+                // matrix -> attributes
+                const m = parseEFMatrix(t);
+                const pos = new THREE.Vector3();
+                const quat = new THREE.Quaternion();
+                const scale = new THREE.Vector3();
+                m.decompose(pos, quat, scale);
+                result.push({
+                    loc: toFixedArray([pos.x, pos.y, pos.z]),
+                    rot: quaternionToEFAttributesArray(quat),
+                    sca: toFixedArray([scale.x, scale.y, scale.z])
+                });
+            } else {
+                result.push(t);
+            }
+        }
+    }
+    return result;
 }
 
 function exportAnimationJson(exportFormat, optimizeKeyframes) {
@@ -2837,7 +2926,31 @@ const EF_I18N = {
         'ef.msg.missing_bones': 'Missing bones',
         'ef.msg.coord_ignored': 'Coord ignored.',
         'ef.msg.coord_preview_mode': 'Coord files are still imported in preview mode.',
-        'ef.msg.skipped_no_data': 'Skipped (no data)'
+        'ef.msg.skipped_no_data': 'Skipped (no data)',
+        // IK
+        'ef.ik.create_controller': 'Create IK Controller',
+        'ef.ik.break_controller': 'Break IK Controller',
+        'ef.ik.bake': 'Bake IK',
+        'ef.ik.select_source': 'Select IK Source',
+        'ef.ik.controller_created': 'IK controller created',
+        'ef.ik.no_controller': 'No IK controller found',
+        'ef.ik.no_bones': 'No ArmatureBone selected',
+        'ef.ik.toggle': 'Toggle IK Controller',
+        'ef.ik.enabled': 'IK enabled',
+        'ef.ik.disabled': 'IK disabled',
+        'ef.ik.limits': 'IK Angle Limits',
+        'ef.ik.limits_title': 'IK Angle Limits',
+        'ef.ik.enabled_suffix': 'Enabled',
+        'ef.ik.limitation_axis': 'Limitation Axis',
+        'ef.ik.min_deg': 'Min (deg)',
+        'ef.ik.max_deg': 'Max (deg)',
+        'ef.ik.none': 'None',
+        'ef.ik.edit_limits_undo': 'Edit IK angle limits',
+        'ef.ik.create_undo': 'Create IK controller',
+        'ef.ik.change_source_undo': 'Change IK source',
+        'ef.ik.break_undo': 'Break IK controller',
+        'ef.ik.enable_undo': 'Enable IK controller',
+        'ef.ik.disable_undo': 'Disable IK controller'
     },
     zh: {
         // Actions
@@ -2914,7 +3027,31 @@ const EF_I18N = {
         'ef.msg.missing_bones': '缺失骨骼',
         'ef.msg.coord_ignored': 'Coord 已忽略。',
         'ef.msg.coord_preview_mode': 'Coord 文件仍以预览模式导入。',
-        'ef.msg.skipped_no_data': '已跳过（无数据）'
+        'ef.msg.skipped_no_data': '已跳过（无数据）',
+        // IK
+        'ef.ik.create_controller': '创建 IK 控制器',
+        'ef.ik.break_controller': '断开 IK 控制器',
+        'ef.ik.bake': '烘焙 IK',
+        'ef.ik.select_source': '选择 IK 源',
+        'ef.ik.controller_created': 'IK 控制器已创建',
+        'ef.ik.no_controller': '未找到 IK 控制器',
+        'ef.ik.no_bones': '未选中 ArmatureBone',
+        'ef.ik.toggle': '切换 IK 控制器',
+        'ef.ik.enabled': 'IK 已启用',
+        'ef.ik.disabled': 'IK 已禁用',
+        'ef.ik.limits': 'IK 角度限制',
+        'ef.ik.limits_title': 'IK 角度限制',
+        'ef.ik.enabled_suffix': '启用',
+        'ef.ik.limitation_axis': '限制轴',
+        'ef.ik.min_deg': '最小 (度)',
+        'ef.ik.max_deg': '最大 (度)',
+        'ef.ik.none': '无',
+        'ef.ik.edit_limits_undo': '编辑 IK 角度限制',
+        'ef.ik.create_undo': '创建 IK 控制器',
+        'ef.ik.change_source_undo': '更改 IK 源',
+        'ef.ik.break_undo': '断开 IK 控制器',
+        'ef.ik.enable_undo': '启用 IK 控制器',
+        'ef.ik.disable_undo': '禁用 IK 控制器'
     }
 };
 
@@ -2926,8 +3063,1021 @@ function efRegisterTranslations() {
 }
 
 // ============================================================
+//  IK Support for ArmatureBone
+//  复用 Blockbench 原生 NullObject 作为 IK 控制器/目标
+//  自定义 displayIK 求解，修复 Blockbench 原生求解对旋转骨骼的处理问题
+//  流程: 选择末端骨骼 -> 右键 创建 IK 控制器 -> 选择 source -> 拖动 NullObject
+// ============================================================
+
+function efSetupIKSupport() {
+    if (typeof ArmatureBone === 'undefined' || !ArmatureBone.animator) return null;
+    try {
+        return efSetupIKSupportInner();
+    } catch (e) {
+        console.error('[EF] IK setup failed:', e);
+        return null;
+    }
+}
+
+function efSetupIKSupportInner() {
+    // Three.js CCDIKSolver 内联实现（简化版，移除可视化 helper）
+    const _quaternion = new THREE.Quaternion();
+    const _targetPos = new THREE.Vector3();
+    const _targetVec = new THREE.Vector3();
+    const _effectorPos = new THREE.Vector3();
+    const _effectorVec = new THREE.Vector3();
+    const _linkPos = new THREE.Vector3();
+    const _invLinkQ = new THREE.Quaternion();
+    const _linkScale = new THREE.Vector3();
+    const _axis = new THREE.Vector3();
+    const _vector = new THREE.Vector3();
+
+    class CCDIKSolver {
+        constructor(mesh, iks = []) {
+            this.mesh = mesh;
+            this.iks = iks;
+            this._initialQuaternions = [];
+            this._workingQuaternion = new THREE.Quaternion();
+            for (const ik of iks) {
+                const chainQuats = [];
+                for (let i = 0; i < ik.links.length; i++) {
+                    chainQuats.push(new THREE.Quaternion());
+                }
+                this._initialQuaternions.push(chainQuats);
+            }
+            this._valid();
+        }
+        update(globalBlendFactor = 1.0) {
+            const iks = this.iks;
+            for (let i = 0, il = iks.length; i < il; i++) {
+                this.updateOne(iks[i], globalBlendFactor);
+            }
+            return this;
+        }
+        updateOne(ik, overrideBlend = 1.0) {
+            const chainBlend = ik.blendFactor !== undefined ? ik.blendFactor : overrideBlend;
+            const bones = this.mesh.skeleton.bones;
+            const chainIndex = this.iks.indexOf(ik);
+            const initialQuaternions = this._initialQuaternions[chainIndex];
+            const math = Math;
+            const effector = bones[ik.effector];
+            const target = bones[ik.target];
+            _targetPos.setFromMatrixPosition(target.matrixWorld);
+            const links = ik.links;
+            const iteration = ik.iteration !== undefined ? ik.iteration : 1;
+            if (chainBlend < 1.0) {
+                for (let j = 0; j < links.length; j++) {
+                    const linkIndex = links[j].index;
+                    initialQuaternions[j].copy(bones[linkIndex].quaternion);
+                }
+            }
+            for (let i = 0; i < iteration; i++) {
+                let rotated = false;
+                for (let j = 0, jl = links.length; j < jl; j++) {
+                    const link = bones[links[j].index];
+                    if (links[j].enabled === false) break;
+                    const limitation = links[j].limitation;
+                    const rotationMin = links[j].rotationMin;
+                    const rotationMax = links[j].rotationMax;
+                    link.matrixWorld.decompose(_linkPos, _invLinkQ, _linkScale);
+                    _invLinkQ.invert();
+                    _effectorPos.setFromMatrixPosition(effector.matrixWorld);
+                    _effectorVec.subVectors(_effectorPos, _linkPos);
+                    _effectorVec.applyQuaternion(_invLinkQ);
+                    _effectorVec.normalize();
+                    _targetVec.subVectors(_targetPos, _linkPos);
+                    _targetVec.applyQuaternion(_invLinkQ);
+                    _targetVec.normalize();
+                    let angle = _targetVec.dot(_effectorVec);
+                    if (angle > 1.0) angle = 1.0;
+                    else if (angle < -1.0) angle = -1.0;
+                    angle = math.acos(angle);
+                    if (angle < 1e-5) continue;
+                    if (ik.minAngle !== undefined && angle < ik.minAngle) angle = ik.minAngle;
+                    if (ik.maxAngle !== undefined && angle > ik.maxAngle) angle = ik.maxAngle;
+                    _axis.crossVectors(_effectorVec, _targetVec);
+                    _axis.normalize();
+                    _quaternion.setFromAxisAngle(_axis, angle);
+                    link.quaternion.multiply(_quaternion);
+                    if (limitation !== undefined) {
+                        let c = link.quaternion.w;
+                        if (c > 1.0) c = 1.0;
+                        const dot = link.quaternion.x * limitation.x + link.quaternion.y * limitation.y + link.quaternion.z * limitation.z;
+                        const sign = dot < 0 ? -1 : 1;
+                        const c2 = sign * math.sqrt(1 - c * c);
+                        link.quaternion.set(
+                            limitation.x * c2,
+                            limitation.y * c2,
+                            limitation.z * c2,
+                            c
+                        );
+                    }
+                    if (rotationMin !== undefined || rotationMax !== undefined) {
+                        const euler = _vector.setFromEuler(link.rotation);
+                        if (rotationMin !== undefined) euler.max(rotationMin);
+                        if (rotationMax !== undefined) euler.min(rotationMax);
+                        link.rotation.setFromVector3(euler);
+                    }
+                    link.updateMatrixWorld(true);
+                    rotated = true;
+                }
+                if (!rotated) break;
+            }
+            if (chainBlend < 1.0) {
+                for (let j = 0; j < links.length; j++) {
+                    const linkIndex = links[j].index;
+                    const link = bones[linkIndex];
+                    this._workingQuaternion.copy(initialQuaternions[j]).slerp(link.quaternion, chainBlend);
+                    link.quaternion.copy(this._workingQuaternion);
+                    link.updateMatrixWorld(true);
+                }
+            }
+            return this;
+        }
+        _valid() {
+            const iks = this.iks;
+            const bones = this.mesh.skeleton.bones;
+            for (let i = 0; i < iks.length; i++) {
+                const ik = iks[i];
+                const effector = bones[ik.effector];
+                const links = ik.links;
+                let link0 = effector;
+                for (let j = 0; j < links.length; j++) {
+                    const link1 = bones[links[j].index];
+                    if (link0.parent !== link1) {
+                        console.warn('CCDIKSolver: bone ' + link0.name + ' is not the child of bone ' + link1.name);
+                    }
+                    link0 = link1;
+                }
+            }
+        }
+    }
+
+    if (typeof NullObject === 'undefined') {
+        console.warn('[EF] NullObject not available, IK support disabled');
+        return null;
+    }
+
+    const scene = (typeof Canvas !== 'undefined' && Canvas.scene) ? Canvas.scene : ((typeof Project !== 'undefined' && Project.model_3d) ? Project.model_3d : null);
+
+    function efFindNodeByUuid(uuid) {
+        if (!uuid) return null;
+        return [...Group.all, ...ArmatureBone.all, ...Locator.all, ...NullObject.all].find(node => node.uuid === uuid);
+    }
+
+    // 查找 IK source 下作为 pole target 参考的 helper bone（knee/elbow），排除目标骨骼自身
+    function efFindPoleHelperBone(sourceBone, targetBone) {
+        if (!(sourceBone instanceof ArmatureBone)) return null;
+        return sourceBone.children.find(child =>
+            child instanceof ArmatureBone &&
+            child !== targetBone &&
+            /^(knee|elbow)_/i.test(child.name)
+        ) || null;
+    }
+
+    // 估算骨骼尾端（ankle/wrist）的世界位置
+    // 先求 mesh 的本地包围盒，再取本地 Y 方向绝对值最大的端点，避免 world box 对角点不准
+    function efGetBoneTailWorldPosition(bone) {
+        if (!bone || !bone.mesh) {
+            return bone.getWorldCenter ? bone.getWorldCenter() : new THREE.Vector3();
+        }
+        const worldBox = new THREE.Box3().setFromObject(bone.mesh);
+        const size = worldBox.getSize(new THREE.Vector3());
+        if (size.lengthSq() < 1e-6) {
+            return bone.getWorldCenter ? bone.getWorldCenter() : new THREE.Vector3();
+        }
+        const invMatrix = bone.mesh.matrixWorld.clone().invert();
+        const localBox = new THREE.Box3();
+        for (const x of [worldBox.min.x, worldBox.max.x]) {
+            for (const y of [worldBox.min.y, worldBox.max.y]) {
+                for (const z of [worldBox.min.z, worldBox.max.z]) {
+                    localBox.expandByPoint(new THREE.Vector3(x, y, z).applyMatrix4(invMatrix));
+                }
+            }
+        }
+        const tipY = Math.abs(localBox.max.y) > Math.abs(localBox.min.y) ? localBox.max.y : localBox.min.y;
+        const tailLocal = new THREE.Vector3(0, tipY, 0);
+        return tailLocal.applyMatrix4(bone.mesh.matrixWorld);
+    }
+
+    // 计算 pole target 的默认世界位置：复用 EpicFight helper bone 的方向
+    // helper bone（Knee_R/L、Elbow_R/L）的本地 Y 轴就是原 rig 里 pole target 的方向
+    function efComputePoleWorldPosition(sourceBone, targetBone, helperBone) {
+        const hipWorld = sourceBone.mesh.getWorldPosition(new THREE.Vector3());
+        const kneeWorld = helperBone ? helperBone.mesh.getWorldPosition(new THREE.Vector3()) : targetBone.mesh.getWorldPosition(new THREE.Vector3());
+        const ankleWorld = targetBone.getWorldCenter();
+        const thighLen = hipWorld.distanceTo(kneeWorld);
+
+        let poleDir;
+        if (helperBone && helperBone.mesh) {
+            const worldQuat = helperBone.mesh.getWorldQuaternion(new THREE.Quaternion());
+            poleDir = new THREE.Vector3(0, 1, 0).applyQuaternion(worldQuat).normalize();
+            if (poleDir.lengthSq() < 1e-6) poleDir = null;
+        }
+
+        if (!poleDir) {
+            const chainDir = ankleWorld.clone().sub(hipWorld).normalize();
+            const up = new THREE.Vector3(0, 1, 0);
+            poleDir = new THREE.Vector3().crossVectors(chainDir, up);
+            if (poleDir.lengthSq() < 1e-6) poleDir = new THREE.Vector3(1, 0, 0);
+            poleDir.normalize();
+            const outwardSign = hipWorld.x < 0 ? -1 : 1;
+            if (poleDir.x * outwardSign < 0) poleDir.negate();
+        }
+
+        const offsetDistance = thighLen * 0.75;
+        return kneeWorld.clone().add(poleDir.multiplyScalar(offsetDistance));
+    }
+
+    // 查找与骨骼关联的 NullObject IK 控制器
+    function efFindController(targetBone) {
+        return NullObject.all.find(no => no.ik_target === targetBone.uuid);
+    }
+
+    // 选择不在 IK 链中的 Armature/Group/root 作为控制器父级
+    function efGetControllerParent(sourceBone) {
+        let parent = sourceBone.parent;
+        while (parent !== 'root') {
+            if (parent instanceof Group || parent instanceof Armature) return parent;
+            parent = parent.parent;
+            if (!parent) return 'root';
+        }
+        return 'root';
+    }
+
+    // 收集可作为 IK source 的骨骼（选中骨骼的祖先）
+    function efCollectSourceCandidates(targetBone) {
+        const nodes = [];
+        function collect(arr) {
+            arr.forEach(node => {
+                if (node instanceof ArmatureBone && targetBone.isChildOf(node)) nodes.push(node);
+                if (node.children) collect(node.children);
+            });
+        }
+        collect(Outliner.root);
+        return nodes;
+    }
+
+    // 创建 NullObject 作为 IK 控制器
+    // 根据骨骼名称推断默认 IK 角度限制
+    // Blockbench ArmatureBone 的本地 Y 轴为骨骼长度方向，膝盖/肘部弯曲通常绕 X 轴
+    function efGetDefaultIKLimit(bone) {
+        const name = bone.name.toLowerCase();
+        // 小腿/前臂/手部末端骨骼：铰链关节，限制弯曲轴
+        // EpicFight biped 中 Hand_R/Hand_L 实际为前臂，Foot 类骨骼同理
+        if (/leg|shin|calf|forearm|arm_lower|lower_arm|hand/.test(name)) {
+            return {
+                enabled: true,
+                limitation: new THREE.Vector3(1, 0, 0),
+                rotationMin: new THREE.Vector3(-Math.PI / 2, 0, 0),
+                rotationMax: new THREE.Vector3(0, 0, 0)
+            };
+        }
+        // 大腿/上臂：球关节，限制外展/内收
+        if (/thigh|upper_arm|arm_upper/.test(name)) {
+            return {
+                enabled: true,
+                rotationMin: new THREE.Vector3(-Math.PI / 4, -Math.PI / 2, -Math.PI / 4),
+                rotationMax: new THREE.Vector3(Math.PI / 4, Math.PI / 2, Math.PI / 4)
+            };
+        }
+        return null;
+    }
+
+    function efCreateController(targetBone, sourceBone) {
+        if (!targetBone.isChildOf(sourceBone)) return null;
+
+        const created = [];
+        Undo.initEdit({elements: created, outliner: true});
+
+        const parent = efGetControllerParent(sourceBone);
+        const controller = new NullObject().addTo(parent).init();
+        controller.name = targetBone.name + '_ik';
+        controller.ik_target = targetBone.uuid;
+        controller.ik_source = sourceBone.uuid;
+
+        // 收集 IK 链上的骨骼并设置默认角度限制
+        controller.ik_limits = {};
+        const chainBones = [];
+        let cur = targetBone;
+        while (cur !== sourceBone) {
+            if (cur instanceof ArmatureBone) chainBones.push(cur);
+            cur = cur.parent;
+        }
+        if (sourceBone instanceof ArmatureBone) chainBones.push(sourceBone);
+        chainBones.reverse();
+        chainBones.forEach(bone => {
+            const limit = efGetDefaultIKLimit(bone);
+            if (limit) controller.ik_limits[bone.uuid] = limit;
+        });
+
+        // 控制器放在目标骨骼尾端（ankle/wrist），而不是骨骼中心
+        const targetWorld = efGetBoneTailWorldPosition(targetBone);
+        let localPos = targetWorld.clone();
+        if (parent !== 'root') {
+            parent.mesh.worldToLocal(localPos);
+        }
+        controller.position[0] = localPos.x;
+        controller.position[1] = localPos.y;
+        controller.position[2] = localPos.z;
+        controller.preview_controller.updateTransform(controller);
+
+        // 创建 pole target，默认位置放在 knee/elbow 关节的偏移方向，避免与控制器重叠
+        const pole = new NullObject().addTo(parent).init();
+        pole.name = targetBone.name + '_ik_pole';
+        controller.ik_pole = pole.uuid;
+        pole.ik_controller = controller.uuid;
+
+        const helperBone = efFindPoleHelperBone(sourceBone, targetBone);
+        const poleWorld = efComputePoleWorldPosition(sourceBone, targetBone, helperBone);
+        let poleLocal = poleWorld.clone();
+        if (parent !== 'root') {
+            parent.mesh.worldToLocal(poleLocal);
+        }
+        pole.position[0] = poleLocal.x;
+        pole.position[1] = poleLocal.y;
+        pole.position[2] = poleLocal.z;
+        pole.preview_controller.updateTransform(pole);
+
+        created.push(controller, pole);
+        Undo.finishEdit(tl('ef.ik.create_undo'));
+        Blockbench.showQuickMessage(tl('ef.ik.controller_created'));
+        return controller;
+    }
+
+    // pole 作为 Thigh FK 控制器：pole 决定大腿方向，小腿再伸向脚踝
+    function efSolveFKPoleIK(bones, target, controller, pole, boneWorldPositions, get_samples) {
+        if (bones.length !== 2) return null;
+
+        const hipWorld = boneWorldPositions[0].start.clone();
+        const kneeRest = boneWorldPositions[0].end.clone();
+        const ankleTarget = controller.getWorldCenter(true);
+        const poleWorld = pole.getWorldCenter(true);
+        const thighLen = hipWorld.distanceTo(kneeRest);
+
+        const hipToPole = poleWorld.clone().sub(hipWorld);
+        const poleDir = hipToPole.lengthSq() > 1e-6 ? hipToPole.normalize() : new THREE.Vector3(0, -1, 0);
+        const kneeWorld = hipWorld.clone().add(poleDir.multiplyScalar(thighLen));
+
+        // 小腿保持原长，只把末端指向 ankle 控制器方向，避免拉伸
+        const kneeToAnkle = ankleTarget.clone().sub(kneeWorld);
+        const legDir = kneeToAnkle.lengthSq() > 1e-6 ? kneeToAnkle.normalize() : poleDir.clone();
+        const legLen = boneWorldPositions[1].end.distanceTo(boneWorldPositions[1].start);
+        const ankleClamped = kneeWorld.clone().add(legDir.multiplyScalar(legLen));
+
+        const fikBones = [
+            { start: hipWorld, end: kneeWorld },
+            { start: kneeWorld, end: ankleClamped }
+        ];
+
+        const results = {};
+        bones.forEach((bone, i) => {
+            const restWorld = boneWorldPositions[i].end.clone().sub(boneWorldPositions[i].start).normalize();
+            const ikWorld = fikBones[i].end.clone().sub(fikBones[i].start).normalize();
+
+            const deltaQuat = new THREE.Quaternion().setFromUnitVectors(restWorld, ikWorld);
+            const parentQuat = bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion());
+            const localDeltaQuat = parentQuat.clone().invert().multiply(deltaQuat).multiply(parentQuat);
+            const fixQuat = new THREE.Quaternion().setFromEuler(
+                bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0),
+                Format.euler_order || 'ZYX'
+            );
+            const newLocalQuat = localDeltaQuat.multiply(fixQuat);
+            const newEuler = new THREE.Euler().setFromQuaternion(newLocalQuat, Format.euler_order || 'ZYX');
+
+            // 应用 IK 角度限制（限制值表示相对于 rest pose 的偏移）
+            const limit = controller.ik_limits && controller.ik_limits[bone.uuid];
+            if (limit && limit.enabled) {
+                const fixRot = bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+                const offsetEuler = new THREE.Euler(
+                    newEuler.x - fixRot.x,
+                    newEuler.y - fixRot.y,
+                    newEuler.z - fixRot.z,
+                    Format.euler_order || 'ZYX'
+                );
+                if (limit.rotationMin) {
+                    offsetEuler.x = Math.max(offsetEuler.x, limit.rotationMin.x);
+                    offsetEuler.y = Math.max(offsetEuler.y, limit.rotationMin.y);
+                    offsetEuler.z = Math.max(offsetEuler.z, limit.rotationMin.z);
+                }
+                if (limit.rotationMax) {
+                    offsetEuler.x = Math.min(offsetEuler.x, limit.rotationMax.x);
+                    offsetEuler.y = Math.min(offsetEuler.y, limit.rotationMax.y);
+                    offsetEuler.z = Math.min(offsetEuler.z, limit.rotationMax.z);
+                }
+                newEuler.set(
+                    fixRot.x + offsetEuler.x,
+                    fixRot.y + offsetEuler.y,
+                    fixRot.z + offsetEuler.z
+                );
+            }
+
+            bone.mesh.rotation.copy(newEuler);
+            bone.mesh.updateMatrixWorld();
+
+            if (get_samples) {
+                const deltaEuler = new THREE.Euler().setFromQuaternion(localDeltaQuat, Format.euler_order || 'ZYX');
+                results[bone.uuid] = {
+                    euler: deltaEuler,
+                    array: [
+                        Math.radToDeg(deltaEuler.x),
+                        Math.radToDeg(deltaEuler.y),
+                        Math.radToDeg(deltaEuler.z),
+                    ]
+                };
+            }
+        });
+
+        return get_samples ? results : undefined;
+    }
+
+    // 2-bone IK 解析求解，带 pole target 控制弯曲方向
+    function efSolveTwoBoneIKWithPole(bones, target, controller, pole, boneWorldPositions, get_samples) {
+        const hipWorld = boneWorldPositions[0].start;
+        const kneeRest = boneWorldPositions[0].end;
+        const ankleRest = boneWorldPositions[1].end;
+        const thighLen = hipWorld.distanceTo(kneeRest);
+        const legLen = kneeRest.distanceTo(ankleRest);
+        const ankleTarget = controller.getWorldCenter(true);
+        const poleWorld = pole.getWorldCenter(true);
+        const dist = hipWorld.distanceTo(ankleTarget);
+
+        // 不可达时回退到 FIK（完全伸直）
+        if (dist >= thighLen + legLen - 1e-4 || dist <= Math.abs(thighLen - legLen) + 1e-4) {
+            return null;
+        }
+
+        const AB = ankleTarget.clone().sub(hipWorld);
+        const axis = AB.clone().normalize();
+        const d1 = (thighLen * thighLen - legLen * legLen + dist * dist) / (2 * dist);
+        const r = Math.sqrt(Math.max(0, thighLen * thighLen - d1 * d1));
+        const circleCenter = hipWorld.clone().add(axis.clone().multiplyScalar(d1));
+
+        const poleToCenter = poleWorld.clone().sub(circleCenter);
+        let poleProj = poleToCenter.clone().sub(axis.clone().multiplyScalar(poleToCenter.dot(axis)));
+        if (poleProj.lengthSq() < 1e-6) {
+            const arbitrary = Math.abs(axis.y) < 0.9 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
+            poleProj = new THREE.Vector3().crossVectors(axis, arbitrary).normalize();
+        }
+        const kneeWorld = circleCenter.clone().add(poleProj.normalize().multiplyScalar(r));
+
+        const fikBones = [
+            { start: hipWorld, end: kneeWorld },
+            { start: kneeWorld, end: ankleTarget }
+        ];
+
+        const results = {};
+        bones.forEach((bone, i) => {
+            const restWorld = boneWorldPositions[i].end.clone().sub(boneWorldPositions[i].start).normalize();
+            const ikWorld = fikBones[i].end.clone().sub(fikBones[i].start).normalize();
+
+            const deltaQuat = new THREE.Quaternion().setFromUnitVectors(restWorld, ikWorld);
+            const parentQuat = bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion());
+            const localDeltaQuat = parentQuat.clone().invert().multiply(deltaQuat).multiply(parentQuat);
+            const fixQuat = new THREE.Quaternion().setFromEuler(
+                bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0),
+                Format.euler_order || 'ZYX'
+            );
+            const newLocalQuat = localDeltaQuat.multiply(fixQuat);
+            const newEuler = new THREE.Euler().setFromQuaternion(newLocalQuat, Format.euler_order || 'ZYX');
+
+            // 应用 IK 角度限制（限制值表示相对于 rest pose 的偏移）
+            const limit = controller.ik_limits && controller.ik_limits[bone.uuid];
+            if (limit && limit.enabled) {
+                const fixRot = bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+                const offsetEuler = new THREE.Euler(
+                    newEuler.x - fixRot.x,
+                    newEuler.y - fixRot.y,
+                    newEuler.z - fixRot.z,
+                    Format.euler_order || 'ZYX'
+                );
+                if (limit.rotationMin) {
+                    offsetEuler.x = Math.max(offsetEuler.x, limit.rotationMin.x);
+                    offsetEuler.y = Math.max(offsetEuler.y, limit.rotationMin.y);
+                    offsetEuler.z = Math.max(offsetEuler.z, limit.rotationMin.z);
+                }
+                if (limit.rotationMax) {
+                    offsetEuler.x = Math.min(offsetEuler.x, limit.rotationMax.x);
+                    offsetEuler.y = Math.min(offsetEuler.y, limit.rotationMax.y);
+                    offsetEuler.z = Math.min(offsetEuler.z, limit.rotationMax.z);
+                }
+                newEuler.set(
+                    fixRot.x + offsetEuler.x,
+                    fixRot.y + offsetEuler.y,
+                    fixRot.z + offsetEuler.z
+                );
+            }
+
+            bone.mesh.rotation.copy(newEuler);
+            bone.mesh.updateMatrixWorld();
+
+            if (get_samples) {
+                const deltaEuler = new THREE.Euler().setFromQuaternion(localDeltaQuat, Format.euler_order || 'ZYX');
+                results[bone.uuid] = {
+                    euler: deltaEuler,
+                    array: [
+                        Math.radToDeg(deltaEuler.x),
+                        Math.radToDeg(deltaEuler.y),
+                        Math.radToDeg(deltaEuler.z),
+                    ]
+                };
+            }
+        });
+
+        return get_samples ? results : undefined;
+    }
+
+    // 自定义 IK 求解，修复 Blockbench 原生 displayIK 对旋转骨骼 rest direction 的计算错误
+    function efDisplayIK(animator, get_samples) {
+        const null_object = animator.getElement();
+        if (!null_object || !null_object.ik_target || !null_object.ik_source) return;
+
+        const target = efFindNodeByUuid(null_object.ik_target);
+        const source = efFindNodeByUuid(null_object.ik_source);
+        if (!target || !source || !target.isChildOf(source)) return;
+
+        // IK 禁用时，将控制器对齐到目标骨骼尾端，使其跟随 FK 运动
+        if (null_object.ik_enabled === false) {
+            const ankleWorld = efGetBoneTailWorldPosition(target);
+            const parent = null_object.parent;
+            let localPos = ankleWorld.clone();
+            if (parent !== 'root' && parent.mesh) {
+                parent.mesh.worldToLocal(localPos);
+            }
+            null_object.position[0] = localPos.x;
+            null_object.position[1] = localPos.y;
+            null_object.position[2] = localPos.z;
+            null_object.preview_controller.updateTransform(null_object);
+            return;
+        }
+
+        // 把目标骨骼也纳入 IK 链，末端使用骨骼尾端（ankle/wrist）而不是中心
+        const bones = [];
+        let cur = target;
+        while (cur !== source) {
+            if (cur instanceof ArmatureBone) bones.push(cur);
+            cur = cur.parent;
+        }
+        if (source instanceof ArmatureBone) bones.push(source);
+        if (!bones.length) return;
+        bones.reverse();
+
+        // 重置到 rest pose（位置、旋转、缩放都要还原）
+        bones.forEach(bone => {
+            if (bone.mesh.fix_position) bone.mesh.position.copy(bone.mesh.fix_position);
+            if (bone.mesh.fix_rotation) bone.mesh.rotation.copy(bone.mesh.fix_rotation);
+            if (bone.mesh.fix_scale) bone.mesh.scale.copy(bone.mesh.fix_scale);
+            bone.mesh.updateMatrixWorld();
+        });
+
+        // 捕获 rest 下的世界位置
+        const boneWorldPositions = [];
+        bones.forEach((bone, i) => {
+            const next = bones[i + 1];
+            const start = bone.mesh.getWorldPosition(new THREE.Vector3());
+            const end = next ? next.mesh.getWorldPosition(new THREE.Vector3()) : efGetBoneTailWorldPosition(bone);
+            boneWorldPositions.push({ start, end });
+        });
+
+        const pole = null_object.ik_pole ? efFindNodeByUuid(null_object.ik_pole) : null;
+
+        // 2-bone 链 + pole 时用解析 IK 求解，pole 控制膝盖/肘部弯曲方向
+        if (bones.length === 2 && pole) {
+            const result = efSolveTwoBoneIKWithPole(bones, target, null_object, pole, boneWorldPositions, get_samples);
+            if (result !== null) return result;
+            // 不可达时退化到 CCD 求解
+        }
+
+        // 使用 Three.js CCDIKSolver 求解
+        // 在目标骨骼尾端创建一个临时 effector bone，这样 Leg 和 Thigh 都能被旋转
+        const effectorBone = new THREE.Bone();
+        effectorBone.name = target.name + '_ik_effector';
+        const tailWorld = efGetBoneTailWorldPosition(target);
+        const tailLocal = tailWorld.clone();
+        target.mesh.worldToLocal(tailLocal);
+        effectorBone.position.copy(tailLocal);
+        target.mesh.add(effectorBone);
+        effectorBone.updateMatrixWorld();
+
+        const ikBones = bones.map(bone => bone.mesh);
+        const effectorIndex = bones.length;
+        ikBones.push(effectorBone);
+        ikBones.push(null_object.mesh);
+        const targetIndex = ikBones.length - 1;
+
+        const links = [];
+        for (let i = effectorIndex - 1; i >= 0; i--) {
+            const bone = bones[i];
+            const limit = null_object.ik_limits && null_object.ik_limits[bone.uuid];
+            const link = { index: i, enabled: true };
+            if (limit && limit.enabled) {
+                if (limit.limitation) link.limitation = limit.limitation;
+                // IK 限制值表示相对于 rest pose 的偏移，转换为绝对限制传入 solver
+                const fixRot = bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+                if (limit.rotationMin) {
+                    link.rotationMin = new THREE.Vector3(
+                        fixRot.x + limit.rotationMin.x,
+                        fixRot.y + limit.rotationMin.y,
+                        fixRot.z + limit.rotationMin.z
+                    );
+                }
+                if (limit.rotationMax) {
+                    link.rotationMax = new THREE.Vector3(
+                        fixRot.x + limit.rotationMax.x,
+                        fixRot.y + limit.rotationMax.y,
+                        fixRot.z + limit.rotationMax.z
+                    );
+                }
+            }
+            links.push(link);
+        }
+
+        const ik = {
+            effector: effectorIndex,
+            target: targetIndex,
+            links: links,
+            iteration: 10,
+        };
+
+        const skinnedMesh = { skeleton: { bones: ikBones } };
+        const solver = new CCDIKSolver(skinnedMesh, [ik]);
+        solver.update();
+
+        // 移除临时 effector bone
+        target.mesh.remove(effectorBone);
+
+        // CCDIKSolver 直接修改了 bone.mesh.quaternion，同步回 Euler rotation
+        bones.forEach(bone => {
+            const euler = new THREE.Euler().setFromQuaternion(bone.mesh.quaternion, Format.euler_order || 'ZYX');
+            bone.mesh.rotation.copy(euler);
+            bone.mesh.updateMatrixWorld();
+        });
+
+        // 收集结果
+        const results = {};
+        if (get_samples) {
+            bones.forEach(bone => {
+                const restQuat = new THREE.Quaternion().setFromEuler(
+                    bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0),
+                    Format.euler_order || 'ZYX'
+                );
+                const deltaQuat = bone.mesh.quaternion.clone().multiply(restQuat.clone().invert());
+                const deltaEuler = new THREE.Euler().setFromQuaternion(deltaQuat, Format.euler_order || 'ZYX');
+                results[bone.uuid] = {
+                    euler: deltaEuler,
+                    array: [
+                        Math.radToDeg(deltaEuler.x),
+                        Math.radToDeg(deltaEuler.y),
+                        Math.radToDeg(deltaEuler.z),
+                    ]
+                };
+            });
+        }
+
+        // 在 IK 结果上叠加骨骼自身旋转关键帧（手动旋转），实现 IK + FK 同时生效
+        bones.forEach(bone => {
+            const animator = Animation.selected ? Animation.selected.getBoneAnimator(bone) : null;
+            if (animator && animator.rotation && animator.rotation.length) {
+                const rotDeg = animator.interpolate('rotation', false);
+                if (rotDeg) {
+                    bone.mesh.rotation.x += Math.degToRad(rotDeg[0]);
+                    bone.mesh.rotation.y += Math.degToRad(rotDeg[1]);
+                    bone.mesh.rotation.z += Math.degToRad(rotDeg[2]);
+                    bone.mesh.updateMatrixWorld();
+                }
+            }
+        });
+
+        // Blockbench showDefaultPose(true) 不会更新场景矩阵，
+        // 但 Cube/Mesh 作为 bone 子对象需要完整场景矩阵更新才能跟随骨骼
+        if (typeof Canvas !== 'undefined' && Canvas.scene) {
+            Canvas.scene.updateMatrixWorld(true);
+        }
+
+        // 触发带骨骼权重 Mesh 的顶点形变更新，否则模型不会跟随骨骼运动
+        if (typeof Animator !== 'undefined' && Animator.displayMeshDeformation) {
+            Animator.displayMeshDeformation();
+        }
+
+        return get_samples ? results : undefined;
+    }
+
+    // 判断骨骼是否处于某个启用中 IK 控制器的链上
+    function efIsBoneInActiveIKChain(bone) {
+        for (const no of NullObject.all) {
+            if (no.ik_enabled === false || !no.ik_target || !no.ik_source) continue;
+            const source = efFindNodeByUuid(no.ik_source);
+            const target = efFindNodeByUuid(no.ik_target);
+            if (!source || !target) continue;
+            const inChain = (bone === source || bone.isChildOf(source)) && (target === bone || target.isChildOf(bone));
+            if (inChain) return true;
+        }
+        return false;
+    }
+
+    // 覆盖 BoneAnimator.displayRotation：IK 链上的骨骼由 efDisplayIK 统一叠加手动旋转，避免重复加
+    const origDisplayRotation = BoneAnimator.prototype.displayRotation;
+    BoneAnimator.prototype.displayRotation = function(arr, multiplier = 1) {
+        const group = this.getGroup();
+        if (group && group instanceof ArmatureBone && efIsBoneInActiveIKChain(group)) {
+            return this;
+        }
+        return origDisplayRotation.call(this, arr, multiplier);
+    };
+
+    // 覆盖 NullObjectAnimator.displayIK，使所有带 ik_target/ik_source 的 NullObject 走自定义求解
+    const origDisplayIK = NullObjectAnimator.prototype.displayIK;
+    NullObjectAnimator.prototype.displayIK = function(get_samples) {
+        const null_object = this.getElement();
+        if (null_object && null_object.ik_target && null_object.ik_source) {
+            return efDisplayIK(this, get_samples);
+        }
+        if (null_object && null_object.ik_controller) {
+            const controller = efFindNodeByUuid(null_object.ik_controller);
+            if (controller && controller.ik_target && controller.ik_source) {
+                const anim = Animation.selected;
+                const controllerAnimator = anim ? anim.getBoneAnimator(controller) : null;
+                if (controllerAnimator && controllerAnimator.displayIK) {
+                    controllerAnimator.displayIK(get_samples);
+                }
+            }
+        }
+        return origDisplayIK.call(this, get_samples);
+    };
+
+    const ikActions = [];
+
+    // 创建 IK 控制器
+    ikActions.push(new Action('ef_create_ik_controller', {
+        name: tl('ef.ik.create_controller'),
+        icon: 'fa-link',
+        category: 'edit',
+        condition: () => Modes.animate && ArmatureBone.selected.length > 0,
+        searchable: true,
+        children() {
+            const targetBone = ArmatureBone.selected[0];
+            const sources = efCollectSourceCandidates(targetBone);
+            const existingController = efFindController(targetBone);
+            return sources.map(source => ({
+                name: source.name + ((existingController && existingController.ik_source === source.uuid) ? ' (✓)' : ''),
+                icon: 'fa-link',
+                marked: existingController && existingController.ik_source === source.uuid,
+                click() {
+                    const existing = efFindController(targetBone);
+                    if (existing) {
+                        Undo.initEdit({elements: [existing]});
+                        existing.ik_source = source.uuid;
+                        Undo.finishEdit(tl('ef.ik.change_source_undo'));
+                    } else {
+                        efCreateController(targetBone, source);
+                    }
+                    Animator.preview();
+                }
+            }));
+        },
+        click(event) {
+            const targetBone = ArmatureBone.selected[0];
+            const sources = efCollectSourceCandidates(targetBone);
+            if (sources.length === 0) return;
+            if (sources.length === 1) {
+                const existing = efFindController(targetBone);
+                if (existing) {
+                    Undo.initEdit({elements: [existing]});
+                    existing.ik_source = sources[0].uuid;
+                    Undo.finishEdit(tl('ef.ik.change_source_undo'));
+                } else {
+                    efCreateController(targetBone, sources[0]);
+                }
+                Animator.preview();
+                return;
+            }
+            new Menu('ef_create_ik_controller', this.children(this), {searchable: true}).show(event.target, this);
+        }
+    }));
+
+    // 断开/删除 IK 控制器
+    ikActions.push(new Action('ef_break_ik_controller', {
+        name: tl('ef.ik.break_controller'),
+        icon: 'fa-unlink',
+        category: 'edit',
+        condition: () => Modes.animate && ArmatureBone.selected.length > 0 && ArmatureBone.selected.some(b => efFindController(b)),
+        click() {
+            const controllers = [];
+            ArmatureBone.selected.forEach(b => {
+                const c = efFindController(b);
+                if (c) {
+                    controllers.push(c);
+                    if (c.ik_pole) {
+                        const pole = efFindNodeByUuid(c.ik_pole);
+                        if (pole) controllers.push(pole);
+                    }
+                }
+            });
+            if (!controllers.length) return;
+            Undo.initEdit({elements: controllers, outliner: true});
+            controllers.forEach(c => c.remove());
+            Undo.finishEdit(tl('ef.ik.break_undo'));
+            Animator.preview();
+        }
+    }));
+
+    // 烘焙 IK（复用 Blockbench 原生 bake_ik_animation，但会走自定义 displayIK）
+    ikActions.push(new Action('ef_bake_ik_controller', {
+        name: tl('ef.ik.bake'),
+        icon: 'cake',
+        category: 'edit',
+        condition: () => Modes.animate && Animation.selected && ArmatureBone.selected.some(b => efFindController(b)),
+        click() {
+            if (BarItems.bake_ik_animation && BarItems.bake_ik_animation.condition && BarItems.bake_ik_animation.click) {
+                BarItems.bake_ik_animation.click();
+            }
+        }
+    }));
+
+    // 切换 IK 控制器启用/禁用：禁用后可手动调整骨骼旋转
+    ikActions.push(new Action('ef_toggle_ik_controller', {
+        name: tl('ef.ik.toggle'),
+        icon: 'toggle_on',
+        category: 'edit',
+        condition() {
+            if (!Modes.animate || !Animation.selected) return false;
+            const controller = NullObject.selected[0] || ArmatureBone.selected.map(b => efFindController(b)).find(c => c);
+            return !!controller;
+        },
+        click() {
+            let controller = NullObject.selected[0];
+            if (!controller || !controller.ik_target) {
+                controller = ArmatureBone.selected.map(b => efFindController(b)).find(c => c);
+            }
+            if (!controller) return;
+            controller.ik_enabled = controller.ik_enabled !== false ? false : true;
+            Undo.initEdit({elements: [controller]});
+            Undo.finishEdit(controller.ik_enabled ? tl('ef.ik.enable_undo') : tl('ef.ik.disable_undo'));
+            Animator.preview();
+            Blockbench.showQuickMessage(controller.ik_enabled !== false ? tl('ef.ik.enabled') : tl('ef.ik.disabled'));
+        }
+    }));
+
+    // 编辑 IK 角度限制
+    ikActions.push(new Action('ef_ik_limits', {
+        name: tl('ef.ik.limits'),
+        icon: 'fa-sliders-h',
+        category: 'edit',
+        condition() {
+            if (!Modes.animate || !Animation.selected) return false;
+            const controller = NullObject.selected[0] || ArmatureBone.selected.map(b => efFindController(b)).find(c => c);
+            return !!controller;
+        },
+        click() {
+            let controller = NullObject.selected[0];
+            if (!controller || !controller.ik_target) {
+                controller = ArmatureBone.selected.map(b => efFindController(b)).find(c => c);
+            }
+            if (!controller) return;
+
+            const target = efFindNodeByUuid(controller.ik_target);
+            const source = efFindNodeByUuid(controller.ik_source);
+            if (!target || !source) return;
+
+            const bones = [];
+            let cur = target;
+            while (cur !== source) {
+                if (cur instanceof ArmatureBone) bones.push(cur);
+                cur = cur.parent;
+            }
+            if (source instanceof ArmatureBone) bones.push(source);
+            bones.reverse();
+
+            const form = {};
+            bones.forEach(bone => {
+                const limit = (controller.ik_limits && controller.ik_limits[bone.uuid]) || {};
+                const defaultLimit = efGetDefaultIKLimit(bone) || {};
+                const enabled = !!limit.enabled;
+                const limitation = limit.limitation
+                    ? limit.limitation.clone()
+                    : (defaultLimit.limitation ? defaultLimit.limitation.clone() : new THREE.Vector3(0, 1, 0));
+                const maxAxis = Math.abs(limitation.x) > Math.abs(limitation.y)
+                    ? (Math.abs(limitation.x) > Math.abs(limitation.z) ? 'x' : 'z')
+                    : (Math.abs(limitation.y) > Math.abs(limitation.z) ? 'y' : 'z');
+                const defaultMin = defaultLimit.rotationMin
+                    ? [Math.radToDeg(defaultLimit.rotationMin.x), Math.radToDeg(defaultLimit.rotationMin.y), Math.radToDeg(defaultLimit.rotationMin.z)]
+                    : [0, -90, 0];
+                const defaultMax = defaultLimit.rotationMax
+                    ? [Math.radToDeg(defaultLimit.rotationMax.x), Math.radToDeg(defaultLimit.rotationMax.y), Math.radToDeg(defaultLimit.rotationMax.z)]
+                    : [0, 0, 0];
+                const minDeg = limit.rotationMin
+                    ? [Math.radToDeg(limit.rotationMin.x), Math.radToDeg(limit.rotationMin.y), Math.radToDeg(limit.rotationMin.z)]
+                    : defaultMin;
+                const maxDeg = limit.rotationMax
+                    ? [Math.radToDeg(limit.rotationMax.x), Math.radToDeg(limit.rotationMax.y), Math.radToDeg(limit.rotationMax.z)]
+                    : defaultMax;
+
+                form[bone.uuid + '_enabled'] = {
+                    type: 'checkbox',
+                    label: bone.name + ' ' + tl('ef.ik.enabled_suffix'),
+                    value: enabled
+                };
+                form[bone.uuid + '_limitation'] = {
+                    type: 'select',
+                    label: bone.name + ' ' + tl('ef.ik.limitation_axis'),
+                    options: { none: tl('ef.ik.none'), x: 'X', y: 'Y', z: 'Z' },
+                    value: enabled ? maxAxis : 'none'
+                };
+                form[bone.uuid + '_min'] = {
+                    type: 'vector',
+                    dimensions: 3,
+                    label: bone.name + ' ' + tl('ef.ik.min_deg'),
+                    value: minDeg
+                };
+                form[bone.uuid + '_max'] = {
+                    type: 'vector',
+                    dimensions: 3,
+                    label: bone.name + ' ' + tl('ef.ik.max_deg'),
+                    value: maxDeg
+                };
+            });
+
+            new Dialog('ef_ik_limits', {
+                title: tl('ef.ik.limits_title'),
+                form,
+                onConfirm(result) {
+                    Undo.initEdit({elements: [controller]});
+                    controller.ik_limits = {};
+                    bones.forEach(bone => {
+                        const enabled = result[bone.uuid + '_enabled'];
+                        if (!enabled) return;
+                        const limitationStr = result[bone.uuid + '_limitation'];
+                        const limitation = new THREE.Vector3(0, 0, 0);
+                        if (limitationStr && limitationStr !== 'none') {
+                            limitation[limitationStr] = 1;
+                        }
+                        const minDeg = result[bone.uuid + '_min'];
+                        const maxDeg = result[bone.uuid + '_max'];
+                        controller.ik_limits[bone.uuid] = {
+                            enabled: true,
+                            limitation: limitationStr !== 'none' ? limitation : undefined,
+                            rotationMin: new THREE.Vector3(
+                                Math.degToRad(minDeg[0]),
+                                Math.degToRad(minDeg[1]),
+                                Math.degToRad(minDeg[2])
+                            ),
+                            rotationMax: new THREE.Vector3(
+                                Math.degToRad(maxDeg[0]),
+                                Math.degToRad(maxDeg[1]),
+                                Math.degToRad(maxDeg[2])
+                            )
+                        };
+                    });
+                    Undo.finishEdit(tl('ef.ik.edit_limits_undo'));
+                    Animator.preview();
+                }
+            }).show();
+        }
+    }));
+
+    // 添加到 ArmatureBone 右键菜单
+    const origShowContextMenu = ArmatureBone.prototype.showContextMenu;
+    ArmatureBone.prototype.showContextMenu = function(event) {
+        if (!this.menu._efIKAdded) {
+            this.menu.structure.push(new MenuSeparator('ef_ik'));
+            this.menu.structure.push('ef_create_ik_controller');
+            this.menu.structure.push('ef_break_ik_controller');
+            this.menu.structure.push('ef_bake_ik_controller');
+            this.menu.structure.push('ef_toggle_ik_controller');
+            this.menu.structure.push('ef_ik_limits');
+            this.menu._efIKAdded = true;
+        }
+        return origShowContextMenu.call(this, event);
+    };
+
+    // 添加到 NullObject（控制器/pole）右键菜单
+    const origNullShowContextMenu = NullObject.prototype.showContextMenu;
+    NullObject.prototype.showContextMenu = function(event) {
+        if (!this.menu._efIKAdded) {
+            this.menu.structure.push(new MenuSeparator('ef_ik'));
+            this.menu.structure.push('ef_toggle_ik_controller');
+            this.menu.structure.push('ef_ik_limits');
+            this.menu._efIKAdded = true;
+        }
+        return origNullShowContextMenu.call(this, event);
+    };
+
+    return {
+        cleanup() {
+            NullObjectAnimator.prototype.displayIK = origDisplayIK;
+            BoneAnimator.prototype.displayRotation = origDisplayRotation;
+            ArmatureBone.prototype.showContextMenu = origShowContextMenu;
+            NullObject.prototype.showContextMenu = origNullShowContextMenu;
+            ikActions.forEach(a => a.delete());
+        }
+    };
+}
+
+// ============================================================
 //  Plugin Registration
 // ============================================================
+
+let efIKCleanup = null;
 
 Plugin.register('epicfight_export', {
     title: 'EpicFight Tools',
@@ -2940,53 +4090,8 @@ Plugin.register('epicfight_export', {
 
     onload() {
         efRegisterTranslations();
-        // Patch ArmatureBoneAnimator.interpolate with pointer-based search for faster playback
-        // Strategy: use a sequential pointer to find before/after O(1), then temporarily replace
-        // the keyframe array with just those 2 items so the original scan runs in O(1) too.
-        if (typeof ArmatureBoneAnimator !== 'undefined' && ArmatureBoneAnimator.prototype.interpolate) {
-            const origInterpolate = ArmatureBoneAnimator.prototype.interpolate;
-            if (!origInterpolate.__efPatched) {
-                ArmatureBoneAnimator.prototype.interpolate = function(channel, allow_expression, axis) {
-                    const kfs = this[channel];
-                    const kfLen = kfs ? kfs.length : 0;
-                    if (!kfLen) return axis ? 0 : [0, 0, 0];
-                    if (kfLen <= 2) return origInterpolate.call(this, channel, allow_expression, axis);
-
-                    const time = this.animation.time;
-
-                    // Pointer-based forward scan
-                    if (!this._efInterpPtr) this._efInterpPtr = {};
-                    let ptr = this._efInterpPtr[channel] || 0;
-                    const startIdx = Math.max(0, Math.min(ptr, kfLen - 1));
-                    let before = null, after = null;
-                    let iP = startIdx;
-                    for (; iP < kfLen; iP++) {
-                        const kf = kfs[iP];
-                        if (kf.time >= time) { after = kf; break; }
-                    }
-                    if (after) { before = iP > 0 ? kfs[iP - 1] : null; }
-                    else { before = kfs[kfLen - 1]; }
-                    this._efInterpPtr[channel] = Math.max(0, iP - 1);
-
-                    // Loop wrapping: fallback to original
-                    if ((!after || !before) && Format.animation_loop_wrapping && this.animation.loop === 'loop' && kfLen >= 2) {
-                        return origInterpolate.call(this, channel, allow_expression, axis);
-                    }
-                    if (!before && !after) return axis ? 0 : [0, 0, 0];
-
-                    // Swap keyframe array to just before+after so original's scan is O(1)
-                    const origKfs = this[channel];
-                    this[channel] = before && after ? [before, after] : (before ? [before] : [after]);
-                    try {
-                        return origInterpolate.call(this, channel, allow_expression, axis);
-                    } finally {
-                        this[channel] = origKfs;
-                    }
-                };
-                ArmatureBoneAnimator.prototype.interpolate.__efPatched = true;
-                ArmatureBoneAnimator.prototype.interpolate.__efOriginal = origInterpolate;
-            }
-        }
+        // Patch ArmatureBoneAnimator.interpolate 已移除 (导致画面消失)
+        // 如需重新启用, 需要修复 this.group 问题
         const actImportMesh = new Action('ef_import_mesh', {
             name: tl('ef.import_mesh'),
             description: tl('ef.import_mesh.desc'),
@@ -3049,6 +4154,9 @@ Plugin.register('epicfight_export', {
         MenuBar.addAction(actImportMesh, 'tools');
         MenuBar.addAction(actImportArmature, 'tools');
         MenuBar.addAction(actImportAnim, 'tools');
+
+        // 注册 ArmatureBone IK 支持
+        efIKCleanup = efSetupIKSupport();
     },
 
     onunload() {
@@ -3056,5 +4164,9 @@ Plugin.register('epicfight_export', {
             const action = Action.actions[id];
             if (action) action.delete();
         });
+        if (efIKCleanup) {
+            efIKCleanup.cleanup();
+            efIKCleanup = null;
+        }
     }
 });
