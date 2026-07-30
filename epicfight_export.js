@@ -2944,13 +2944,29 @@ const EF_I18N = {
         'ef.ik.limitation_axis': 'Limitation Axis',
         'ef.ik.min_deg': 'Min (deg)',
         'ef.ik.max_deg': 'Max (deg)',
+        'ef.ik.chain_length': 'Chain Length (0 = All Ancestors)',
+        'ef.ik.influence': 'IK Influence',
+        'ef.ik.iterations': 'CCD Iterations',
+        'ef.ik.pole_iterations': 'Pole Convergence Passes',
+        'ef.ik.tolerance': 'Convergence Tolerance',
+        'ef.ik.pole_angle': 'Pole Angle (deg)',
+        'ef.ik.twist_stiffness': 'Twist Stiffness',
         'ef.ik.none': 'None',
         'ef.ik.edit_limits_undo': 'Edit IK angle limits',
         'ef.ik.create_undo': 'Create IK controller',
         'ef.ik.change_source_undo': 'Change IK source',
         'ef.ik.break_undo': 'Break IK controller',
         'ef.ik.enable_undo': 'Enable IK controller',
-        'ef.ik.disable_undo': 'Disable IK controller'
+        'ef.ik.disable_undo': 'Disable IK controller',
+        'ef.rig.rebuild': 'Rebuild Humanoid IK/FK Rig',
+        'ef.rig.bake': 'Bake Humanoid Rig',
+        'ef.rig.validate': 'Validate Humanoid Rig',
+        'ef.rig.rebuilt': 'Humanoid rig rebuilt',
+        'ef.rig.baked': 'Humanoid rig baked and validated',
+        'ef.rig.valid': 'Humanoid rig is valid',
+        'ef.rig.invalid': 'Humanoid Rig Error',
+        'ef.rig.rebuild_undo': 'Rebuild humanoid IK/FK rig',
+        'ef.rig.bake_undo': 'Bake humanoid IK/FK rig'
     },
     zh: {
         // Actions
@@ -3045,13 +3061,29 @@ const EF_I18N = {
         'ef.ik.limitation_axis': '限制轴',
         'ef.ik.min_deg': '最小 (度)',
         'ef.ik.max_deg': '最大 (度)',
+        'ef.ik.chain_length': '链长（0 = 全部祖先）',
+        'ef.ik.influence': 'IK 影响权重',
+        'ef.ik.iterations': 'CCD 迭代次数',
+        'ef.ik.pole_iterations': 'Pole 二次收敛次数',
+        'ef.ik.tolerance': '收敛容差',
+        'ef.ik.pole_angle': '极向角 (度)',
+        'ef.ik.twist_stiffness': '扭转刚度',
         'ef.ik.none': '无',
         'ef.ik.edit_limits_undo': '编辑 IK 角度限制',
         'ef.ik.create_undo': '创建 IK 控制器',
         'ef.ik.change_source_undo': '更改 IK 源',
         'ef.ik.break_undo': '断开 IK 控制器',
         'ef.ik.enable_undo': '启用 IK 控制器',
-        'ef.ik.disable_undo': '禁用 IK 控制器'
+        'ef.ik.disable_undo': '禁用 IK 控制器',
+        'ef.rig.rebuild': '一键重建人形 IK/FK',
+        'ef.rig.bake': '烘焙人形控制器',
+        'ef.rig.validate': '验证人形控制器',
+        'ef.rig.rebuilt': '人形 IK/FK 已重建',
+        'ef.rig.baked': '人形控制器已烘焙并通过验证',
+        'ef.rig.valid': '人形控制器验证通过',
+        'ef.rig.invalid': '人形控制器错误',
+        'ef.rig.rebuild_undo': '重建人形 IK/FK',
+        'ef.rig.bake_undo': '烘焙人形 IK/FK'
     }
 };
 
@@ -3080,6 +3112,26 @@ function efSetupIKSupport() {
 }
 
 function efSetupIKSupportInner() {
+    if (typeof NullObject === 'undefined' || typeof NullObjectAnimator === 'undefined') {
+        console.warn('[EF] NullObject not available, IK support disabled');
+        return null;
+    }
+
+    const ikProperties = [];
+    if (typeof Property !== 'undefined') {
+        ikProperties.push(new Property(NullObject, 'object', 'ef_ik'));
+        if (!NullObject.properties.rotation) {
+            ikProperties.push(new Property(NullObject, 'vector', 'rotation'));
+        }
+    }
+
+    const originalNullObjectRotatable = NullObject.prototype.constructor.behavior.rotatable;
+    NullObject.prototype.constructor.behavior.rotatable = true;
+    const originalNullChannels = NullObjectAnimator.prototype.channels;
+    NullObjectAnimator.prototype.channels = Object.assign({}, originalNullChannels, {
+        rotation: {name: tl('timeline.rotation'), mutable: true, transform: true, max_data_points: 2}
+    });
+
     // Three.js CCDIKSolver 内联实现（简化版，移除可视化 helper）
     const _quaternion = new THREE.Quaternion();
     const _targetPos = new THREE.Vector3();
@@ -3131,7 +3183,13 @@ function efSetupIKSupportInner() {
                     initialQuaternions[j].copy(bones[linkIndex].quaternion);
                 }
             }
+            const tolerance = Math.max(0, Number(ik.tolerance) || 0);
+            const toleranceSq = tolerance * tolerance;
             for (let i = 0; i < iteration; i++) {
+                if (tolerance > 0) {
+                    _effectorPos.setFromMatrixPosition(effector.matrixWorld);
+                    if (_effectorPos.distanceToSquared(_targetPos) <= toleranceSq) break;
+                }
                 let rotated = false;
                 for (let j = 0, jl = links.length; j < jl; j++) {
                     const link = bones[links[j].index];
@@ -3144,9 +3202,10 @@ function efSetupIKSupportInner() {
                     _effectorPos.setFromMatrixPosition(effector.matrixWorld);
                     _effectorVec.subVectors(_effectorPos, _linkPos);
                     _effectorVec.applyQuaternion(_invLinkQ);
-                    _effectorVec.normalize();
                     _targetVec.subVectors(_targetPos, _linkPos);
                     _targetVec.applyQuaternion(_invLinkQ);
+                    if (_effectorVec.lengthSq() < 1e-12 || _targetVec.lengthSq() < 1e-12) continue;
+                    _effectorVec.normalize();
                     _targetVec.normalize();
                     let angle = _targetVec.dot(_effectorVec);
                     if (angle > 1.0) angle = 1.0;
@@ -3156,6 +3215,10 @@ function efSetupIKSupportInner() {
                     if (ik.minAngle !== undefined && angle < ik.minAngle) angle = ik.minAngle;
                     if (ik.maxAngle !== undefined && angle > ik.maxAngle) angle = ik.maxAngle;
                     _axis.crossVectors(_effectorVec, _targetVec);
+                    if (_axis.lengthSq() < 1e-12) {
+                        _vector.set(Math.abs(_effectorVec.x) < 0.9 ? 1 : 0, Math.abs(_effectorVec.x) < 0.9 ? 0 : 1, 0);
+                        _axis.crossVectors(_effectorVec, _vector);
+                    }
                     _axis.normalize();
                     _quaternion.setFromAxisAngle(_axis, angle);
                     link.quaternion.multiply(_quaternion);
@@ -3173,10 +3236,10 @@ function efSetupIKSupportInner() {
                         );
                     }
                     if (rotationMin !== undefined || rotationMax !== undefined) {
-                        const euler = _vector.setFromEuler(link.rotation);
-                        if (rotationMin !== undefined) euler.max(rotationMin);
-                        if (rotationMax !== undefined) euler.min(rotationMax);
-                        link.rotation.setFromVector3(euler);
+                        _vector.set(link.rotation.x, link.rotation.y, link.rotation.z);
+                        if (rotationMin !== undefined) _vector.max(rotationMin);
+                        if (rotationMax !== undefined) _vector.min(rotationMax);
+                        link.rotation.setFromVector3(_vector);
                     }
                     link.updateMatrixWorld(true);
                     rotated = true;
@@ -3213,26 +3276,497 @@ function efSetupIKSupportInner() {
         }
     }
 
-    if (typeof NullObject === 'undefined') {
-        console.warn('[EF] NullObject not available, IK support disabled');
-        return null;
+    const scene = (typeof Canvas !== 'undefined' && Canvas.scene) ? Canvas.scene : ((typeof Project !== 'undefined' && Project.model_3d) ? Project.model_3d : null);
+    const originalNullUpdateTransform = NullObject.preview_controller.updateTransform;
+    const originalNullUpdateSelection = NullObject.preview_controller.updateSelection;
+    const originalNullDisplayFrame = NullObjectAnimator.prototype.displayFrame;
+    const originalPreviewRaycast = typeof Preview !== 'undefined' ? Preview.prototype.raycast : null;
+    const controllerVisuals = new Map();
+    const patchedIKMenus = new Map();
+    const ikLineMaterial = new THREE.LineBasicMaterial({
+        color: 0xffb13b,
+        depthTest: false,
+        transparent: true,
+        opacity: 0.9
+    });
+    const ikLineGeometry = new THREE.BufferGeometry();
+    const ikLineHelper = new THREE.LineSegments(ikLineGeometry, ikLineMaterial);
+    ikLineHelper.name = 'ef_ik_chain_helper';
+    ikLineHelper.renderOrder = 1000;
+    ikLineHelper.frustumCulled = false;
+    ikLineHelper.visible = false;
+    if (scene) scene.add(ikLineHelper);
+
+    function efDisposeControllerVisual(visual) {
+        if (!visual) return;
+        if (visual.parent) visual.parent.remove(visual);
+        if (visual.userData.efControllerUuid) controllerVisuals.delete(visual.userData.efControllerUuid);
+        visual.traverse(object => {
+            if (object.geometry) object.geometry.dispose();
+            if (Array.isArray(object.material)) object.material.forEach(material => material.dispose());
+            else if (object.material) object.material.dispose();
+        });
     }
 
-    const scene = (typeof Canvas !== 'undefined' && Canvas.scene) ? Canvas.scene : ((typeof Project !== 'undefined' && Project.model_3d) ? Project.model_3d : null);
+    function efGetControllerVisualStyle(element) {
+        const config = element.ef_ik || {};
+        const side = /_r$/i.test(config.limb || element.name) ? 'right' : /_l$/i.test(config.limb || element.name) ? 'left' : '';
+        const color = side === 'right' ? 0xef4444 : side === 'left' ? 0x22c55e : config.role === 'master' || config.layer === 'root' ? 0xfacc15 : config.layer === 'torso' ? 0x3b82f6 : config.layer === 'chest' ? 0x22d3ee : config.role === 'target' ? 0xf97316 : 0xa855f7;
+        const shape = config.role === 'master' ? 'master' : config.role === 'target' ? 'box' : config.role === 'pole' ? 'diamond' : config.layer === 'root' ? 'root_ring' : config.layer === 'torso' ? 'torso_ring' : config.layer === 'chest' ? 'chest_ring' : 'ring';
+        return {color, shape, key: [config.role, config.layer, config.limb, shape, 'visual_scale_0.5'].join(':')};
+    }
+
+    function efCreateControllerVisual(element, style) {
+        const group = new THREE.Group();
+        const material = new THREE.MeshBasicMaterial({
+            color: style.color,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.96,
+            depthTest: false,
+            depthWrite: false
+        });
+        const addMesh = (geometry, rotation, scale) => {
+            const mesh = new THREE.Mesh(geometry, material.clone());
+            if (rotation) mesh.rotation.set(rotation[0], rotation[1], rotation[2]);
+            if (scale) mesh.scale.set(scale[0], scale[1], scale[2]);
+            mesh.scale.multiplyScalar(0.25);
+            mesh.userData.efControllerUuid = element.uuid;
+            mesh.userData.element = element;
+            mesh.no_export = true;
+            mesh.renderOrder = 1002;
+            group.add(mesh);
+            return mesh;
+        };
+        if (style.shape === 'master') {
+            addMesh(new THREE.BoxGeometry(28, 2, 20));
+        } else if (style.shape === 'box') {
+            addMesh(new THREE.BoxGeometry(11, 11, 11));
+        } else if (style.shape === 'diamond') {
+            addMesh(new THREE.OctahedronGeometry(5.5, 0));
+            addMesh(new THREE.TorusGeometry(6.5, 0.35, 6, 24), [Math.PI / 2, 0, 0], [1, 1, 0.65]);
+        } else {
+            const radius = style.shape === 'root_ring' ? 15 : style.shape === 'torso_ring' ? 12 : style.shape === 'chest_ring' ? 14 : 9;
+            addMesh(new THREE.TorusGeometry(radius, 0.55, 8, 40), [Math.PI / 2, 0, 0]);
+            if (style.shape === 'chest_ring') {
+                addMesh(new THREE.TorusGeometry(radius * 0.72, 0.4, 8, 32), [0, Math.PI / 2, 0]);
+                addMesh(new THREE.TorusGeometry(radius * 0.72, 0.4, 8, 32), [0, 0, 0]);
+            }
+        }
+        material.dispose();
+        group.name = 'ef_ik_controller_visual';
+        group.userData.efIKVisualKey = style.key;
+        group.userData.efIKColor = style.color;
+        group.userData.efControllerUuid = element.uuid;
+        group.no_export = true;
+        group.renderOrder = 1001;
+        return group;
+    }
+
+    function efUpdateControllerVisual(element) {
+        if (!element || !element.mesh) return;
+        const role = element.ef_ik && element.ef_ik.role;
+        let visual = controllerVisuals.get(element.uuid);
+        if (!role) {
+            efDisposeControllerVisual(visual);
+            return;
+        }
+        const style = efGetControllerVisualStyle(element);
+        if (visual && visual.userData.efIKVisualKey !== style.key) {
+            efDisposeControllerVisual(visual);
+            visual = null;
+        }
+        if (!visual) {
+            visual = efCreateControllerVisual(element, style);
+            if (scene) scene.add(visual);
+            controllerVisuals.set(element.uuid, visual);
+        }
+        element.mesh.updateMatrixWorld(true);
+        element.mesh.getWorldPosition(visual.position);
+        element.mesh.getWorldQuaternion(visual.quaternion);
+        visual.updateMatrixWorld(true);
+        const color = element.selected && typeof gizmo_colors !== 'undefined' ? gizmo_colors.outline : style.color;
+        visual.traverse(object => {
+            if (object.material && object.material.color) object.material.color.set(color);
+        });
+        visual.userData.efIKColor = style.color;
+        visual.visible = element.visibility !== false && element.mesh.visible !== false;
+    }
+
+    function efApplyNullRotation(element) {
+        if (!element || !element.mesh) return;
+        const rotation = Array.isArray(element.rotation) ? element.rotation : [0, 0, 0];
+        element.mesh.rotation.set(
+            Math.degToRad(Number(rotation[0]) || 0),
+            Math.degToRad(Number(rotation[1]) || 0),
+            Math.degToRad(Number(rotation[2]) || 0),
+            Format.euler_order || 'ZYX'
+        );
+        if (!element.mesh.fix_rotation) element.mesh.fix_rotation = new THREE.Euler();
+        element.mesh.fix_rotation.copy(element.mesh.rotation);
+    }
+
+    NullObject.preview_controller.updateTransform = function(element) {
+        originalNullUpdateTransform.call(this, element);
+        efApplyNullRotation(element);
+        efUpdateControllerVisual(element);
+    };
+    NullObject.preview_controller.updateSelection = function(element) {
+        originalNullUpdateSelection.call(this, element);
+        const role = element && element.ef_ik && element.ef_ik.role;
+        if (role && element.mesh && element.mesh.material) {
+            const style = efGetControllerVisualStyle(element);
+            const color = element.selected && typeof gizmo_colors !== 'undefined' ? gizmo_colors.outline : style.color;
+            element.mesh.material.color.set(color);
+        }
+        efUpdateControllerVisual(element);
+    };
+    if (originalPreviewRaycast) {
+        Preview.prototype.raycast = function(event, options) {
+            const nativeHit = originalPreviewRaycast.call(this, event, options);
+            if (typeof Modes === 'undefined' || !Modes.animate || typeof Animation === 'undefined' || !Animation.selected) return nativeHit;
+            const pickMeshes = [];
+            let hasHumanoidController = false;
+            controllerVisuals.forEach((visual, uuid) => {
+                const element = efFindNodeByUuid(uuid);
+                if (!element || !visual || !visual.visible || element.visibility === false || element.locked === true) return;
+                if (element.ef_ik && element.ef_ik.rig === 'epicfight_humanoid') hasHumanoidController = true;
+                visual.traverse(object => {
+                    if (object.isMesh && object.visible !== false) pickMeshes.push(object);
+                });
+            });
+            if (!hasHumanoidController) return nativeHit;
+            const controllerIntersects = this.raycaster.intersectObjects(pickMeshes, false);
+            const controllerHit = controllerIntersects[0];
+            if (controllerHit) {
+                const element = controllerHit.object.userData.element || efFindNodeByUuid(controllerHit.object.userData.efControllerUuid);
+                if (element) return {type: 'element', event, intersects: controllerIntersects, element};
+            }
+            const nativeElement = nativeHit && nativeHit.element;
+            const isCube = typeof Cube !== 'undefined' && nativeElement instanceof Cube;
+            const isMesh = typeof Blockbench !== 'undefined' && Blockbench.Mesh && nativeElement instanceof Blockbench.Mesh;
+            const isTextureMesh = typeof TextureMesh !== 'undefined' && nativeElement instanceof TextureMesh;
+            return isCube || isMesh || isTextureMesh ? null : nativeHit;
+        };
+    }
+    NullObjectAnimator.prototype.displayFrame = function(multiplier = 1) {
+        if (!this.doRender()) return;
+        const element = this.getElement();
+        if (!element || !efResolveController(element)) {
+            return originalNullDisplayFrame.call(this, multiplier);
+        }
+        if (!this.rotation) this.rotation = [];
+        if (element.mesh.fix_rotation) element.mesh.rotation.copy(element.mesh.fix_rotation);
+        if (!this.muted.position) this.displayPosition(this.interpolate('position'), multiplier);
+        if (!this.muted.rotation) {
+            const rotation = this.interpolate('rotation');
+            if (rotation) {
+                element.mesh.rotation.x += Math.degToRad(rotation[0] || 0) * multiplier;
+                element.mesh.rotation.y += Math.degToRad(rotation[1] || 0) * multiplier;
+                element.mesh.rotation.z += Math.degToRad(rotation[2] || 0) * multiplier;
+            }
+        }
+        element.mesh.updateMatrixWorld(true);
+        efUpdateControllerVisual(element);
+        const config = efGetFKConfig(element) || efGetMasterConfig(element);
+        if (config) efDisplayFK(element);
+        else this.displayIK();
+        efUpdateIKLineHelper();
+    };
+
+    const updateIKVisuals = function() {
+        const active = new Set(NullObject.all.map(element => element.uuid));
+        [...controllerVisuals.entries()].forEach(([uuid, visual]) => {
+            if (!active.has(uuid)) efDisposeControllerVisual(visual);
+        });
+        NullObject.all.forEach(element => {
+            if (element.ef_ik && element.mesh) NullObject.preview_controller.updateSelection(element);
+        });
+        efUpdateIKLineHelper();
+    };
+    Blockbench.on('update_selection', updateIKVisuals);
+    Blockbench.on('update_view', updateIKVisuals);
 
     function efFindNodeByUuid(uuid) {
         if (!uuid) return null;
         return [...Group.all, ...ArmatureBone.all, ...Locator.all, ...NullObject.all].find(node => node.uuid === uuid);
     }
 
+    function efGetNodeWorldPosition(node) {
+        if (node && node.mesh && node.mesh.getWorldPosition) {
+            node.mesh.updateMatrixWorld(true);
+            return node.mesh.getWorldPosition(new THREE.Vector3());
+        }
+        return node && node.getWorldCenter ? node.getWorldCenter(true) : new THREE.Vector3();
+    }
+
     // 查找 IK source 下作为 pole target 参考的 helper bone（knee/elbow），排除目标骨骼自身
     function efFindPoleHelperBone(sourceBone, targetBone) {
-        if (!(sourceBone instanceof ArmatureBone)) return null;
-        return sourceBone.children.find(child =>
-            child instanceof ArmatureBone &&
-            child !== targetBone &&
-            /^(knee|elbow)_/i.test(child.name)
-        ) || null;
+        if (!(sourceBone instanceof ArmatureBone) || !(targetBone instanceof ArmatureBone)) return null;
+        const sideMatch = targetBone.name.match(/_([lr])$/i);
+        const helperType = /^(hand|tool)_/i.test(targetBone.name) ? 'elbow' : 'knee';
+        const helperPattern = new RegExp('^' + helperType + (sideMatch ? '_' + sideMatch[1] : ''), 'i');
+        const siblings = targetBone.parent && targetBone.parent.children ? targetBone.parent.children : [];
+        const sibling = siblings.find(child => child instanceof ArmatureBone && helperPattern.test(child.name));
+        if (sibling) return sibling;
+        const stack = sourceBone.children.slice();
+        while (stack.length) {
+            const child = stack.shift();
+            if (child instanceof ArmatureBone && child !== targetBone && helperPattern.test(child.name)) return child;
+            if (child.children) stack.push(...child.children);
+        }
+        return null;
+    }
+
+    function efUsesBoneOriginAsEffector(bone) {
+        return bone instanceof ArmatureBone && /^(hand|tool)_/i.test(bone.name);
+    }
+
+    function efGetIKEffectorWorldPosition(bone) {
+        return efUsesBoneOriginAsEffector(bone) ? efGetNodeWorldPosition(bone) : efGetBoneTailWorldPosition(bone);
+    }
+
+    function efGetIKOwner(target) {
+        if (!(target instanceof ArmatureBone)) return null;
+        return efUsesBoneOriginAsEffector(target) ? target.parent : target;
+    }
+
+    function efCollectIKChain(target, chainLength) {
+        const bones = [];
+        let current = efGetIKOwner(target);
+        const limit = Math.max(0, Math.floor(Number(chainLength) || 0));
+        while (current && current !== 'root' && current instanceof ArmatureBone) {
+            bones.push(current);
+            if (limit > 0 && bones.length >= limit) break;
+            current = current.parent;
+        }
+        bones.reverse();
+        return bones;
+    }
+
+    function efGetMaximumChainLength(target) {
+        let length = 0;
+        let current = efGetIKOwner(target);
+        while (current && current !== 'root' && current instanceof ArmatureBone) {
+            length++;
+            current = current.parent;
+        }
+        return length;
+    }
+
+    function efGetIKConfig(controller) {
+        return controller && controller.ef_ik && controller.ef_ik.role === 'target' ? controller.ef_ik : null;
+    }
+
+    function efGetPoleConfig(pole) {
+        return pole && pole.ef_ik && pole.ef_ik.role === 'pole' ? pole.ef_ik : null;
+    }
+
+    function efGetFKConfig(controller) {
+        return controller && controller.ef_ik && controller.ef_ik.role === 'fk' ? controller.ef_ik : null;
+    }
+
+    function efGetMasterConfig(controller) {
+        return controller && controller.ef_ik && controller.ef_ik.role === 'master' ? controller.ef_ik : null;
+    }
+
+    function efGetOwningArmature(node) {
+        let current = node;
+        while (current && current !== 'root') {
+            if (current instanceof Armature) return current;
+            current = current.parent;
+        }
+        return null;
+    }
+
+    function efGetSelectedArmatureBone() {
+        const selectedBone = ArmatureBone.selected && ArmatureBone.selected[0];
+        if (selectedBone) return selectedBone;
+        const selectedNull = NullObject.selected && NullObject.selected[0];
+        const controller = efResolveController(selectedNull);
+        const config = controller && controller.ef_ik;
+        const target = config && efFindNodeByUuid(config.target);
+        return target instanceof ArmatureBone ? target : null;
+    }
+
+    function efGetArmatureBones(armature) {
+        const bones = [];
+        const visit = node => {
+            if (node instanceof ArmatureBone) bones.push(node);
+            if (node && node.children) node.children.forEach(visit);
+        };
+        if (armature && armature.children) armature.children.forEach(visit);
+        return bones;
+    }
+
+    function efGetHumanoidRig(selectedBone) {
+        const anchorBone = selectedBone || efGetSelectedArmatureBone();
+        const armature = efGetOwningArmature(anchorBone);
+        const byName = {};
+        const duplicates = [];
+        efGetArmatureBones(armature).forEach(bone => {
+            const key = String(bone.name || '').toLowerCase();
+            if (byName[key]) duplicates.push(bone.name);
+            else byName[key] = bone;
+        });
+        const names = ['Root', 'Torso', 'Chest', 'Head', 'Thigh_R', 'Leg_R', 'Knee_R', 'Thigh_L', 'Leg_L', 'Knee_L', 'Shoulder_R', 'Arm_R', 'Hand_R', 'Tool_R', 'Elbow_R', 'Shoulder_L', 'Arm_L', 'Hand_L', 'Tool_L', 'Elbow_L'];
+        const bones = {};
+        const missing = [];
+        names.forEach(name => {
+            const bone = byName[name.toLowerCase()];
+            if (bone) bones[name] = bone;
+            else missing.push(name);
+        });
+        const isChildOf = (child, parent) => {
+            let current = child && child.parent;
+            while (current && current !== 'root') {
+                if (current === parent) return true;
+                current = current.parent;
+            }
+            return false;
+        };
+        const invalid = [];
+        if (!armature) invalid.push('No Armature');
+        if (!missing.length && !duplicates.length) {
+            [['Torso', 'Root'], ['Chest', 'Torso'], ['Thigh_R', 'Root'], ['Leg_R', 'Thigh_R'], ['Thigh_L', 'Root'], ['Leg_L', 'Thigh_L'], ['Shoulder_R', 'Chest'], ['Arm_R', 'Shoulder_R'], ['Hand_R', 'Arm_R'], ['Tool_R', 'Hand_R'], ['Shoulder_L', 'Chest'], ['Arm_L', 'Shoulder_L'], ['Hand_L', 'Arm_L'], ['Tool_L', 'Hand_L']].forEach(pair => {
+                if (!isChildOf(bones[pair[0]], bones[pair[1]])) invalid.push(pair[1] + ' > ' + pair[0]);
+            });
+        }
+        return {
+            valid: !!armature && missing.length === 0 && duplicates.length === 0 && invalid.length === 0,
+            armature,
+            bones,
+            missing,
+            duplicates,
+            invalid
+        };
+    }
+    function efGetArmatureIKNodes(armature) {
+        return NullObject.all.filter(node => {
+            const controller = efResolveController(node);
+            const config = controller && efGetIKConfig(controller);
+            const target = config && efFindNodeByUuid(config.target);
+            return target instanceof ArmatureBone && efGetOwningArmature(target) === armature;
+        });
+    }
+
+    function efGetRigControllers(armature) {
+        return NullObject.all.filter(node => {
+            if (!node.ef_ik || node.ef_ik.rig !== 'epicfight_humanoid') return false;
+            if (!armature) return true;
+            const target = efFindNodeByUuid(node.ef_ik.target);
+            if (target instanceof ArmatureBone) return efGetOwningArmature(target) === armature;
+            const controller = efResolveController(node);
+            const controllerTarget = controller && efFindNodeByUuid(controller.ef_ik.target);
+            return controllerTarget instanceof ArmatureBone && efGetOwningArmature(controllerTarget) === armature;
+        });
+    }
+
+    function efResolveController(node) {
+        if (efGetIKConfig(node) || efGetFKConfig(node) || efGetMasterConfig(node)) return node;
+        const poleConfig = efGetPoleConfig(node);
+        const controller = poleConfig ? efFindNodeByUuid(poleConfig.controller) : null;
+        return efGetIKConfig(controller) ? controller : null;
+    }
+
+    function efToVector3(value, fallback) {
+        if (value && value.isVector3) return value.clone();
+        if (Array.isArray(value)) return new THREE.Vector3(Number(value[0]) || 0, Number(value[1]) || 0, Number(value[2]) || 0);
+        if (value && typeof value === 'object') return new THREE.Vector3(Number(value.x) || 0, Number(value.y) || 0, Number(value.z) || 0);
+        return fallback ? fallback.clone() : new THREE.Vector3();
+    }
+
+    function efDecomposeSwingTwist(quaternion, axis, swing, twist) {
+        const projected = new THREE.Vector3(quaternion.x, quaternion.y, quaternion.z).projectOnVector(axis);
+        twist.set(projected.x, projected.y, projected.z, quaternion.w).normalize();
+        if (quaternion.dot(twist) < 0) twist.set(-twist.x, -twist.y, -twist.z, -twist.w);
+        swing.copy(twist).invert().premultiply(quaternion);
+    }
+
+    function efApplyTwistStiffness(localQuaternion, restQuaternion, stiffness) {
+        if (!(stiffness > 0)) return localQuaternion;
+        const delta = restQuaternion.clone().invert().multiply(localQuaternion);
+        const swing = new THREE.Quaternion();
+        const twist = new THREE.Quaternion();
+        efDecomposeSwingTwist(delta, new THREE.Vector3(0, 1, 0), swing, twist);
+        twist.slerp(new THREE.Quaternion(), THREE.MathUtils.clamp(stiffness, 0, 1));
+        return restQuaternion.clone().multiply(swing).multiply(twist);
+    }
+
+    function efApplyIKLimit(localQuaternion, restQuaternion, limit) {
+        if (!limit || !limit.enabled) return localQuaternion;
+        const order = Format.euler_order || 'ZYX';
+        const deltaQuaternion = restQuaternion.clone().invert().multiply(localQuaternion);
+        const deltaEuler = new THREE.Euler().setFromQuaternion(deltaQuaternion, order);
+        const rotationMin = limit.rotationMin ? efToVector3(limit.rotationMin) : null;
+        const rotationMax = limit.rotationMax ? efToVector3(limit.rotationMax) : null;
+        if (rotationMin) {
+            deltaEuler.x = Math.max(deltaEuler.x, rotationMin.x);
+            deltaEuler.y = Math.max(deltaEuler.y, rotationMin.y);
+            deltaEuler.z = Math.max(deltaEuler.z, rotationMin.z);
+        }
+        if (rotationMax) {
+            deltaEuler.x = Math.min(deltaEuler.x, rotationMax.x);
+            deltaEuler.y = Math.min(deltaEuler.y, rotationMax.y);
+            deltaEuler.z = Math.min(deltaEuler.z, rotationMax.z);
+        }
+        return restQuaternion.clone().multiply(new THREE.Quaternion().setFromEuler(deltaEuler));
+    }
+
+    function efApplyBoneAnimationRotation(bone) {
+        const animator = Animation.selected ? Animation.selected.getBoneAnimator(bone) : null;
+        if (!animator || !animator.rotation || !animator.rotation.length) return;
+        const rotation = animator.interpolate('rotation', false);
+        if (!rotation) return;
+        const offset = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+            Math.degToRad(rotation[0] || 0),
+            Math.degToRad(rotation[1] || 0),
+            Math.degToRad(rotation[2] || 0),
+            Format.euler_order || 'ZYX'
+        ));
+        bone.mesh.quaternion.multiply(offset);
+        bone.mesh.rotation.setFromQuaternion(bone.mesh.quaternion, Format.euler_order || 'ZYX');
+        bone.mesh.updateMatrixWorld(true);
+    }
+
+    function efCollectIKSamples(bones, controller) {
+        const results = {};
+        bones.forEach(bone => {
+            const restRotation = bone.mesh.fix_rotation
+                ? bone.mesh.fix_rotation.clone()
+                : new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+            restRotation.order = Format.euler_order || restRotation.order;
+            const restQuaternion = new THREE.Quaternion().setFromEuler(restRotation);
+            const deltaQuaternion = restQuaternion.invert().multiply(bone.mesh.quaternion);
+            const deltaEuler = new THREE.Euler().setFromQuaternion(deltaQuaternion, Format.euler_order || 'ZYX');
+            results[bone.uuid] = {
+                euler: deltaEuler,
+                array: efMakeEulerContinuous(controller, bone, [
+                    Math.radToDeg(deltaEuler.x),
+                    Math.radToDeg(deltaEuler.y),
+                    Math.radToDeg(deltaEuler.z)
+                ])
+            };
+        });
+        return results;
+    }
+
+    function efMakeEulerContinuous(controller, bone, values) {
+        const time = typeof Timeline !== 'undefined' ? Timeline.time : 0;
+        if (!controller._ef_ik_sample_state || time < controller._ef_ik_sample_state.time) {
+            controller._ef_ik_sample_state = {time, values: {}};
+        }
+        const previous = controller._ef_ik_sample_state.values[bone.uuid];
+        const continuous = values.slice();
+        if (previous) {
+            for (let i = 0; i < 3; i++) {
+                while (continuous[i] - previous[i] > 180) continuous[i] -= 360;
+                while (continuous[i] - previous[i] < -180) continuous[i] += 360;
+            }
+        }
+        controller._ef_ik_sample_state.time = time;
+        controller._ef_ik_sample_state.values[bone.uuid] = continuous.slice();
+        return continuous;
     }
 
     // 估算骨骼尾端（ankle/wrist）的世界位置
@@ -3260,62 +3794,102 @@ function efSetupIKSupportInner() {
         return tailLocal.applyMatrix4(bone.mesh.matrixWorld);
     }
 
-    // 计算 pole target 的默认世界位置：复用 EpicFight helper bone 的方向
-    // helper bone（Knee_R/L、Elbow_R/L）的本地 Y 轴就是原 rig 里 pole target 的方向
-    function efComputePoleWorldPosition(sourceBone, targetBone, helperBone) {
-        const hipWorld = sourceBone.mesh.getWorldPosition(new THREE.Vector3());
-        const kneeWorld = helperBone ? helperBone.mesh.getWorldPosition(new THREE.Vector3()) : targetBone.mesh.getWorldPosition(new THREE.Vector3());
-        const ankleWorld = targetBone.getWorldCenter();
-        const thighLen = hipWorld.distanceTo(kneeWorld);
+    function efComputePoleWorldPosition(chainBones, targetBone, helperBone) {
+        const sourceWorld = efGetNodeWorldPosition(chainBones[0]);
+        const jointWorld = efGetNodeWorldPosition(chainBones[chainBones.length - 1]);
+        const effectorWorld = efGetIKEffectorWorldPosition(targetBone);
+        const chainAxis = effectorWorld.clone().sub(sourceWorld);
+        const firstLength = sourceWorld.distanceTo(jointWorld);
+        const secondLength = jointWorld.distanceTo(effectorWorld);
+        const limbScale = Math.max(firstLength, secondLength, 1);
+        const epsilonSq = Math.pow(limbScale * 1e-4, 2);
+        const axis = chainAxis.lengthSq() > epsilonSq ? chainAxis.clone().normalize() : new THREE.Vector3(0, 1, 0);
+        let helperTail = null;
+        let poleDir = null;
 
-        let poleDir;
         if (helperBone && helperBone.mesh) {
-            const worldQuat = helperBone.mesh.getWorldQuaternion(new THREE.Quaternion());
-            poleDir = new THREE.Vector3(0, 1, 0).applyQuaternion(worldQuat).normalize();
-            if (poleDir.lengthSq() < 1e-6) poleDir = null;
+            helperTail = efGetBoneTailWorldPosition(helperBone);
+            poleDir = helperTail.clone().sub(jointWorld);
+            poleDir.sub(axis.clone().multiplyScalar(poleDir.dot(axis)));
+            if (poleDir.lengthSq() < epsilonSq) poleDir = null;
         }
 
         if (!poleDir) {
-            const chainDir = ankleWorld.clone().sub(hipWorld).normalize();
-            const up = new THREE.Vector3(0, 1, 0);
-            poleDir = new THREE.Vector3().crossVectors(chainDir, up);
-            if (poleDir.lengthSq() < 1e-6) poleDir = new THREE.Vector3(1, 0, 0);
-            poleDir.normalize();
-            const outwardSign = hipWorld.x < 0 ? -1 : 1;
-            if (poleDir.x * outwardSign < 0) poleDir.negate();
+            poleDir = jointWorld.clone().sub(sourceWorld);
+            poleDir.sub(axis.clone().multiplyScalar(poleDir.dot(axis)));
         }
 
-        const offsetDistance = thighLen * 0.75;
-        return kneeWorld.clone().add(poleDir.multiplyScalar(offsetDistance));
+        if (poleDir.lengthSq() < epsilonSq) {
+            const references = [new THREE.Vector3(0, 0, 1), new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0)];
+            const reference = references.sort((a, b) => Math.abs(a.dot(axis)) - Math.abs(b.dot(axis)))[0];
+            poleDir = reference.clone().sub(axis.clone().multiplyScalar(reference.dot(axis)));
+        }
+
+        poleDir.normalize();
+        const helperReach = helperTail ? Math.max(0, helperTail.clone().sub(jointWorld).dot(poleDir)) : 0;
+        const clearance = THREE.MathUtils.clamp(limbScale * 0.15, 0.25, limbScale * 0.35);
+        const offsetDistance = Math.max(helperReach + clearance, limbScale * 0.75);
+        return jointWorld.clone().add(poleDir.multiplyScalar(offsetDistance));
     }
 
-    // 查找与骨骼关联的 NullObject IK 控制器
     function efFindController(targetBone) {
-        return NullObject.all.find(no => no.ik_target === targetBone.uuid);
+        return NullObject.all.find(no => {
+            const config = efGetIKConfig(no);
+            return config && config.target === targetBone.uuid;
+        });
     }
 
-    // 选择不在 IK 链中的 Armature/Group/root 作为控制器父级
-    function efGetControllerParent(sourceBone) {
-        let parent = sourceBone.parent;
-        while (parent !== 'root') {
-            if (parent instanceof Group || parent instanceof Armature) return parent;
-            parent = parent.parent;
-            if (!parent) return 'root';
-        }
-        return 'root';
+    function efFindPole(controller) {
+        const config = efGetIKConfig(controller);
+        if (!config || !config.pole) return null;
+        const pole = efFindNodeByUuid(config.pole);
+        const poleConfig = efGetPoleConfig(pole);
+        return poleConfig && poleConfig.controller === controller.uuid ? pole : null;
     }
 
-    // 收集可作为 IK source 的骨骼（选中骨骼的祖先）
-    function efCollectSourceCandidates(targetBone) {
-        const nodes = [];
-        function collect(arr) {
-            arr.forEach(node => {
-                if (node instanceof ArmatureBone && targetBone.isChildOf(node)) nodes.push(node);
-                if (node.children) collect(node.children);
-            });
+    function efGetSelectedController() {
+        const selectedNull = NullObject.selected && NullObject.selected[0];
+        const resolved = efResolveController(selectedNull);
+        if (resolved) return resolved;
+        const selectedBone = ArmatureBone.selected && ArmatureBone.selected[0];
+        return selectedBone ? efFindController(selectedBone) : null;
+    }
+
+    function efUpdateIKLineHelper() {
+        if (!ikLineHelper || !ikLineGeometry) return;
+        const controller = efGetSelectedController();
+        const config = efGetIKConfig(controller);
+        const target = config && efFindNodeByUuid(config.target);
+        if (!config || !(target instanceof ArmatureBone)) {
+            ikLineGeometry.setAttribute('position', new THREE.Float32BufferAttribute([], 3));
+            ikLineHelper.visible = false;
+            return;
         }
-        collect(Outliner.root);
-        return nodes;
+        const bones = efCollectIKChain(target, config.chain_length);
+        const points = [];
+        bones.forEach((bone, index) => {
+            const start = efGetNodeWorldPosition(bone);
+            const end = bones[index + 1]
+                ? efGetNodeWorldPosition(bones[index + 1])
+                : efGetIKEffectorWorldPosition(target);
+            points.push(start.x, start.y, start.z, end.x, end.y, end.z);
+        });
+        const effector = efGetIKEffectorWorldPosition(target);
+        const targetPosition = efGetNodeWorldPosition(controller);
+        points.push(effector.x, effector.y, effector.z, targetPosition.x, targetPosition.y, targetPosition.z);
+        const pole = efFindPole(controller);
+        if (pole && bones.length > 1) {
+            const joint = efGetNodeWorldPosition(bones[bones.length - 1]);
+            const polePosition = efGetNodeWorldPosition(pole);
+            points.push(joint.x, joint.y, joint.z, polePosition.x, polePosition.y, polePosition.z);
+        }
+        ikLineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
+        ikLineGeometry.computeBoundingSphere();
+        ikLineHelper.visible = points.length > 0;
+    }
+
+    function efGetControllerParent(chainRoot) {
+        return efGetOwningArmature(chainRoot) || 'root';
     }
 
     // 创建 NullObject 作为 IK 控制器
@@ -3327,52 +3901,61 @@ function efSetupIKSupportInner() {
         // EpicFight biped 中 Hand_R/Hand_L 实际为前臂，Foot 类骨骼同理
         if (/leg|shin|calf|forearm|arm_lower|lower_arm|hand/.test(name)) {
             return {
-                enabled: true,
+                enabled: false,
                 limitation: new THREE.Vector3(1, 0, 0),
-                rotationMin: new THREE.Vector3(-Math.PI / 2, 0, 0),
-                rotationMax: new THREE.Vector3(0, 0, 0)
+                rotationMin: new THREE.Vector3(-Math.PI, -Math.PI, -Math.PI),
+                rotationMax: new THREE.Vector3(Math.PI, Math.PI, Math.PI)
             };
         }
         // 大腿/上臂：球关节，限制外展/内收
         if (/thigh|upper_arm|arm_upper/.test(name)) {
             return {
-                enabled: true,
-                rotationMin: new THREE.Vector3(-Math.PI / 4, -Math.PI / 2, -Math.PI / 4),
-                rotationMax: new THREE.Vector3(Math.PI / 4, Math.PI / 2, Math.PI / 4)
+                enabled: false,
+                rotationMin: new THREE.Vector3(-Math.PI, -Math.PI, -Math.PI),
+                rotationMax: new THREE.Vector3(Math.PI, Math.PI, Math.PI)
             };
         }
         return null;
     }
 
-    function efCreateController(targetBone, sourceBone) {
-        if (!targetBone.isChildOf(sourceBone)) return null;
+    function efCreateController(targetBone, chainLength, options) {
+        const chainBones = efCollectIKChain(targetBone, chainLength);
+        if (!chainBones.length) return null;
 
-        const created = [];
-        Undo.initEdit({elements: created, outliner: true});
+        const settings = options || {};
+        const created = settings.created || [];
+        if (!settings.created) Undo.initEdit({elements: created, outliner: true});
 
-        const parent = efGetControllerParent(sourceBone);
+        const parent = settings.parent || efGetControllerParent(chainBones[0]);
         const controller = new NullObject().addTo(parent).init();
         controller.name = targetBone.name + '_ik';
         controller.ik_target = targetBone.uuid;
-        controller.ik_source = sourceBone.uuid;
+        controller.ik_source = chainBones[0].uuid;
+        controller.ef_ik = {
+            version: 2,
+            role: 'target',
+            target: targetBone.uuid,
+            chain_length: Math.max(0, Math.floor(Number(chainLength) || 0)),
+            enabled: true,
+            influence: 1,
+            pole: '',
+            pole_angle: 0,
+            twist_stiffness: 0.75,
+            iterations: 10,
+            pole_iterations: 4,
+            tolerance: 0.001,
+            limits: {},
+            rig: settings.rig || '',
+            limb: settings.limb || ''
+        };
 
-        // 收集 IK 链上的骨骼并设置默认角度限制
-        controller.ik_limits = {};
-        const chainBones = [];
-        let cur = targetBone;
-        while (cur !== sourceBone) {
-            if (cur instanceof ArmatureBone) chainBones.push(cur);
-            cur = cur.parent;
-        }
-        if (sourceBone instanceof ArmatureBone) chainBones.push(sourceBone);
-        chainBones.reverse();
         chainBones.forEach(bone => {
             const limit = efGetDefaultIKLimit(bone);
-            if (limit) controller.ik_limits[bone.uuid] = limit;
+            if (limit) controller.ef_ik.limits[bone.uuid] = limit;
         });
 
         // 控制器放在目标骨骼尾端（ankle/wrist），而不是骨骼中心
-        const targetWorld = efGetBoneTailWorldPosition(targetBone);
+        const targetWorld = efGetIKEffectorWorldPosition(targetBone);
         let localPos = targetWorld.clone();
         if (parent !== 'root') {
             parent.mesh.worldToLocal(localPos);
@@ -3380,16 +3963,32 @@ function efSetupIKSupportInner() {
         controller.position[0] = localPos.x;
         controller.position[1] = localPos.y;
         controller.position[2] = localPos.z;
+        const targetQuaternion = targetBone.mesh.getWorldQuaternion(new THREE.Quaternion());
+        if (parent !== 'root' && parent.mesh) {
+            targetQuaternion.premultiply(parent.mesh.getWorldQuaternion(new THREE.Quaternion()).invert());
+        }
+        const targetEuler = new THREE.Euler().setFromQuaternion(targetQuaternion, Format.euler_order || 'ZYX');
+        controller.rotation = [
+            Math.radToDeg(targetEuler.x),
+            Math.radToDeg(targetEuler.y),
+            Math.radToDeg(targetEuler.z)
+        ];
         controller.preview_controller.updateTransform(controller);
 
         // 创建 pole target，默认位置放在 knee/elbow 关节的偏移方向，避免与控制器重叠
         const pole = new NullObject().addTo(parent).init();
         pole.name = targetBone.name + '_ik_pole';
-        controller.ik_pole = pole.uuid;
-        pole.ik_controller = controller.uuid;
+        controller.ef_ik.pole = pole.uuid;
+        pole.ef_ik = {
+            version: 2,
+            role: 'pole',
+            controller: controller.uuid,
+            rig: settings.rig || '',
+            limb: settings.limb || ''
+        };
 
-        const helperBone = efFindPoleHelperBone(sourceBone, targetBone);
-        const poleWorld = efComputePoleWorldPosition(sourceBone, targetBone, helperBone);
+        const helperBone = efFindPoleHelperBone(chainBones[0], targetBone);
+        const poleWorld = efComputePoleWorldPosition(chainBones, targetBone, helperBone);
         let poleLocal = poleWorld.clone();
         if (parent !== 'root') {
             parent.mesh.worldToLocal(poleLocal);
@@ -3398,21 +3997,156 @@ function efSetupIKSupportInner() {
         pole.position[1] = poleLocal.y;
         pole.position[2] = poleLocal.z;
         pole.preview_controller.updateTransform(pole);
+        controller.preview_controller.updateSelection(controller);
+        pole.preview_controller.updateSelection(pole);
 
         created.push(controller, pole);
-        Undo.finishEdit(tl('ef.ik.create_undo'));
-        Blockbench.showQuickMessage(tl('ef.ik.controller_created'));
+        if (!settings.created) {
+            Undo.finishEdit(tl('ef.ik.create_undo'));
+            Blockbench.showQuickMessage(tl('ef.ik.controller_created'));
+        }
         return controller;
     }
 
     // pole 作为 Thigh FK 控制器：pole 决定大腿方向，小腿再伸向脚踝
+    function efGetControllerRotationDelta(controller) {
+        const rest = controller.ef_ik && Array.isArray(controller.ef_ik.rest_rotation) ? controller.ef_ik.rest_rotation : [0, 0, 0];
+        const restQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.degToRad(rest[0] || 0), Math.degToRad(rest[1] || 0), Math.degToRad(rest[2] || 0), Format.euler_order || 'ZYX'));
+        return restQuaternion.invert().multiply(controller.mesh.quaternion.clone());
+    }
+
+    function efDisplayFK(source) {
+        const sourceTarget = source && source.ef_ik && efFindNodeByUuid(source.ef_ik.target);
+        const armature = efGetOwningArmature(sourceTarget);
+        const controls = efGetRigControllers(armature);
+        const master = controls.find(node => efGetMasterConfig(node));
+        const fkByLayer = {};
+        controls.forEach(node => {
+            const config = efGetFKConfig(node);
+            if (config) fkByLayer[config.layer] = node;
+        });
+        const rootControl = fkByLayer.root;
+        if (rootControl) {
+            const config = efGetFKConfig(rootControl);
+            const target = efFindNodeByUuid(config.target);
+            if (target && target.mesh) {
+                const restQuaternion = new THREE.Quaternion().fromArray(config.target_rest_quaternion);
+                const rotation = restQuaternion.clone();
+                if (master) rotation.multiply(efGetControllerRotationDelta(master));
+                rotation.multiply(efGetControllerRotationDelta(rootControl));
+                target.mesh.quaternion.copy(rotation);
+                const restPosition = new THREE.Vector3().fromArray(config.target_rest_position);
+                if (master) {
+                    const masterConfig = efGetMasterConfig(master);
+                    const offset = master.mesh.position.clone().sub(new THREE.Vector3().fromArray(masterConfig.rest_position));
+                    restPosition.add(offset);
+                }
+                target.mesh.position.copy(restPosition);
+                target.mesh.updateMatrixWorld(true);
+            }
+        }
+        ['torso', 'chest'].forEach(layer => {
+            const control = fkByLayer[layer];
+            const config = efGetFKConfig(control);
+            const target = config && efFindNodeByUuid(config.target);
+            if (!target || !target.mesh) return;
+            target.mesh.quaternion.copy(new THREE.Quaternion().fromArray(config.target_rest_quaternion).multiply(efGetControllerRotationDelta(control)));
+            target.mesh.position.fromArray(config.target_rest_position);
+            target.mesh.updateMatrixWorld(true);
+        });
+        if (typeof Canvas !== 'undefined' && Canvas.scene) Canvas.scene.updateMatrixWorld(true);
+        if (typeof Animator !== 'undefined' && Animator.displayMeshDeformation) Animator.displayMeshDeformation();
+    }
+
+    function efCreateFKController(name, role, target, parent, layer, created) {
+        const controller = new NullObject().addTo(parent).init();
+        controller.name = name;
+        const worldPosition = efGetNodeWorldPosition(target);
+        let localPosition = worldPosition.clone();
+        if (parent !== 'root' && parent.mesh) parent.mesh.worldToLocal(localPosition);
+        controller.position = [localPosition.x, localPosition.y, localPosition.z];
+        const targetWorldQuaternion = target.mesh.getWorldQuaternion(new THREE.Quaternion());
+        if (parent !== 'root' && parent.mesh) targetWorldQuaternion.premultiply(parent.mesh.getWorldQuaternion(new THREE.Quaternion()).invert());
+        const euler = new THREE.Euler().setFromQuaternion(targetWorldQuaternion, Format.euler_order || 'ZYX');
+        controller.rotation = [Math.radToDeg(euler.x), Math.radToDeg(euler.y), Math.radToDeg(euler.z)];
+        controller.ef_ik = {
+            version: 3,
+            role,
+            rig: 'epicfight_humanoid',
+            layer,
+            target: target.uuid,
+            rest_position: controller.position.slice(),
+            rest_rotation: controller.rotation.slice(),
+            target_rest_position: target.mesh.position.toArray(),
+            target_rest_quaternion: target.mesh.quaternion.toArray()
+        };
+        controller.preview_controller.updateTransform(controller);
+        created.push(controller);
+        return controller;
+    }
+
+    function efRebuildHumanoidRig() {
+        const humanoid = efGetHumanoidRig();
+        if (!humanoid.valid) return false;
+        const existing = [...new Set([...efGetRigControllers(humanoid.armature), ...efGetArmatureIKNodes(humanoid.armature)])];
+        const affected = existing.slice();
+        Undo.initEdit({elements: affected, outliner: true});
+        existing.forEach(node => node.remove());
+        const parent = efGetControllerParent(humanoid.bones.Root);
+        efCreateFKController('Master', 'master', humanoid.bones.Root, parent, 'master', affected);
+        efCreateFKController('Root_FK', 'fk', humanoid.bones.Root, parent, 'root', affected);
+        efCreateFKController('Torso_FK', 'fk', humanoid.bones.Torso, parent, 'torso', affected);
+        efCreateFKController('Chest_FK', 'fk', humanoid.bones.Chest, parent, 'chest', affected);
+        [['Leg_R', 'leg_r'], ['Leg_L', 'leg_l'], ['Tool_R', 'arm_r'], ['Tool_L', 'arm_l']].forEach(item => {
+            efCreateController(humanoid.bones[item[0]], 2, {created: affected, parent, rig: 'epicfight_humanoid', limb: item[1]});
+        });
+        Undo.finishEdit(tl('ef.rig.rebuild_undo'));
+        Animator.preview();
+        Blockbench.showQuickMessage(tl('ef.rig.rebuilt'));
+        return true;
+    }
+
+    function efApplyTargetOrientation(controller, target, get_samples, results) {
+        if (target instanceof ArmatureBone && /^Tool_[RL]$/i.test(target.name)) return results;
+        if (!controller || !controller.mesh || !target || !target.mesh || !target.mesh.parent) return results;
+        const config = efGetIKConfig(controller);
+        const influence = THREE.MathUtils.clamp(config && config.influence === undefined ? 1 : Number(config && config.influence), 0, 1);
+        const controllerWorldQuaternion = controller.mesh.getWorldQuaternion(new THREE.Quaternion());
+        const parentWorldQuaternion = target.mesh.parent.getWorldQuaternion(new THREE.Quaternion());
+        const targetLocalQuaternion = parentWorldQuaternion.invert().multiply(controllerWorldQuaternion);
+        target.mesh.quaternion.slerp(targetLocalQuaternion, influence);
+        target.mesh.rotation.setFromQuaternion(target.mesh.quaternion, Format.euler_order || 'ZYX');
+        target.mesh.updateMatrixWorld(true);
+        if (get_samples) {
+            const restRotation = target.mesh.fix_rotation
+                ? target.mesh.fix_rotation.clone()
+                : new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+            restRotation.order = Format.euler_order || restRotation.order;
+            const restQuaternion = new THREE.Quaternion().setFromEuler(restRotation);
+            const deltaQuaternion = restQuaternion.invert().multiply(target.mesh.quaternion);
+            const deltaEuler = new THREE.Euler().setFromQuaternion(deltaQuaternion, Format.euler_order || 'ZYX');
+            if (!results) results = {};
+            results[target.uuid] = {
+                euler: deltaEuler,
+                array: efMakeEulerContinuous(controller, target, [
+                    Math.radToDeg(deltaEuler.x),
+                    Math.radToDeg(deltaEuler.y),
+                    Math.radToDeg(deltaEuler.z)
+                ])
+            };
+        }
+        return results;
+    }
+
     function efSolveFKPoleIK(bones, target, controller, pole, boneWorldPositions, get_samples) {
         if (bones.length !== 2) return null;
+        const config = efGetIKConfig(controller);
+        if (!config) return null;
 
         const hipWorld = boneWorldPositions[0].start.clone();
         const kneeRest = boneWorldPositions[0].end.clone();
-        const ankleTarget = controller.getWorldCenter(true);
-        const poleWorld = pole.getWorldCenter(true);
+        const ankleTarget = efGetNodeWorldPosition(controller);
+        const poleWorld = efGetNodeWorldPosition(pole);
         const thighLen = hipWorld.distanceTo(kneeRest);
 
         const hipToPole = poleWorld.clone().sub(hipWorld);
@@ -3436,54 +4170,35 @@ function efSetupIKSupportInner() {
             const ikWorld = fikBones[i].end.clone().sub(fikBones[i].start).normalize();
 
             const deltaQuat = new THREE.Quaternion().setFromUnitVectors(restWorld, ikWorld);
+            const targetWorldQuat = deltaQuat.multiply(boneWorldPositions[i].quaternion);
             const parentQuat = bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion());
-            const localDeltaQuat = parentQuat.clone().invert().multiply(deltaQuat).multiply(parentQuat);
-            const fixQuat = new THREE.Quaternion().setFromEuler(
-                bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0),
-                Format.euler_order || 'ZYX'
+            let newLocalQuat = parentQuat.clone().invert().multiply(targetWorldQuat);
+            const fixRotation = bone.mesh.fix_rotation
+                ? bone.mesh.fix_rotation.clone()
+                : new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+            fixRotation.order = Format.euler_order || fixRotation.order;
+            const fixQuat = new THREE.Quaternion().setFromEuler(fixRotation);
+            newLocalQuat = efApplyTwistStiffness(newLocalQuat, fixQuat, Number(config.twist_stiffness) || 0);
+            newLocalQuat = efApplyIKLimit(newLocalQuat, fixQuat, config.limits && config.limits[bone.uuid]);
+            const influencedQuat = fixQuat.clone().slerp(
+                newLocalQuat,
+                THREE.MathUtils.clamp(config.influence === undefined ? 1 : Number(config.influence), 0, 1)
             );
-            const newLocalQuat = localDeltaQuat.multiply(fixQuat);
-            const newEuler = new THREE.Euler().setFromQuaternion(newLocalQuat, Format.euler_order || 'ZYX');
-
-            // 应用 IK 角度限制（限制值表示相对于 rest pose 的偏移）
-            const limit = controller.ik_limits && controller.ik_limits[bone.uuid];
-            if (limit && limit.enabled) {
-                const fixRot = bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
-                const offsetEuler = new THREE.Euler(
-                    newEuler.x - fixRot.x,
-                    newEuler.y - fixRot.y,
-                    newEuler.z - fixRot.z,
-                    Format.euler_order || 'ZYX'
-                );
-                if (limit.rotationMin) {
-                    offsetEuler.x = Math.max(offsetEuler.x, limit.rotationMin.x);
-                    offsetEuler.y = Math.max(offsetEuler.y, limit.rotationMin.y);
-                    offsetEuler.z = Math.max(offsetEuler.z, limit.rotationMin.z);
-                }
-                if (limit.rotationMax) {
-                    offsetEuler.x = Math.min(offsetEuler.x, limit.rotationMax.x);
-                    offsetEuler.y = Math.min(offsetEuler.y, limit.rotationMax.y);
-                    offsetEuler.z = Math.min(offsetEuler.z, limit.rotationMax.z);
-                }
-                newEuler.set(
-                    fixRot.x + offsetEuler.x,
-                    fixRot.y + offsetEuler.y,
-                    fixRot.z + offsetEuler.z
-                );
-            }
-
-            bone.mesh.rotation.copy(newEuler);
-            bone.mesh.updateMatrixWorld();
+            bone.mesh.quaternion.copy(influencedQuat);
+            bone.mesh.rotation.setFromQuaternion(influencedQuat, Format.euler_order || 'ZYX');
+            bone.mesh.updateMatrixWorld(true);
 
             if (get_samples) {
-                const deltaEuler = new THREE.Euler().setFromQuaternion(localDeltaQuat, Format.euler_order || 'ZYX');
+                const appliedLocalQuat = influencedQuat.clone();
+                const appliedDeltaQuat = fixQuat.clone().invert().multiply(appliedLocalQuat);
+                const deltaEuler = new THREE.Euler().setFromQuaternion(appliedDeltaQuat, Format.euler_order || 'ZYX');
                 results[bone.uuid] = {
                     euler: deltaEuler,
-                    array: [
+                    array: efMakeEulerContinuous(controller, bone, [
                         Math.radToDeg(deltaEuler.x),
                         Math.radToDeg(deltaEuler.y),
                         Math.radToDeg(deltaEuler.z),
-                    ]
+                    ])
                 };
             }
         });
@@ -3491,24 +4206,61 @@ function efSetupIKSupportInner() {
         return get_samples ? results : undefined;
     }
 
-    // 2-bone IK 解析求解，带 pole target 控制弯曲方向
+    function efSolveSingleBoneIK(bones, controller, boneWorldPositions, get_samples) {
+        const config = efGetIKConfig(controller);
+        if (!config || bones.length !== 1) return null;
+        const bone = bones[0];
+        const rest = boneWorldPositions[0];
+        const restDirection = rest.end.clone().sub(rest.start);
+        const targetDirection = efGetNodeWorldPosition(controller).sub(rest.start);
+        if (restDirection.lengthSq() < 1e-12 || targetDirection.lengthSq() < 1e-12) return null;
+        restDirection.normalize();
+        targetDirection.normalize();
+        const targetWorldQuaternion = new THREE.Quaternion().setFromUnitVectors(restDirection, targetDirection).multiply(rest.quaternion);
+        const parentQuaternion = bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion());
+        const restRotation = bone.mesh.fix_rotation
+            ? bone.mesh.fix_rotation.clone()
+            : new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+        restRotation.order = Format.euler_order || restRotation.order;
+        const restQuaternion = new THREE.Quaternion().setFromEuler(restRotation);
+        let localQuaternion = parentQuaternion.invert().multiply(targetWorldQuaternion);
+        localQuaternion = efApplyTwistStiffness(localQuaternion, restQuaternion, Number(config.twist_stiffness) || 0);
+        localQuaternion = efApplyIKLimit(localQuaternion, restQuaternion, config.limits && config.limits[bone.uuid]);
+        localQuaternion = restQuaternion.clone().slerp(localQuaternion, THREE.MathUtils.clamp(config.influence === undefined ? 1 : Number(config.influence), 0, 1));
+        bone.mesh.quaternion.copy(localQuaternion);
+        bone.mesh.updateMatrixWorld(true);
+        if (!get_samples) return undefined;
+        const deltaQuaternion = restQuaternion.clone().invert().multiply(localQuaternion);
+        const deltaEuler = new THREE.Euler().setFromQuaternion(deltaQuaternion, Format.euler_order || 'ZYX');
+        return {
+            [bone.uuid]: {
+                euler: deltaEuler,
+                array: efMakeEulerContinuous(controller, bone, [
+                    Math.radToDeg(deltaEuler.x),
+                    Math.radToDeg(deltaEuler.y),
+                    Math.radToDeg(deltaEuler.z)
+                ])
+            }
+        };
+    }
+
     function efSolveTwoBoneIKWithPole(bones, target, controller, pole, boneWorldPositions, get_samples) {
+        const config = efGetIKConfig(controller);
+        if (!config) return null;
         const hipWorld = boneWorldPositions[0].start;
         const kneeRest = boneWorldPositions[0].end;
         const ankleRest = boneWorldPositions[1].end;
         const thighLen = hipWorld.distanceTo(kneeRest);
         const legLen = kneeRest.distanceTo(ankleRest);
-        const ankleTarget = controller.getWorldCenter(true);
-        const poleWorld = pole.getWorldCenter(true);
-        const dist = hipWorld.distanceTo(ankleTarget);
-
-        // 不可达时回退到 FIK（完全伸直）
-        if (dist >= thighLen + legLen - 1e-4 || dist <= Math.abs(thighLen - legLen) + 1e-4) {
-            return null;
-        }
-
-        const AB = ankleTarget.clone().sub(hipWorld);
-        const axis = AB.clone().normalize();
+        const ankleTarget = efGetNodeWorldPosition(controller);
+        const poleWorld = efGetNodeWorldPosition(pole);
+        const targetOffset = ankleTarget.clone().sub(hipWorld);
+        if (targetOffset.lengthSq() < 1e-12 || thighLen < 1e-6 || legLen < 1e-6) return null;
+        const axis = targetOffset.normalize();
+        const minReach = Math.abs(thighLen - legLen) + 1e-5;
+        const maxReach = Math.max(minReach, thighLen + legLen - 1e-5);
+        const dist = THREE.MathUtils.clamp(hipWorld.distanceTo(ankleTarget), minReach, maxReach);
+        const solvedTarget = hipWorld.clone().add(axis.clone().multiplyScalar(dist));
         const d1 = (thighLen * thighLen - legLen * legLen + dist * dist) / (2 * dist);
         const r = Math.sqrt(Math.max(0, thighLen * thighLen - d1 * d1));
         const circleCenter = hipWorld.clone().add(axis.clone().multiplyScalar(d1));
@@ -3516,14 +4268,21 @@ function efSetupIKSupportInner() {
         const poleToCenter = poleWorld.clone().sub(circleCenter);
         let poleProj = poleToCenter.clone().sub(axis.clone().multiplyScalar(poleToCenter.dot(axis)));
         if (poleProj.lengthSq() < 1e-6) {
-            const arbitrary = Math.abs(axis.y) < 0.9 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
-            poleProj = new THREE.Vector3().crossVectors(axis, arbitrary).normalize();
+            const restJointOffset = kneeRest.clone().sub(circleCenter);
+            poleProj = restJointOffset.sub(axis.clone().multiplyScalar(restJointOffset.dot(axis)));
         }
-        const kneeWorld = circleCenter.clone().add(poleProj.normalize().multiplyScalar(r));
+        if (poleProj.lengthSq() < 1e-6) {
+            const arbitrary = Math.abs(axis.y) < 0.9 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
+            poleProj = new THREE.Vector3().crossVectors(axis, arbitrary);
+        }
+        poleProj.normalize();
+        const poleAngle = Math.degToRad(Number(config.pole_angle) || 0);
+        if (Math.abs(poleAngle) > 1e-8) poleProj.applyQuaternion(new THREE.Quaternion().setFromAxisAngle(axis, poleAngle));
+        const kneeWorld = circleCenter.clone().add(poleProj.multiplyScalar(r));
 
         const fikBones = [
             { start: hipWorld, end: kneeWorld },
-            { start: kneeWorld, end: ankleTarget }
+            { start: kneeWorld, end: solvedTarget }
         ];
 
         const results = {};
@@ -3532,54 +4291,35 @@ function efSetupIKSupportInner() {
             const ikWorld = fikBones[i].end.clone().sub(fikBones[i].start).normalize();
 
             const deltaQuat = new THREE.Quaternion().setFromUnitVectors(restWorld, ikWorld);
+            const targetWorldQuat = deltaQuat.multiply(boneWorldPositions[i].quaternion);
             const parentQuat = bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion());
-            const localDeltaQuat = parentQuat.clone().invert().multiply(deltaQuat).multiply(parentQuat);
-            const fixQuat = new THREE.Quaternion().setFromEuler(
-                bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0),
-                Format.euler_order || 'ZYX'
+            let newLocalQuat = parentQuat.clone().invert().multiply(targetWorldQuat);
+            const fixRotation = bone.mesh.fix_rotation
+                ? bone.mesh.fix_rotation.clone()
+                : new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+            fixRotation.order = Format.euler_order || fixRotation.order;
+            const fixQuat = new THREE.Quaternion().setFromEuler(fixRotation);
+            newLocalQuat = efApplyTwistStiffness(newLocalQuat, fixQuat, Number(config.twist_stiffness) || 0);
+            newLocalQuat = efApplyIKLimit(newLocalQuat, fixQuat, config.limits && config.limits[bone.uuid]);
+            const influencedQuat = fixQuat.clone().slerp(
+                newLocalQuat,
+                THREE.MathUtils.clamp(config.influence === undefined ? 1 : Number(config.influence), 0, 1)
             );
-            const newLocalQuat = localDeltaQuat.multiply(fixQuat);
-            const newEuler = new THREE.Euler().setFromQuaternion(newLocalQuat, Format.euler_order || 'ZYX');
-
-            // 应用 IK 角度限制（限制值表示相对于 rest pose 的偏移）
-            const limit = controller.ik_limits && controller.ik_limits[bone.uuid];
-            if (limit && limit.enabled) {
-                const fixRot = bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
-                const offsetEuler = new THREE.Euler(
-                    newEuler.x - fixRot.x,
-                    newEuler.y - fixRot.y,
-                    newEuler.z - fixRot.z,
-                    Format.euler_order || 'ZYX'
-                );
-                if (limit.rotationMin) {
-                    offsetEuler.x = Math.max(offsetEuler.x, limit.rotationMin.x);
-                    offsetEuler.y = Math.max(offsetEuler.y, limit.rotationMin.y);
-                    offsetEuler.z = Math.max(offsetEuler.z, limit.rotationMin.z);
-                }
-                if (limit.rotationMax) {
-                    offsetEuler.x = Math.min(offsetEuler.x, limit.rotationMax.x);
-                    offsetEuler.y = Math.min(offsetEuler.y, limit.rotationMax.y);
-                    offsetEuler.z = Math.min(offsetEuler.z, limit.rotationMax.z);
-                }
-                newEuler.set(
-                    fixRot.x + offsetEuler.x,
-                    fixRot.y + offsetEuler.y,
-                    fixRot.z + offsetEuler.z
-                );
-            }
-
-            bone.mesh.rotation.copy(newEuler);
-            bone.mesh.updateMatrixWorld();
+            bone.mesh.quaternion.copy(influencedQuat);
+            bone.mesh.rotation.setFromQuaternion(influencedQuat, Format.euler_order || 'ZYX');
+            bone.mesh.updateMatrixWorld(true);
 
             if (get_samples) {
-                const deltaEuler = new THREE.Euler().setFromQuaternion(localDeltaQuat, Format.euler_order || 'ZYX');
+                const appliedLocalQuat = influencedQuat.clone();
+                const appliedDeltaQuat = fixQuat.clone().invert().multiply(appliedLocalQuat);
+                const deltaEuler = new THREE.Euler().setFromQuaternion(appliedDeltaQuat, Format.euler_order || 'ZYX');
                 results[bone.uuid] = {
                     euler: deltaEuler,
-                    array: [
+                    array: efMakeEulerContinuous(controller, bone, [
                         Math.radToDeg(deltaEuler.x),
                         Math.radToDeg(deltaEuler.y),
                         Math.radToDeg(deltaEuler.z),
-                    ]
+                    ])
                 };
             }
         });
@@ -3590,15 +4330,14 @@ function efSetupIKSupportInner() {
     // 自定义 IK 求解，修复 Blockbench 原生 displayIK 对旋转骨骼 rest direction 的计算错误
     function efDisplayIK(animator, get_samples) {
         const null_object = animator.getElement();
-        if (!null_object || !null_object.ik_target || !null_object.ik_source) return;
+        const config = efGetIKConfig(null_object);
+        if (!config) return;
 
-        const target = efFindNodeByUuid(null_object.ik_target);
-        const source = efFindNodeByUuid(null_object.ik_source);
-        if (!target || !source || !target.isChildOf(source)) return;
+        const target = efFindNodeByUuid(config.target);
+        if (!(target instanceof ArmatureBone)) return;
 
-        // IK 禁用时，将控制器对齐到目标骨骼尾端，使其跟随 FK 运动
-        if (null_object.ik_enabled === false) {
-            const ankleWorld = efGetBoneTailWorldPosition(target);
+        if (config.enabled === false) {
+            const ankleWorld = efGetIKEffectorWorldPosition(target);
             const parent = null_object.parent;
             let localPos = ankleWorld.clone();
             if (parent !== 'root' && parent.mesh) {
@@ -3611,16 +4350,8 @@ function efSetupIKSupportInner() {
             return;
         }
 
-        // 把目标骨骼也纳入 IK 链，末端使用骨骼尾端（ankle/wrist）而不是中心
-        const bones = [];
-        let cur = target;
-        while (cur !== source) {
-            if (cur instanceof ArmatureBone) bones.push(cur);
-            cur = cur.parent;
-        }
-        if (source instanceof ArmatureBone) bones.push(source);
+        const bones = efCollectIKChain(target, config.chain_length);
         if (!bones.length) return;
-        bones.reverse();
 
         // 重置到 rest pose（位置、旋转、缩放都要还原）
         bones.forEach(bone => {
@@ -3635,76 +4366,139 @@ function efSetupIKSupportInner() {
         bones.forEach((bone, i) => {
             const next = bones[i + 1];
             const start = bone.mesh.getWorldPosition(new THREE.Vector3());
-            const end = next ? next.mesh.getWorldPosition(new THREE.Vector3()) : efGetBoneTailWorldPosition(bone);
-            boneWorldPositions.push({ start, end });
+            const end = next
+                ? next.mesh.getWorldPosition(new THREE.Vector3())
+                : efUsesBoneOriginAsEffector(target)
+                    ? efGetNodeWorldPosition(target)
+                    : efGetBoneTailWorldPosition(bone);
+            const quaternion = bone.mesh.getWorldQuaternion(new THREE.Quaternion());
+            boneWorldPositions.push({ start, end, quaternion });
         });
 
-        const pole = null_object.ik_pole ? efFindNodeByUuid(null_object.ik_pole) : null;
+        const pole = efFindPole(null_object);
 
-        // 2-bone 链 + pole 时用解析 IK 求解，pole 控制膝盖/肘部弯曲方向
+        if (bones.length === 1) {
+            let result = efSolveSingleBoneIK(bones, null_object, boneWorldPositions, get_samples);
+            if (result !== null) {
+                if (!bones.includes(target)) result = efApplyTargetOrientation(null_object, target, get_samples, result);
+                if (typeof Canvas !== 'undefined' && Canvas.scene) Canvas.scene.updateMatrixWorld(true);
+                if (typeof Animator !== 'undefined' && Animator.displayMeshDeformation) Animator.displayMeshDeformation();
+                return result;
+            }
+        }
+
         if (bones.length === 2 && pole) {
-            const result = efSolveTwoBoneIKWithPole(bones, target, null_object, pole, boneWorldPositions, get_samples);
-            if (result !== null) return result;
-            // 不可达时退化到 CCD 求解
+            let result = efSolveTwoBoneIKWithPole(bones, target, null_object, pole, boneWorldPositions, get_samples);
+            if (result !== null) {
+                bones.forEach(efApplyBoneAnimationRotation);
+                if (get_samples) result = efCollectIKSamples(bones, null_object);
+                if (!bones.includes(target)) result = efApplyTargetOrientation(null_object, target, get_samples, result);
+                if (typeof Canvas !== 'undefined' && Canvas.scene) Canvas.scene.updateMatrixWorld(true);
+                if (typeof Animator !== 'undefined' && Animator.displayMeshDeformation) Animator.displayMeshDeformation();
+                return result;
+            }
         }
 
         // 使用 Three.js CCDIKSolver 求解
         // 在目标骨骼尾端创建一个临时 effector bone，这样 Leg 和 Thigh 都能被旋转
         const effectorBone = new THREE.Bone();
         effectorBone.name = target.name + '_ik_effector';
-        const tailWorld = efGetBoneTailWorldPosition(target);
+        const tailWorld = efGetIKEffectorWorldPosition(target);
         const tailLocal = tailWorld.clone();
         target.mesh.worldToLocal(tailLocal);
         effectorBone.position.copy(tailLocal);
         target.mesh.add(effectorBone);
         effectorBone.updateMatrixWorld();
 
-        const ikBones = bones.map(bone => bone.mesh);
-        const effectorIndex = bones.length;
-        ikBones.push(effectorBone);
-        ikBones.push(null_object.mesh);
-        const targetIndex = ikBones.length - 1;
+        try {
+            const ikBones = bones.map(bone => bone.mesh);
+            const effectorIndex = bones.length;
+            ikBones.push(effectorBone);
+            ikBones.push(null_object.mesh);
+            const targetIndex = ikBones.length - 1;
 
-        const links = [];
-        for (let i = effectorIndex - 1; i >= 0; i--) {
-            const bone = bones[i];
-            const limit = null_object.ik_limits && null_object.ik_limits[bone.uuid];
-            const link = { index: i, enabled: true };
-            if (limit && limit.enabled) {
-                if (limit.limitation) link.limitation = limit.limitation;
-                // IK 限制值表示相对于 rest pose 的偏移，转换为绝对限制传入 solver
-                const fixRot = bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
-                if (limit.rotationMin) {
-                    link.rotationMin = new THREE.Vector3(
-                        fixRot.x + limit.rotationMin.x,
-                        fixRot.y + limit.rotationMin.y,
-                        fixRot.z + limit.rotationMin.z
-                    );
+            const links = [];
+            for (let i = effectorIndex - 1; i >= 0; i--) {
+                const bone = bones[i];
+                const limit = config.limits && config.limits[bone.uuid];
+                const link = { index: i, enabled: true };
+                if (limit && limit.enabled) {
+                    if (limit.limitation) link.limitation = efToVector3(limit.limitation);
+                    // IK 限制值表示相对于 rest pose 的偏移，转换为绝对限制传入 solver
+                    const fixRot = bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+                    if (limit.rotationMin) {
+                        const rotationMin = efToVector3(limit.rotationMin);
+                        link.rotationMin = new THREE.Vector3(
+                            fixRot.x + rotationMin.x,
+                            fixRot.y + rotationMin.y,
+                            fixRot.z + rotationMin.z
+                        );
+                    }
+                    if (limit.rotationMax) {
+                        const rotationMax = efToVector3(limit.rotationMax);
+                        link.rotationMax = new THREE.Vector3(
+                            fixRot.x + rotationMax.x,
+                            fixRot.y + rotationMax.y,
+                            fixRot.z + rotationMax.z
+                        );
+                    }
                 }
-                if (limit.rotationMax) {
-                    link.rotationMax = new THREE.Vector3(
-                        fixRot.x + limit.rotationMax.x,
-                        fixRot.y + limit.rotationMax.y,
-                        fixRot.z + limit.rotationMax.z
-                    );
+                links.push(link);
+            }
+
+            const ik = {
+                effector: effectorIndex,
+                target: targetIndex,
+                links: links,
+                iteration: THREE.MathUtils.clamp(Math.floor(Number(config.iterations) || 10), 1, 100),
+                blendFactor: THREE.MathUtils.clamp(config.influence === undefined ? 1 : Number(config.influence), 0, 1),
+                tolerance: Math.max(1e-6, Number(config.tolerance) || 0.001),
+            };
+
+            const skinnedMesh = { skeleton: { bones: ikBones } };
+            const solver = new CCDIKSolver(skinnedMesh, [ik]);
+            solver.update();
+            if (pole && bones.length > 2) {
+                const poleWorld = efGetNodeWorldPosition(pole);
+                const rootWorld = bones[0].mesh.getWorldPosition(new THREE.Vector3());
+                const effectorWorld = efGetIKEffectorWorldPosition(target);
+                const chainAxis = effectorWorld.clone().sub(rootWorld);
+                const tolerance = Math.max(1e-6, Number(config.tolerance) || 0.001);
+                const poleIterations = THREE.MathUtils.clamp(Math.floor(Number(config.pole_iterations) || 4), 1, 50);
+                if (chainAxis.lengthSq() > 1e-12) {
+                    chainAxis.normalize();
+                    const poleAngle = Math.degToRad(Number(config.pole_angle) || 0);
+                    for (let pass = 0; pass < poleIterations; pass++) {
+                        const poleProjection = poleWorld.clone().sub(rootWorld).projectOnPlane(chainAxis);
+                        if (poleProjection.lengthSq() < 1e-12) break;
+                        poleProjection.normalize();
+                        if (Math.abs(poleAngle) > 1e-8) poleProjection.applyAxisAngle(chainAxis, poleAngle);
+                        let corrected = false;
+                        for (let jointIndex = 1; jointIndex < bones.length; jointIndex++) {
+                            const joint = bones[jointIndex].mesh.getWorldPosition(new THREE.Vector3());
+                            const jointProjection = joint.clone().sub(rootWorld).projectOnPlane(chainAxis);
+                            if (jointProjection.lengthSq() < 1e-12) continue;
+                            jointProjection.normalize();
+                            let angle = Math.acos(THREE.MathUtils.clamp(jointProjection.dot(poleProjection), -1, 1));
+                            const cross = new THREE.Vector3().crossVectors(jointProjection, poleProjection);
+                            if (cross.dot(chainAxis) < 0) angle = -angle;
+                            if (Math.abs(angle) <= tolerance) continue;
+                            const owner = bones[jointIndex - 1];
+                            const parentQuaternion = owner.mesh.parent.getWorldQuaternion(new THREE.Quaternion());
+                            const localAxis = chainAxis.clone().applyQuaternion(parentQuaternion.invert());
+                            const weight = 1 / (bones.length - jointIndex);
+                            owner.mesh.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(localAxis, angle * weight));
+                            owner.mesh.updateMatrixWorld(true);
+                            corrected = true;
+                        }
+                        if (!corrected) break;
+                        solver.update();
+                    }
                 }
             }
-            links.push(link);
+        } finally {
+            target.mesh.remove(effectorBone);
         }
-
-        const ik = {
-            effector: effectorIndex,
-            target: targetIndex,
-            links: links,
-            iteration: 10,
-        };
-
-        const skinnedMesh = { skeleton: { bones: ikBones } };
-        const solver = new CCDIKSolver(skinnedMesh, [ik]);
-        solver.update();
-
-        // 移除临时 effector bone
-        target.mesh.remove(effectorBone);
 
         // CCDIKSolver 直接修改了 bone.mesh.quaternion，同步回 Euler rotation
         bones.forEach(bone => {
@@ -3714,39 +4508,32 @@ function efSetupIKSupportInner() {
         });
 
         // 收集结果
-        const results = {};
+        let results = {};
         if (get_samples) {
             bones.forEach(bone => {
-                const restQuat = new THREE.Quaternion().setFromEuler(
-                    bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0),
-                    Format.euler_order || 'ZYX'
-                );
-                const deltaQuat = bone.mesh.quaternion.clone().multiply(restQuat.clone().invert());
+                const restRotation = bone.mesh.fix_rotation
+                    ? bone.mesh.fix_rotation.clone()
+                    : new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+                restRotation.order = Format.euler_order || restRotation.order;
+                const restQuat = new THREE.Quaternion().setFromEuler(restRotation);
+                const deltaQuat = restQuat.clone().invert().multiply(bone.mesh.quaternion);
                 const deltaEuler = new THREE.Euler().setFromQuaternion(deltaQuat, Format.euler_order || 'ZYX');
                 results[bone.uuid] = {
                     euler: deltaEuler,
-                    array: [
+                    array: efMakeEulerContinuous(null_object, bone, [
                         Math.radToDeg(deltaEuler.x),
                         Math.radToDeg(deltaEuler.y),
                         Math.radToDeg(deltaEuler.z),
-                    ]
+                    ])
                 };
             });
         }
 
         // 在 IK 结果上叠加骨骼自身旋转关键帧（手动旋转），实现 IK + FK 同时生效
-        bones.forEach(bone => {
-            const animator = Animation.selected ? Animation.selected.getBoneAnimator(bone) : null;
-            if (animator && animator.rotation && animator.rotation.length) {
-                const rotDeg = animator.interpolate('rotation', false);
-                if (rotDeg) {
-                    bone.mesh.rotation.x += Math.degToRad(rotDeg[0]);
-                    bone.mesh.rotation.y += Math.degToRad(rotDeg[1]);
-                    bone.mesh.rotation.z += Math.degToRad(rotDeg[2]);
-                    bone.mesh.updateMatrixWorld();
-                }
-            }
-        });
+        bones.forEach(efApplyBoneAnimationRotation);
+        if (get_samples) results = efCollectIKSamples(bones, null_object);
+
+        if (!bones.includes(target)) results = efApplyTargetOrientation(null_object, target, get_samples, results);
 
         // Blockbench showDefaultPose(true) 不会更新场景矩阵，
         // 但 Cube/Mesh 作为 bone 子对象需要完整场景矩阵更新才能跟随骨骼
@@ -3764,13 +4551,12 @@ function efSetupIKSupportInner() {
 
     // 判断骨骼是否处于某个启用中 IK 控制器的链上
     function efIsBoneInActiveIKChain(bone) {
-        for (const no of NullObject.all) {
-            if (no.ik_enabled === false || !no.ik_target || !no.ik_source) continue;
-            const source = efFindNodeByUuid(no.ik_source);
-            const target = efFindNodeByUuid(no.ik_target);
-            if (!source || !target) continue;
-            const inChain = (bone === source || bone.isChildOf(source)) && (target === bone || target.isChildOf(bone));
-            if (inChain) return true;
+        for (const controller of NullObject.all) {
+            const config = efGetIKConfig(controller);
+            if (!config || config.enabled === false) continue;
+            const target = efFindNodeByUuid(config.target);
+            if (!target) continue;
+            if (efCollectIKChain(target, config.chain_length).includes(bone)) return true;
         }
         return false;
     }
@@ -3789,23 +4575,194 @@ function efSetupIKSupportInner() {
     const origDisplayIK = NullObjectAnimator.prototype.displayIK;
     NullObjectAnimator.prototype.displayIK = function(get_samples) {
         const null_object = this.getElement();
-        if (null_object && null_object.ik_target && null_object.ik_source) {
-            return efDisplayIK(this, get_samples);
-        }
-        if (null_object && null_object.ik_controller) {
-            const controller = efFindNodeByUuid(null_object.ik_controller);
-            if (controller && controller.ik_target && controller.ik_source) {
+        const config = efGetIKConfig(null_object);
+        if (config) return efDisplayIK(this, get_samples);
+        const poleConfig = efGetPoleConfig(null_object);
+        if (poleConfig) {
+            const controller = efFindNodeByUuid(poleConfig.controller);
+            if (efGetIKConfig(controller)) {
                 const anim = Animation.selected;
                 const controllerAnimator = anim ? anim.getBoneAnimator(controller) : null;
-                if (controllerAnimator && controllerAnimator.displayIK) {
-                    controllerAnimator.displayIK(get_samples);
-                }
+                if (controllerAnimator && controllerAnimator.displayIK) controllerAnimator.displayIK(get_samples);
             }
         }
         return origDisplayIK.call(this, get_samples);
     };
 
+    function efValidateHumanoidRig(expectBaked) {
+        const humanoid = efGetHumanoidRig();
+        const errors = [];
+        if (!humanoid.valid) {
+            if (humanoid.missing.length) errors.push('Missing: ' + humanoid.missing.join(', '));
+            if (humanoid.duplicates.length) errors.push('Duplicate: ' + humanoid.duplicates.join(', '));
+            if (humanoid.invalid.length) errors.push('Hierarchy: ' + humanoid.invalid.join(', '));
+            return errors;
+        }
+        const controllers = efGetRigControllers(humanoid.armature);
+        if (expectBaked) {
+            if (controllers.length) errors.push('Active rig controllers remain after bake');
+            if (efGetArmatureIKNodes(humanoid.armature).length) errors.push('Active IK targets remain after bake');
+            const animation = Animation.selected;
+            Object.keys(humanoid.bones).forEach(name => {
+                const animator = animation && animation.animators[humanoid.bones[name].uuid];
+                if (!animator || !animator.rotation || !animator.rotation.length) errors.push('No baked rotation: ' + name);
+            });
+            return errors;
+        }
+        const roles = controllers.map(node => {
+            const config = node.ef_ik;
+            return config.role + ':' + (config.layer || config.limb || '');
+        });
+        ['master:master', 'fk:root', 'fk:torso', 'fk:chest', 'target:leg_r', 'pole:leg_r', 'target:leg_l', 'pole:leg_l', 'target:arm_r', 'pole:arm_r', 'target:arm_l', 'pole:arm_l'].forEach(role => {
+            if (!roles.includes(role)) errors.push('Missing controller: ' + role);
+        });
+        const expectedLimbTargets = {
+            leg_r: humanoid.bones.Leg_R,
+            leg_l: humanoid.bones.Leg_L,
+            arm_r: humanoid.bones.Tool_R,
+            arm_l: humanoid.bones.Tool_L
+        };
+        controllers.forEach(node => {
+            const config = node.ef_ik;
+            const target = (config.role === 'target' || config.role === 'fk' || config.role === 'master') && efFindNodeByUuid(config.target);
+            if ((config.role === 'target' || config.role === 'fk' || config.role === 'master') && !target) errors.push('Broken target: ' + node.name);
+            if (config.role === 'target' && expectedLimbTargets[config.limb] && target !== expectedLimbTargets[config.limb]) errors.push('Wrong limb target: ' + node.name);
+            const numericValues = [].concat(node.position || [], node.rotation || []);
+            if (numericValues.some(value => !Number.isFinite(Number(value)))) errors.push('Invalid transform: ' + node.name);
+        });
+        return errors;
+    }
+
+    function efShowRigValidation(errors, successMessage) {
+        if (!errors.length) {
+            Blockbench.showQuickMessage(successMessage);
+            return true;
+        }
+        Blockbench.showMessageBox({title: tl('ef.rig.invalid'), icon: 'error', message: errors.join('\n')});
+        return false;
+    }
+
+    function efBakeHumanoidRig() {
+        const animation = Animation.selected;
+        const humanoid = efGetHumanoidRig();
+        const rigControls = efGetRigControllers(humanoid.armature);
+        const controls = [...new Set([...rigControls, ...efGetArmatureIKNodes(humanoid.armature)])];
+        if (!animation || !humanoid.valid || !rigControls.length) return false;
+        const rate = Math.clamp(Number(animation.snapping) || 20, 1, 144);
+        const duration = Math.max(0, Number(animation.length) || 0);
+        const previousTime = Timeline.time;
+        const states = Animation.all.map(item => ({item, selected: item.selected, playing: item.playing}));
+        const timelineAnimators = Timeline.animators ? Timeline.animators.slice() : [];
+        const bones = efGetArmatureBones(humanoid.armature);
+        const samples = {};
+        const previous = {};
+        bones.forEach(bone => samples[bone.uuid] = []);
+        const times = [];
+        for (let step = 0; step <= Math.floor(duration * rate + 0.000001); step++) times.push(Math.min(duration, step / rate));
+        if (!times.length || Math.abs(times[times.length - 1] - duration) > 0.000001) times.push(duration);
+        let editing = false;
+        try {
+            Animation.all.forEach(item => {
+                item.selected = item === animation;
+                item.playing = item === animation;
+            });
+            Animation.selected = animation;
+            if (Timeline.animators) Timeline.animators.length = 0;
+            Object.keys(animation.animators || {}).forEach(uuid => animation.animators[uuid].addToTimeline());
+            controls.forEach(control => delete control._ef_ik_sample_state);
+            times.forEach(time => {
+                Timeline.time = time;
+                Animator.preview();
+                bones.forEach(bone => {
+                    const rest = bone.mesh.fix_rotation ? new THREE.Quaternion().setFromEuler(bone.mesh.fix_rotation) : new THREE.Quaternion();
+                    const euler = new THREE.Euler().setFromQuaternion(rest.invert().multiply(bone.mesh.quaternion.clone()), Format.euler_order || 'ZYX');
+                    const rotation = [Math.radToDeg(euler.x), Math.radToDeg(euler.y), Math.radToDeg(euler.z)];
+                    const prior = previous[bone.uuid];
+                    if (prior) for (let axis = 0; axis < 3; axis++) {
+                        while (rotation[axis] - prior[axis] > 180) rotation[axis] -= 360;
+                        while (rotation[axis] - prior[axis] < -180) rotation[axis] += 360;
+                    }
+                    previous[bone.uuid] = rotation.slice();
+                    const restPosition = bone.mesh.fix_position || new THREE.Vector3().fromArray(bone.origin || [0, 0, 0]);
+                    samples[bone.uuid].push({time, rotation, position: bone.mesh.position.clone().sub(restPosition).toArray()});
+                });
+            });
+            const removed = [];
+            bones.forEach(bone => {
+                const animator = animation.animators[bone.uuid];
+                if (animator) removed.push(...(animator.rotation || []), ...(animator.position || []));
+            });
+            Undo.initEdit({keyframes: removed, elements: controls, outliner: true});
+            editing = true;
+            removed.forEach(keyframe => keyframe.remove());
+            const created = [];
+            bones.forEach(bone => {
+                const animator = animation.getBoneAnimator(bone);
+                samples[bone.uuid].forEach(sample => {
+                    created.push(animator.createKeyframe({x: sample.rotation[0], y: sample.rotation[1], z: sample.rotation[2]}, sample.time, 'rotation', false, false));
+                    created.push(animator.createKeyframe({x: sample.position[0], y: sample.position[1], z: sample.position[2]}, sample.time, 'position', false, false));
+                });
+                animator.addToTimeline();
+            });
+            controls.forEach(node => node.remove());
+            Undo.finishEdit(tl('ef.rig.bake_undo'), {keyframes: created, elements: controls, outliner: true});
+            editing = false;
+        } catch (error) {
+            if (editing && typeof Undo.cancelEdit === 'function') Undo.cancelEdit(true);
+            throw error;
+        } finally {
+            states.forEach(state => {
+                state.item.selected = state.selected;
+                state.item.playing = state.playing;
+            });
+            Animation.selected = (states.find(state => state.selected) || {item: animation}).item;
+            if (Timeline.animators) {
+                Timeline.animators.length = 0;
+                Timeline.animators.push(...timelineAnimators);
+            }
+            Timeline.time = previousTime;
+            Animator.preview();
+        }
+        return efShowRigValidation(efValidateHumanoidRig(true), tl('ef.rig.baked'));
+    }
     const ikActions = [];
+
+    ikActions.push(new Action('ef_rebuild_humanoid_rig', {
+        name: tl('ef.rig.rebuild'),
+        icon: 'accessibility_new',
+        category: 'animation',
+        condition: () => Modes.animate && Animation.selected && efGetHumanoidRig().valid,
+        searchable: true,
+        click: efRebuildHumanoidRig
+    }));
+
+    ikActions.push(new Action('ef_bake_humanoid_rig', {
+        name: tl('ef.rig.bake'),
+        icon: 'cake',
+        category: 'animation',
+        condition: () => {
+            const humanoid = efGetHumanoidRig();
+            return Modes.animate && Animation.selected && humanoid.valid && efGetRigControllers(humanoid.armature).length > 0;
+        },
+        searchable: true,
+        click: efBakeHumanoidRig
+    }));
+
+    ikActions.push(new Action('ef_validate_humanoid_rig', {
+        name: tl('ef.rig.validate'),
+        icon: 'verified',
+        category: 'animation',
+        condition: () => Modes.animate && Animation.selected && !!efGetHumanoidRig().armature,
+        searchable: true,
+        click() {
+            const humanoid = efGetHumanoidRig();
+            efShowRigValidation(efValidateHumanoidRig(efGetRigControllers(humanoid.armature).length === 0), tl('ef.rig.valid'));
+        }
+    }));
+
+    MenuBar.addAction(ikActions[0], 'tools');
+    MenuBar.addAction(ikActions[1], 'tools');
+    MenuBar.addAction(ikActions[2], 'tools');
 
     // 创建 IK 控制器
     ikActions.push(new Action('ef_create_ik_controller', {
@@ -3814,44 +4771,37 @@ function efSetupIKSupportInner() {
         category: 'edit',
         condition: () => Modes.animate && ArmatureBone.selected.length > 0,
         searchable: true,
-        children() {
+        click() {
             const targetBone = ArmatureBone.selected[0];
-            const sources = efCollectSourceCandidates(targetBone);
-            const existingController = efFindController(targetBone);
-            return sources.map(source => ({
-                name: source.name + ((existingController && existingController.ik_source === source.uuid) ? ' (✓)' : ''),
-                icon: 'fa-link',
-                marked: existingController && existingController.ik_source === source.uuid,
-                click() {
-                    const existing = efFindController(targetBone);
-                    if (existing) {
+            const maximum = efGetMaximumChainLength(targetBone);
+            if (!maximum) return;
+            const existing = efFindController(targetBone);
+            const existingConfig = efGetIKConfig(existing);
+            new Dialog('ef_create_ik_controller_dialog', {
+                title: tl('ef.ik.create_controller'),
+                form: {
+                    chain_length: {
+                        type: 'number',
+                        label: tl('ef.ik.chain_length'),
+                        value: existingConfig ? existingConfig.chain_length : Math.min(2, maximum),
+                        min: 0,
+                        max: maximum,
+                        step: 1
+                    }
+                },
+                onConfirm(result) {
+                    const chainLength = THREE.MathUtils.clamp(Math.floor(Number(result.chain_length) || 0), 0, maximum);
+                    if (existingConfig) {
                         Undo.initEdit({elements: [existing]});
-                        existing.ik_source = source.uuid;
+                        existingConfig.chain_length = chainLength;
+                        existing.ef_ik = Object.assign({}, existingConfig);
                         Undo.finishEdit(tl('ef.ik.change_source_undo'));
                     } else {
-                        efCreateController(targetBone, source);
+                        efCreateController(targetBone, chainLength);
                     }
                     Animator.preview();
                 }
-            }));
-        },
-        click(event) {
-            const targetBone = ArmatureBone.selected[0];
-            const sources = efCollectSourceCandidates(targetBone);
-            if (sources.length === 0) return;
-            if (sources.length === 1) {
-                const existing = efFindController(targetBone);
-                if (existing) {
-                    Undo.initEdit({elements: [existing]});
-                    existing.ik_source = sources[0].uuid;
-                    Undo.finishEdit(tl('ef.ik.change_source_undo'));
-                } else {
-                    efCreateController(targetBone, sources[0]);
-                }
-                Animator.preview();
-                return;
-            }
-            new Menu('ef_create_ik_controller', this.children(this), {searchable: true}).show(event.target, this);
+            }).show();
         }
     }));
 
@@ -3867,10 +4817,8 @@ function efSetupIKSupportInner() {
                 const c = efFindController(b);
                 if (c) {
                     controllers.push(c);
-                    if (c.ik_pole) {
-                        const pole = efFindNodeByUuid(c.ik_pole);
-                        if (pole) controllers.push(pole);
-                    }
+                    const pole = efFindPole(c);
+                    if (pole) controllers.push(pole);
                 }
             });
             if (!controllers.length) return;
@@ -3901,20 +4849,21 @@ function efSetupIKSupportInner() {
         category: 'edit',
         condition() {
             if (!Modes.animate || !Animation.selected) return false;
-            const controller = NullObject.selected[0] || ArmatureBone.selected.map(b => efFindController(b)).find(c => c);
+            const selected = NullObject.selected[0];
+            const controller = efResolveController(selected) || ArmatureBone.selected.map(b => efFindController(b)).find(c => c);
             return !!controller;
         },
         click() {
-            let controller = NullObject.selected[0];
-            if (!controller || !controller.ik_target) {
-                controller = ArmatureBone.selected.map(b => efFindController(b)).find(c => c);
-            }
-            if (!controller) return;
-            controller.ik_enabled = controller.ik_enabled !== false ? false : true;
+            const selected = NullObject.selected[0];
+            const controller = efResolveController(selected) || ArmatureBone.selected.map(b => efFindController(b)).find(c => c);
+            const config = efGetIKConfig(controller);
+            if (!config) return;
             Undo.initEdit({elements: [controller]});
-            Undo.finishEdit(controller.ik_enabled ? tl('ef.ik.enable_undo') : tl('ef.ik.disable_undo'));
+            config.enabled = config.enabled === false;
+            controller.ef_ik = Object.assign({}, config);
+            Undo.finishEdit(config.enabled ? tl('ef.ik.enable_undo') : tl('ef.ik.disable_undo'));
             Animator.preview();
-            Blockbench.showQuickMessage(controller.ik_enabled !== false ? tl('ef.ik.enabled') : tl('ef.ik.disabled'));
+            Blockbench.showQuickMessage(config.enabled ? tl('ef.ik.enabled') : tl('ef.ik.disabled'));
         }
     }));
 
@@ -3925,36 +4874,82 @@ function efSetupIKSupportInner() {
         category: 'edit',
         condition() {
             if (!Modes.animate || !Animation.selected) return false;
-            const controller = NullObject.selected[0] || ArmatureBone.selected.map(b => efFindController(b)).find(c => c);
+            const selected = NullObject.selected[0];
+            const controller = efResolveController(selected) || ArmatureBone.selected.map(b => efFindController(b)).find(c => c);
             return !!controller;
         },
         click() {
-            let controller = NullObject.selected[0];
-            if (!controller || !controller.ik_target) {
-                controller = ArmatureBone.selected.map(b => efFindController(b)).find(c => c);
-            }
-            if (!controller) return;
+            const selected = NullObject.selected[0];
+            const controller = efResolveController(selected) || ArmatureBone.selected.map(b => efFindController(b)).find(c => c);
+            const config = efGetIKConfig(controller);
+            if (!config) return;
 
-            const target = efFindNodeByUuid(controller.ik_target);
-            const source = efFindNodeByUuid(controller.ik_source);
-            if (!target || !source) return;
+            const target = efFindNodeByUuid(config.target);
+            if (!target) return;
 
-            const bones = [];
-            let cur = target;
-            while (cur !== source) {
-                if (cur instanceof ArmatureBone) bones.push(cur);
-                cur = cur.parent;
-            }
-            if (source instanceof ArmatureBone) bones.push(source);
-            bones.reverse();
+            const maximum = efGetMaximumChainLength(target);
+            const bones = efCollectIKChain(target, config.chain_length);
 
-            const form = {};
+            const form = {
+                chain_length: {
+                    type: 'number',
+                    label: tl('ef.ik.chain_length'),
+                    value: config.chain_length,
+                    min: 0,
+                    max: maximum,
+                    step: 1
+                },
+                iterations: {
+                    type: 'number',
+                    label: tl('ef.ik.iterations'),
+                    value: Number(config.iterations) || 10,
+                    min: 1,
+                    max: 100,
+                    step: 1
+                },
+                pole_iterations: {
+                    type: 'number',
+                    label: tl('ef.ik.pole_iterations'),
+                    value: Number(config.pole_iterations) || 4,
+                    min: 1,
+                    max: 50,
+                    step: 1
+                },
+                tolerance: {
+                    type: 'number',
+                    label: tl('ef.ik.tolerance'),
+                    value: Number(config.tolerance) || 0.001,
+                    min: 0.000001,
+                    step: 0.0001
+                },
+                pole_angle: {
+                    type: 'number',
+                    label: tl('ef.ik.pole_angle'),
+                    value: Number(config.pole_angle) || 0
+                },
+                influence: {
+                    type: 'number',
+                    label: tl('ef.ik.influence'),
+                    value: config.influence === undefined ? 1 : Number(config.influence),
+                    min: 0,
+                    max: 1,
+                    step: 0.05
+                },
+                twist_stiffness: {
+                    type: 'number',
+                    label: tl('ef.ik.twist_stiffness'),
+                    value: config.twist_stiffness === undefined ? 0.75 : Number(config.twist_stiffness),
+                    min: 0,
+                    max: 1,
+                    step: 0.05
+                }
+            };
             bones.forEach(bone => {
-                const limit = (controller.ik_limits && controller.ik_limits[bone.uuid]) || {};
+                const limit = (config.limits && config.limits[bone.uuid]) || {};
                 const defaultLimit = efGetDefaultIKLimit(bone) || {};
                 const enabled = !!limit.enabled;
                 const limitation = limit.limitation
-                    ? limit.limitation.clone()
+                    ? efToVector3(limit.limitation)
                     : (defaultLimit.limitation ? defaultLimit.limitation.clone() : new THREE.Vector3(0, 1, 0));
                 const maxAxis = Math.abs(limitation.x) > Math.abs(limitation.y)
                     ? (Math.abs(limitation.x) > Math.abs(limitation.z) ? 'x' : 'z')
@@ -3965,11 +4960,13 @@ function efSetupIKSupportInner() {
                 const defaultMax = defaultLimit.rotationMax
                     ? [Math.radToDeg(defaultLimit.rotationMax.x), Math.radToDeg(defaultLimit.rotationMax.y), Math.radToDeg(defaultLimit.rotationMax.z)]
                     : [0, 0, 0];
-                const minDeg = limit.rotationMin
-                    ? [Math.radToDeg(limit.rotationMin.x), Math.radToDeg(limit.rotationMin.y), Math.radToDeg(limit.rotationMin.z)]
+                const savedMin = limit.rotationMin ? efToVector3(limit.rotationMin) : null;
+                const savedMax = limit.rotationMax ? efToVector3(limit.rotationMax) : null;
+                const minDeg = savedMin
+                    ? [Math.radToDeg(savedMin.x), Math.radToDeg(savedMin.y), Math.radToDeg(savedMin.z)]
                     : defaultMin;
-                const maxDeg = limit.rotationMax
-                    ? [Math.radToDeg(limit.rotationMax.x), Math.radToDeg(limit.rotationMax.y), Math.radToDeg(limit.rotationMax.z)]
+                const maxDeg = savedMax
+                    ? [Math.radToDeg(savedMax.x), Math.radToDeg(savedMax.y), Math.radToDeg(savedMax.z)]
                     : defaultMax;
 
                 form[bone.uuid + '_enabled'] = {
@@ -4002,7 +4999,14 @@ function efSetupIKSupportInner() {
                 form,
                 onConfirm(result) {
                     Undo.initEdit({elements: [controller]});
-                    controller.ik_limits = {};
+                    config.chain_length = THREE.MathUtils.clamp(Math.floor(Number(result.chain_length) || 0), 0, maximum);
+                    config.iterations = THREE.MathUtils.clamp(Math.floor(Number(result.iterations) || 10), 1, 100);
+                    config.pole_iterations = THREE.MathUtils.clamp(Math.floor(Number(result.pole_iterations) || 4), 1, 50);
+                    config.tolerance = Math.max(0.000001, Number(result.tolerance) || 0.001);
+                    config.pole_angle = Number(result.pole_angle) || 0;
+                    config.influence = THREE.MathUtils.clamp(Number(result.influence), 0, 1);
+                    config.twist_stiffness = THREE.MathUtils.clamp(Number(result.twist_stiffness), 0, 1);
+                    config.limits = {};
                     bones.forEach(bone => {
                         const enabled = result[bone.uuid + '_enabled'];
                         if (!enabled) return;
@@ -4013,7 +5017,7 @@ function efSetupIKSupportInner() {
                         }
                         const minDeg = result[bone.uuid + '_min'];
                         const maxDeg = result[bone.uuid + '_max'];
-                        controller.ik_limits[bone.uuid] = {
+                        config.limits[bone.uuid] = {
                             enabled: true,
                             limitation: limitationStr !== 'none' ? limitation : undefined,
                             rotationMin: new THREE.Vector3(
@@ -4028,6 +5032,7 @@ function efSetupIKSupportInner() {
                             )
                         };
                     });
+                    controller.ef_ik = Object.assign({}, config);
                     Undo.finishEdit(tl('ef.ik.edit_limits_undo'));
                     Animator.preview();
                 }
@@ -4035,40 +5040,76 @@ function efSetupIKSupportInner() {
         }
     }));
 
-    // 添加到 ArmatureBone 右键菜单
+    function efAddIKMenuItems(menu, items) {
+        if (!menu || !Array.isArray(menu.structure) || patchedIKMenus.has(menu)) return;
+        const entries = [new MenuSeparator('ef_ik'), ...items];
+        menu.structure.push(...entries);
+        patchedIKMenus.set(menu, entries);
+    }
+
     const origShowContextMenu = ArmatureBone.prototype.showContextMenu;
     ArmatureBone.prototype.showContextMenu = function(event) {
-        if (!this.menu._efIKAdded) {
-            this.menu.structure.push(new MenuSeparator('ef_ik'));
-            this.menu.structure.push('ef_create_ik_controller');
-            this.menu.structure.push('ef_break_ik_controller');
-            this.menu.structure.push('ef_bake_ik_controller');
-            this.menu.structure.push('ef_toggle_ik_controller');
-            this.menu.structure.push('ef_ik_limits');
-            this.menu._efIKAdded = true;
-        }
+        efAddIKMenuItems(this.menu, [
+            'ef_rebuild_humanoid_rig',
+            'ef_bake_humanoid_rig',
+            'ef_validate_humanoid_rig',
+            new MenuSeparator('ef_ik_manual'),
+            'ef_create_ik_controller',
+            'ef_break_ik_controller',
+            'ef_bake_ik_controller',
+            'ef_toggle_ik_controller',
+            'ef_ik_limits'
+        ]);
         return origShowContextMenu.call(this, event);
     };
 
-    // 添加到 NullObject（控制器/pole）右键菜单
     const origNullShowContextMenu = NullObject.prototype.showContextMenu;
     NullObject.prototype.showContextMenu = function(event) {
-        if (!this.menu._efIKAdded) {
-            this.menu.structure.push(new MenuSeparator('ef_ik'));
-            this.menu.structure.push('ef_toggle_ik_controller');
-            this.menu.structure.push('ef_ik_limits');
-            this.menu._efIKAdded = true;
-        }
+        efAddIKMenuItems(this.menu, [
+            'ef_toggle_ik_controller',
+            'ef_ik_limits'
+        ]);
         return origNullShowContextMenu.call(this, event);
     };
 
     return {
         cleanup() {
             NullObjectAnimator.prototype.displayIK = origDisplayIK;
+            NullObjectAnimator.prototype.displayFrame = originalNullDisplayFrame;
+            NullObjectAnimator.prototype.channels = originalNullChannels;
             BoneAnimator.prototype.displayRotation = origDisplayRotation;
+            NullObject.preview_controller.updateTransform = originalNullUpdateTransform;
+            NullObject.preview_controller.updateSelection = originalNullUpdateSelection;
+            if (originalPreviewRaycast) Preview.prototype.raycast = originalPreviewRaycast;
+            NullObject.prototype.constructor.behavior.rotatable = originalNullObjectRotatable;
             ArmatureBone.prototype.showContextMenu = origShowContextMenu;
             NullObject.prototype.showContextMenu = origNullShowContextMenu;
+            patchedIKMenus.forEach((entries, menu) => {
+                entries.forEach(entry => {
+                    const index = menu.structure.indexOf(entry);
+                    if (index !== -1) menu.structure.splice(index, 1);
+                });
+            });
+            patchedIKMenus.clear();
+            Blockbench.removeListener('update_selection', updateIKVisuals);
+            Blockbench.removeListener('update_view', updateIKVisuals);
+            if (ikLineHelper.parent) ikLineHelper.parent.remove(ikLineHelper);
+            ikLineGeometry.dispose();
+            ikLineMaterial.dispose();
+            NullObject.all.forEach(element => {
+                delete element._ef_ik_sample_state;
+                if (element.mesh) {
+                    efDisposeControllerVisual(controllerVisuals.get(element.uuid));
+                    if (element.ef_ik) {
+                        originalNullUpdateTransform.call(NullObject.preview_controller, element);
+                        originalNullUpdateSelection.call(NullObject.preview_controller, element);
+                    }
+                }
+            });
+            [...controllerVisuals.values()].forEach(efDisposeControllerVisual);
+            controllerVisuals.clear();
             ikActions.forEach(a => a.delete());
+            ikProperties.forEach(property => property.delete());
         }
     };
 }
