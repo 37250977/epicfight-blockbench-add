@@ -2987,13 +2987,197 @@ const EF_I18N = {
         'ef.constraint.select_bone': 'Select an armature bone to edit constraints',
         'ef.constraint.copy_transform': 'Copy Transform',
         'ef.constraint.copy_position': 'Copy Position',
+        'ef.constraint.position_blend': 'Position Blend',
         'ef.constraint.copy_rotation': 'Copy Rotation',
+        'ef.constraint.copy_quaternion': 'Copy Quaternion',
+        'ef.constraint.rotation_blend': 'Rotation Blend',
+        'ef.constraint.scale_blend': 'Scale Blend',
+        'ef.constraint.rotation_difference': 'Rotation Difference',
+        'ef.constraint.distance': 'Distance',
+        'ef.constraint.limit_distance': 'Limit Distance',
+        'ef.constraint.distance_mode': 'Mode',
+        'ef.constraint.distance_mode_exact': 'Exact',
+        'ef.constraint.distance_mode_minimum': 'Minimum',
+        'ef.constraint.distance_mode_maximum': 'Maximum',
+        'ef.constraint.distance_mode_initial': 'Initial',
+        'ef.constraint.distance_value': 'Distance',
+        'ef.constraint.initial_distance': 'Initial Distance',
+        'ef.constraint.reset_initial_distance': 'Reset',
+        'ef.constraint.softness': 'Softness',
+        'ef.constraint.owner_local': 'Owner Local',
+        'ef.constraint.direction': 'Direction',
+        'ef.constraint.a_to_b': 'A to B',
+        'ef.constraint.b_to_a': 'B to A',
+        'ef.constraint.application_mode': 'Application Mode',
+        'ef.constraint.difference_strength': 'Difference Strength',
+        'ef.constraint.target_a': 'Target A',
+        'ef.constraint.target_b': 'Target B',
+        'ef.constraint.source_space_a': 'Source Space A',
+        'ef.constraint.source_space_b': 'Source Space B',
+        'ef.constraint.blend_weight': 'Blend Weight',
+        'ef.constraint.invert_target_a': 'Invert Target A',
+        'ef.constraint.invert_target_b': 'Invert Target B',
+        'ef.constraint.invert_position_a': 'Invert Target A Displacement',
+        'ef.constraint.invert_position_b': 'Invert Target B Displacement',
+        'ef.constraint.position_axes': 'Position Axes',
+        'ef.constraint.scale_axes': 'Scale Axes',
+        'ef.constraint.reciprocal_scale_a': 'Reciprocal Target A Scale',
+        'ef.constraint.reciprocal_scale_b': 'Reciprocal Target B Scale',
+        'ef.constraint.linear': 'Linear',
+        'ef.constraint.logarithmic': 'Logarithmic',
         'ef.constraint.copy_scale': 'Copy Scale',
+        'ef.constraint.maintain_volume': 'Maintain Volume',
+        'ef.constraint.reference_scale': 'Reference Scale',
+        'ef.constraint.maintain_volume_main_axis.desc': 'Scale axis used to calculate the current-to-reference ratio; X, Y or Z',
+        'ef.constraint.reset_reference_scale': 'Reset',
+        'ef.constraint.compensation_mode': 'Compensation Mode',
+        'ef.constraint.compensation_volume': 'Volume',
+        'ef.constraint.compensation_area': 'Area',
+        'ef.constraint.compensation_uniform': 'Uniform',
+        'ef.constraint.compensation_custom': 'Custom',
+        'ef.constraint.exponent': 'Exponent',
+        'ef.constraint.custom_x': 'X Compensation',
+        'ef.constraint.custom_y': 'Y Compensation',
+        'ef.constraint.custom_z': 'Z Compensation',
+        'ef.constraint.min_factor': 'Minimum Factor',
+        'ef.constraint.max_factor': 'Maximum Factor',
+        'ef.constraint.compensation_weight': 'Compensation Weight',
+        'ef.constraint.stretch_to': 'Stretch To',
+        'ef.constraint.main_axis': 'Main Axis',
+        'ef.constraint.original_length': 'Original Length',
+        'ef.constraint.rotation_weight': 'Rotation Weight',
+        'ef.constraint.stretch_weight': 'Stretch Weight',
+        'ef.constraint.min_stretch_ratio': 'Minimum Stretch Ratio',
+        'ef.constraint.max_stretch_ratio': 'Maximum Stretch Ratio',
+        'ef.constraint.volume_mode': 'Volume Mode',
+        'ef.constraint.volume_none': 'None',
+        'ef.constraint.volume_preserve': 'Preserve Volume',
+        'ef.constraint.volume_exponent': 'Volume Exponent',
+        'ef.constraint.capture_stretch': 'Capture Length / Offset',
+        'ef.constraint.transform_mapping': 'Transform Mapping',
+        'ef.constraint.action_constraint': 'Action Constraint',
+        'ef.constraint.action': 'Action',
+        'ef.constraint.driver_channel': 'Driver Channel',
+        'ef.constraint.driver_axis': 'Driver Axis',
+        'ef.constraint.input_min': 'Input Min',
+        'ef.constraint.input_max': 'Input Max',
+        'ef.constraint.action_start': 'Action Start',
+        'ef.constraint.action_end': 'Action End',
+        'ef.constraint.mapping_mode': 'Mapping',
+        'ef.constraint.mapping_clamp': 'Clamp',
+        'ef.constraint.mapping_loop': 'Loop',
+        'ef.constraint.mapping_pingpong': 'Ping-Pong',
+        'ef.constraint.reverse': 'Reverse',
+        'ef.constraint.sample_channels': 'Sample Channels',
+        'ef.constraint.source_channel': 'Source Channel',
+        'ef.constraint.target_channel': 'Target Channel',
+        'ef.constraint.source_space': 'Source Space',
+        'ef.constraint.target_space': 'Target Space',
+        'ef.constraint.axis_mapping': 'Axis Mapping',
+        'ef.constraint.from_min': 'From Min',
+        'ef.constraint.from_max': 'From Max',
+        'ef.constraint.to_min': 'To Min',
+        'ef.constraint.to_max': 'To Max',
+        'ef.constraint.extrapolate': 'Extrapolate',
+        'ef.constraint.clamp': 'Clamp',
+        'ef.constraint.mix_mode': 'Mix Mode',
+        'ef.constraint.before': 'Before',
+        'ef.constraint.after': 'After',
+        'ef.constraint.channels': 'Channels',
+        'ef.constraint.shortest_slerp': 'Shortest Path Slerp',
+        'ef.constraint.normalized_nlerp': 'Normalized Linear Nlerp',
+        'ef.constraint.invert_target': 'Invert Target Rotation',
+        'ef.constraint.floor_drop': 'Floor Drop',
+        'ef.constraint.shrinkwrap': 'Shrinkwrap',
+        'ef.constraint.shrinkwrap_mode': 'Wrap Mode',
+        'ef.constraint.shrinkwrap_nearest': 'Nearest Surface',
+        'ef.constraint.shrinkwrap_project': 'Project',
+        'ef.constraint.project_axis': 'Projection Axis',
+        'ef.constraint.bidirectional': 'Bidirectional',
+        'ef.constraint.flip_normal': 'Flip Normal',
+        'ef.constraint.floor': 'Floor',
+        'ef.constraint.pivot': 'Pivot',
+        'ef.constraint.axis': 'Axis',
+        'ef.constraint.drop_axis': 'Drop Axis',
+        'ef.constraint.direction_space': 'Direction Space',
+        'ef.constraint.surface_offset': 'Surface Offset',
+        'ef.constraint.max_distance': 'Maximum Distance',
+        'ef.constraint.align_rotation': 'Align Rotation',
+        'ef.constraint.floor_drop_mode': 'Mode',
+        'ef.constraint.floor_drop_mode_snap': 'Snap',
+        'ef.constraint.floor_drop_mode_above_only': 'Above Only',
+        'ef.constraint.offset': 'Offset',
+        'ef.constraint.prevent_penetration': 'Prevent Penetration',
+        'ef.constraint.snap_to_plane': 'Snap to Plane',
+        'ef.constraint.angle': 'Angle',
+        'ef.constraint.keep_radius': 'Keep Radius',
+        'ef.constraint.follow_rotation': 'Follow Rotation',
+        'ef.constraint.target_local': 'Target Local',
+        'ef.constraint.replace': 'Replace',
+        'ef.constraint.add': 'Add',
+        'ef.constraint.group_transform': 'Transform & Copy',
+        'ef.constraint.group_blend': 'Blend & Difference',
+        'ef.constraint.group_limit': 'Limit & Surface',
+        'ef.constraint.group_track': 'Track & Path',
+        'ef.constraint.group_relation': 'Relation & Action',
+        'ef.constraint.group_advanced': 'Advanced',
+        'ef.constraint.multiply': 'Multiply',
         'ef.constraint.limit_transform': 'Limit Transform',
         'ef.constraint.limit_position': 'Limit Position',
         'ef.constraint.limit_rotation': 'Limit Rotation',
         'ef.constraint.limit_scale': 'Limit Scale',
         'ef.constraint.child_of': 'Child Of',
+        'ef.constraint.armature_blend': 'Armature Blend',
+        'ef.constraint.armature_entries': 'Armature Targets',
+        'ef.constraint.armature_entry': 'Target',
+        'ef.constraint.add_armature_entry': 'Add Target',
+        'ef.constraint.remove_armature_entry': 'Remove Target',
+        'ef.constraint.normalize_weights': 'Normalize Weights',
+        'ef.constraint.capture_armature_offset': 'Capture Offset',
+        'ef.constraint.capture_all_offsets': 'Capture All Offsets',
+        'ef.constraint.key_armature_weight': 'Set target weight keyframe at current time',
+        'ef.constraint.space_switch': 'Space Switch',
+        'ef.constraint.follow_path': 'Follow Path',
+        'ef.constraint.spline_ik': 'Spline IK',
+        'ef.constraint.clamp_to': 'Clamp To',
+        'ef.constraint.owner_space': 'Owner Space',
+        'ef.constraint.root_follow': 'Root Follow',
+        'ef.constraint.stretch': 'Stretch',
+        'ef.constraint.volume': 'Preserve Volume',
+        'ef.constraint.roll': 'Roll',
+        'ef.constraint.spline_bake': 'Bake Entire Spline Chain',
+        'ef.constraint.capture_input_range': 'Capture Input Range',
+        'ef.constraint.path_points': 'Path Points',
+        'ef.constraint.path_point': 'Path Point',
+        'ef.constraint.add_path_point': 'Add Path Point',
+        'ef.constraint.remove_path_point': 'Remove Path Point',
+        'ef.constraint.progress': 'Progress',
+        'ef.constraint.key_progress': 'Set path progress keyframe at current time',
+        'ef.constraint.interpolation': 'Interpolation',
+        'ef.constraint.catmull_rom': 'Catmull-Rom',
+        'ef.constraint.closed': 'Closed Loop',
+        'ef.constraint.forward_axis': 'Forward Axis',
+        'ef.constraint.bank': 'Bank',
+        'ef.constraint.position_weight': 'Position Weight',
+        'ef.constraint.maintain_rotation_offset': 'Maintain Rotation Offset',
+        'ef.constraint.valid_path_required': 'At least two valid, distinct path targets are required',
+        'ef.constraint.space_entries': 'Spaces',
+        'ef.constraint.space_entry': 'Space',
+        'ef.constraint.add_space': 'Add Space',
+        'ef.constraint.remove_space': 'Remove Space',
+        'ef.constraint.capture_space_offset': 'Capture Offset',
+        'ef.constraint.switch_to_space': 'Switch to Space',
+        'ef.constraint.key_space_weight': 'Set space weight keyframe at current time',
+        'ef.constraint.track_to': 'Track To',
+        'ef.constraint.locked_track': 'Locked Track',
+        'ef.constraint.damped_track': 'Damped Track',
+        'ef.constraint.track_axis': 'Track Axis',
+        'ef.constraint.up_axis': 'Up Axis',
+        'ef.constraint.lock_axis': 'Lock Axis',
+        'ef.constraint.up_space': 'Up Direction',
+        'ef.constraint.world_up': 'World Up',
+        'ef.constraint.target_local_up': 'Target Local Up',
+        'ef.constraint.damping_angle': 'Damping Angle',
         'ef.constraint.target': 'Target',
         'ef.constraint.pick_target': 'Pick in 3D View',
         'ef.constraint.pick_target_hint': 'Click a bone or controller in the 3D view',
@@ -3016,7 +3200,204 @@ const EF_I18N = {
         'ef.constraint.reorder_undo': 'Reorder constraints',
         'ef.constraint.edit_undo': 'Edit constraint',
         'ef.constraint.key_undo': 'Key constraint influence',
-        'ef.constraint.bake_undo': 'Bake constraints'
+        'ef.constraint.bake_undo': 'Bake constraints',
+        'ef.constraint.copy_transform.desc': 'Copy a target matrix with independent source/output spaces, channel and per-axis controls, replace/before/after composition, matrix offset and final Influence',
+        'ef.constraint.action_constraint.desc': 'Map one target transform axis to time in another project action and sample only this owner BoneAnimator without previewing the source action',
+        'ef.constraint.action.desc': 'Source project animation; the current action and actions that would create a recursive dependency are unavailable',
+        'ef.constraint.driver_channel.desc': 'Target transform channel used to drive source action time',
+        'ef.constraint.driver_axis.desc': 'Signed target axis used as the driver value',
+        'ef.constraint.action_source_space.desc': 'Read the driver from the target world transform or target local transform',
+        'ef.constraint.input_range.desc': 'Map this driver value range to the configured action time range',
+        'ef.constraint.action_range.desc': 'Source action interval in seconds',
+        'ef.constraint.mapping_mode.desc': 'Clamp at the range ends, repeat, or alternate forward and backward',
+        'ef.constraint.reverse.desc': 'Reverse the mapped source action time',
+        'ef.constraint.sample_channels.desc': 'Apply sampled position, rotation and scale independently and select X, Y and Z per channel',
+        'ef.constraint.action_offset.desc': 'Preserve owner position by addition, rotation by quaternion difference, and scale by safe per-axis ratio',
+        'ef.constraint.copy_transform_source_space.desc': 'Read the complete target matrix in world or target-local space',
+        'ef.constraint.copy_transform_target_space.desc': 'Compose and apply the result in world or owner-local space',
+        'ef.constraint.copy_transform_mix_mode.desc': 'Replace substitutes enabled channels; Before uses sourceMatrix × ownerMatrix; After uses ownerMatrix × sourceMatrix',
+        'ef.constraint.copy_transform_channels.desc': 'Enable position, rotation and scale independently, then select each channel\'s X, Y and Z axes',
+        'ef.constraint.copy_transform_offset.desc': 'Capture source⁻¹ × owner; target, source/output space or mix mode changes recapture automatically',
+        'ef.constraint.copy_position.desc': 'Copy a target\'s position data (optionally with offset) so they move together',
+        'ef.constraint.position_blend.desc': 'Blend positions from two independent targets per axis, then apply the result with a separate final Influence',
+        'ef.constraint.position_blend_target_a.desc': 'First position source; choose from the list or pick it independently in the 3D view',
+        'ef.constraint.position_blend_target_b.desc': 'Second position source; it also participates in dependency ordering',
+        'ef.constraint.position_blend_source_space_a.desc': 'Read Target A position in world or target-local space',
+        'ef.constraint.position_blend_source_space_b.desc': 'Read Target B position in world or target-local space',
+        'ef.constraint.position_blend_target_space.desc': 'Apply the blended position in world or owner-local space; the offset is stored in this output space',
+        'ef.constraint.position_blend_weight.desc': 'Blend between Target A at 0 and Target B at 1 before final Influence is applied',
+        'ef.constraint.position_blend_axes.desc': 'Enable the blended result independently for X, Y and Z',
+        'ef.constraint.invert_position_a.desc': 'Negate Target A displacement from the output-space origin before blending',
+        'ef.constraint.invert_position_b.desc': 'Negate Target B displacement from the output-space origin before blending',
+        'ef.constraint.position_blend_offset.desc': 'Preserve or recapture the owner offset in output space; target, space, weight and inversion changes recapture it automatically',
+        'ef.constraint.copy_rotation.desc': 'Copy a target\'s rotation data (optionally with offset) so they rotate together',
+        'ef.constraint.copy_quaternion.desc': 'Copy target rotation as a quaternion with independent source/target spaces and quaternion blending',
+        'ef.constraint.rotation_blend.desc': 'Blend rotations from two independent targets, then apply the result with a separate final influence',
+        'ef.constraint.rotation_difference.desc': 'Calculate a directional rotation difference, control its strength, then replace or add it before applying final Influence separately',
+        'ef.constraint.distance.desc': 'Keep the owner within the configured distance range from the target, using a captured or live direction',
+        'ef.constraint.limit_distance.desc': 'Constrain the owner-to-target distance with exact, minimum, maximum or captured initial behavior',
+        'ef.constraint.distance_mode.desc': 'Choose exact, minimum, maximum or captured initial distance behavior',
+        'ef.constraint.distance_value.desc': 'Distance used by exact, minimum and maximum modes',
+        'ef.constraint.initial_distance.desc': 'Distance automatically captured when created, when the target changes or when switching to Initial',
+        'ef.constraint.reset_initial_distance.desc': 'Capture the current owner-to-target distance again',
+        'ef.constraint.softness.desc': 'Violation depth over which the correction smoothly reaches the full hard limit',
+        'ef.constraint.direction.desc': 'Choose whether the difference is inverse(A) × B or inverse(B) × A',
+        'ef.constraint.application_mode.desc': 'Replace uses the difference as the target rotation; Add uses current rotation × difference',
+        'ef.constraint.difference_strength.desc': 'Slerp from identity to the full rotation difference (0-1), independent of final Influence',
+        'ef.constraint.rotation_difference_target_space.desc': 'Evaluate the owner and apply the result in world or owner-local space, converting world output back to local',
+        'ef.constraint.rotation_difference_offset.desc': 'Preserve or recapture the offset from the complete difference result; target and parameter changes recapture it automatically',
+        'ef.constraint.target_a.desc': 'First rotation source; choose from the list or pick it in the 3D view',
+        'ef.constraint.target_b.desc': 'Second rotation source; it also participates in dependency ordering',
+        'ef.constraint.source_space_a.desc': 'Read Target A rotation in world or its local space',
+        'ef.constraint.source_space_b.desc': 'Read Target B rotation in world or its local space',
+        'ef.constraint.blend_weight.desc': 'Blend between Target A at 0 and Target B at 1 before final influence is applied',
+        'ef.constraint.invert_target_a.desc': 'Invert Target A quaternion before blending',
+        'ef.constraint.invert_target_b.desc': 'Invert Target B quaternion before blending',
+        'ef.constraint.rotation_blend_mix_mode.desc': 'Use shortest-path Slerp or normalized Nlerp between Target A and Target B',
+        'ef.constraint.rotation_blend_target_space.desc': 'Apply the blended rotation in world or owner-local space',
+        'ef.constraint.rotation_blend_offset.desc': 'Preserve or recapture the offset between the owner and the blended result',
+        'ef.constraint.scale_blend.desc': 'Blend scale from two independent targets per axis, then apply a separate final Influence',
+        'ef.constraint.scale_blend_target_a.desc': 'First scale source; choose from the list or pick it independently in the 3D view',
+        'ef.constraint.scale_blend_target_b.desc': 'Second scale source; it also participates in dependency ordering',
+        'ef.constraint.scale_blend_source_space_a.desc': 'Read Target A scale in world or target-local space',
+        'ef.constraint.scale_blend_source_space_b.desc': 'Read Target B scale in world or target-local space',
+        'ef.constraint.scale_blend_target_space.desc': 'Apply the blended scale in world or owner-local space',
+        'ef.constraint.scale_blend_weight.desc': 'Blend between Target A at 0 and Target B at 1 before final Influence is applied',
+        'ef.constraint.scale_blend_mix_mode.desc': 'Linear interpolates signed scale directly; Logarithmic blends epsilon-safe magnitudes and uses the weight-dominant target sign with exact endpoints',
+        'ef.constraint.scale_blend_axes.desc': 'Enable the blended scale independently for X, Y and Z',
+        'ef.constraint.reciprocal_scale_a.desc': 'Use an epsilon-safe reciprocal of Target A scale on every axis',
+        'ef.constraint.reciprocal_scale_b.desc': 'Use an epsilon-safe reciprocal of Target B scale on every axis',
+        'ef.constraint.scale_blend_offset.desc': 'Preserve or recapture the owner-to-blended per-axis scale ratio; target, space, weight, mode and reciprocal changes recapture it automatically',
+        'ef.constraint.copy_scale.desc': 'Copy a target\'s scale data (optionally with offset) so they scale together',
+        'ef.constraint.maintain_volume.desc': 'Compensate scale on non-main axes from the current-to-reference main-axis ratio, without a target and with final Influence',
+        'ef.constraint.reference_scale.desc': 'Absolute main-axis scale captured automatically when created, when the main axis changes, or when reset',
+        'ef.constraint.reset_reference_scale.desc': 'Capture the current absolute main-axis scale again with epsilon safety',
+        'ef.constraint.compensation_mode.desc': 'Volume uses ratio^(-exponent/2), Area uses ratio^(-exponent), Uniform inversely balances all axes toward equal volume, and Custom uses per-axis weights',
+        'ef.constraint.exponent.desc': 'Compensation exponent from 0 to 2',
+        'ef.constraint.custom_weight.desc': 'Per-axis custom compensation weight from 0 to 1; the main axis is never compensated',
+        'ef.constraint.min_factor.desc': 'Non-negative lower bound for the compensation factor; bounds are automatically ordered',
+        'ef.constraint.max_factor.desc': 'Non-negative upper bound for the compensation factor; bounds are automatically ordered',
+        'ef.constraint.compensation_weight.desc': 'Blend from no compensation to the selected compensation before final Influence',
+        'ef.constraint.stretch_to.desc': 'Aim the main axis at a target and stretch it to the captured length, with stable roll, volume compensation and final Influence',
+        'ef.constraint.main_axis.desc': 'Local axis that points at the target and receives longitudinal scale',
+        'ef.constraint.original_length.desc': 'Reference distance captured when the constraint is created or recaptured',
+        'ef.constraint.rotation_weight.desc': 'Strength of the stable orientation before final Influence',
+        'ef.constraint.stretch_weight.desc': 'Strength of longitudinal stretching before final Influence',
+        'ef.constraint.min_stretch_ratio.desc': 'Minimum allowed target-distance to original-length ratio',
+        'ef.constraint.max_stretch_ratio.desc': 'Maximum allowed target-distance to original-length ratio',
+        'ef.constraint.volume_mode.desc': 'Choose whether transverse axes compensate to preserve volume',
+        'ef.constraint.volume_exponent.desc': 'Strength of transverse volume compensation',
+        'ef.constraint.capture_stretch.desc': 'Capture the current target distance and optional rotation offset again',
+        'ef.constraint.transform_mapping.desc': 'Map a target\'s transform range to this bone\'s transform range',
+        'ef.constraint.shrinkwrap.desc': 'Move an armature bone owner onto the true nearest triangle point or project it along an axis; targets may be a Cube or Mesh, or a Group, bone, Locator or controller containing actual Cube/Mesh descendants; container targets without such descendants produce no hit',
+        'ef.constraint.shrinkwrap_mode.desc': 'Nearest Surface searches every target triangle for the true closest point; Project casts a ray along the selected axis and only falls back to a non-degenerate target AABB when no triangle ray hit is available',
+        'ef.constraint.project_axis.desc': 'Projection ray direction; it can be evaluated in world space or rotated by the target transform',
+        'ef.constraint.bidirectional.desc': 'Cast in both the selected and opposite directions, then use the nearest hit',
+        'ef.constraint.flip_normal.desc': 'Reverse the resolved triangle or AABB surface normal before applying offset and rotation alignment',
+        'ef.constraint.shrinkwrap_up_axis.desc': 'Owner local axis aligned to the resolved surface normal',
+        'ef.constraint.shrinkwrap_rotation_weight.desc': 'Blend amount used to align the owner rotation to the resolved surface normal',
+        'ef.constraint.shrinkwrap_rotation_offset.desc': 'Preserve or recapture the current world rotation relative to the resolved surface orientation',
+        'ef.constraint.floor_drop.desc': 'Project the bone along one signed axis onto the infinite plane at the target with its local normal, with independent position, rotation and final Influence',
+        'ef.constraint.floor_drop_target.desc': 'Plane origin and orientation source; choose a bone, controller or locator, or pick it in the 3D view',
+        'ef.constraint.drop_axis.desc': 'Signed ray direction used exclusively for the plane intersection',
+        'ef.constraint.direction_space.desc': 'Interpret the drop axis in world space or rotate it by the target\'s local orientation',
+        'ef.constraint.surface_offset.desc': 'Move the hit position along the plane normal after intersection',
+        'ef.constraint.max_distance.desc': 'Maximum non-negative ray parameter; 0 means unlimited',
+        'ef.constraint.floor_drop_mode.desc': 'Snap accepts every forward hit; Above Only requires the bone on the normal-allowed side and a ray pointing toward the plane',
+        'ef.constraint.align_rotation.desc': 'Align the selected local up axis to the plane normal while preserving a stable projected tangent heading',
+        'ef.constraint.floor_drop_up_axis.desc': 'Unsigned local bone axis aligned to the plane normal',
+        'ef.constraint.floor_drop_rotation_weight.desc': 'Rotation strength from 0 to 1 before final Influence',
+        'ef.constraint.floor_drop_rotation_offset.desc': 'Preserve or recapture the current world rotation relative to the aligned surface orientation',
+        'ef.constraint.floor.desc': 'Restrict movement to one side of a plane defined by a target',
+        'ef.constraint.pivot.desc': 'Rotate the bone around a target\'s pivot point',
+        'ef.constraint.limit_position.desc': 'Restrict movement along specified axes',
+        'ef.constraint.limit_rotation.desc': 'Restrict rotation along specified axes',
+        'ef.constraint.limit_scale.desc': 'Restrict scaling along specified axes',
+        'ef.constraint.track_to.desc': 'Continuously point a bone axis toward a target',
+        'ef.constraint.locked_track.desc': 'Point toward a target while keeping one axis locked',
+        'ef.constraint.damped_track.desc': 'Smoothly rotate toward a target with a damping angle limit',
+        'ef.constraint.child_of.desc': 'Make the target a detachable parent of this bone',
+        'ef.constraint.armature_blend.desc': 'Blend any number of armature targets with independent animated weights, per-entry source spaces, channel and axis controls, optional offsets and final Influence; this is independent from Space Switch',
+        'ef.constraint.armature_entries.desc': 'Ordered target list; every valid target participates in dependency ordering and owns a stable independent weight channel',
+        'ef.constraint.armature_entry.desc': 'Choose this armature source from the list or pick it independently in the 3D view',
+        'ef.constraint.normalize_weights.desc': 'Normalize valid target weights to 1; when disabled, unused weight preserves the owner transform',
+        'ef.constraint.armature_target_space.desc': 'Apply the blended transform in world or owner-local space',
+        'ef.constraint.armature_channels.desc': 'Enable position, rotation and scale independently, then enable X, Y and Z per channel',
+        'ef.constraint.armature_offset.desc': 'Capture source⁻¹ × owner for one target or all targets in their configured source and output spaces',
+        'ef.constraint.armature_weight.desc': 'Independent 0-1 target weight with channel ef_armature_weight_<constraintid>_<entryid>',
+        'ef.constraint.space_switch.desc': 'Blend any number of target spaces with independent animated weights while preserving the owner world transform',
+        'ef.constraint.follow_path.desc': 'Move along an independent multi-target world path with animated progress, stable tangent orientation, bank, offsets, channel weights and final Influence',
+        'ef.constraint.spline_ik.desc': 'Fit a chain from the selected tail bone toward its parents onto the shared path using arc-length sampling, continuous parallel-transport frames, forward/up axes, roll, offset, root follow, stretch, volume preservation and final Influence; overlapping enabled chains are resolved by stack order and each chain can be baked in full',
+        'ef.constraint.chain_length.desc': 'Number of bones collected from the selected chain tail toward its parents; 0 uses every available parent bone',
+        'ef.constraint.root_follow.desc': 'Move the chain root to the beginning of the fitted path before distributing the remaining bones',
+        'ef.constraint.stretch.desc': 'Allow the chain to use the full path length; disabled mode keeps the original chain length',
+        'ef.constraint.volume.desc': 'Compensate transverse scale by the inverse square root of longitudinal stretch',
+        'ef.constraint.roll.desc': 'Additional rotation in degrees around the continuous path tangent',
+        'ef.constraint.spline_bake.desc': 'Bake every bone affected by this Spline IK chain, including bones shared with other enabled chains',
+        'ef.constraint.clamp_to.desc': 'Map one signed owner position axis from the configured input range to progress on an independently evaluated world-space path, then apply final Influence',
+        'ef.constraint.owner_space.desc': 'Read the owner position in owner-local or world space; path targets are always evaluated in world space',
+        'ef.constraint.clamp_driver_axis.desc': 'Signed owner position axis used as the path progress driver',
+        'ef.constraint.clamp_input_range.desc': 'Map this owner axis range to path progress from 0 to 1; equal bounds always produce progress 0',
+        'ef.constraint.clamp_reverse.desc': 'Reverse the mapped path progress after range mapping',
+        'ef.constraint.path_points.desc': 'Ordered path targets; every valid target participates in dependency ordering and at least two distinct valid points are required',
+        'ef.constraint.path_point.desc': 'Choose this path point from the list or pick it independently in the 3D view',
+        'ef.constraint.progress.desc': 'Position on the path from 0 to 1, animated through the stable dedicated path-progress channel',
+        'ef.constraint.interpolation.desc': 'Linear follows straight segments; Catmull-Rom creates a smooth curve through all points',
+        'ef.constraint.closed.desc': 'Connect the last path point back to the first and wrap progress continuously',
+        'ef.constraint.path_offset.desc': 'World-space vector added to the evaluated path position',
+        'ef.constraint.follow_path_rotation.desc': 'Align the selected local forward axis to the stable path tangent',
+        'ef.constraint.forward_axis.desc': 'Signed local axis aligned to the path tangent',
+        'ef.constraint.path_up_axis.desc': 'Local axis used to stabilize roll; it cannot be parallel to the forward axis',
+        'ef.constraint.bank.desc': 'Additional roll angle in degrees around the path tangent',
+        'ef.constraint.position_weight.desc': 'Position strength from 0 to 1 before final Influence',
+        'ef.constraint.path_rotation_weight.desc': 'Rotation strength from 0 to 1 before final Influence',
+        'ef.constraint.maintain_rotation_offset.desc': 'Preserve or recapture the current world rotation relative to the path orientation',
+        'ef.constraint.space_entries.desc': 'Every target participates in dependency ordering and has a stable independent weight channel',
+        'ef.constraint.space_entry.desc': 'Choose this space target from the list or pick it independently in the 3D view',
+        'ef.constraint.capture_space_offset.desc': 'Capture targetWorld⁻¹ × ownerWorld for this entry to preserve the current world transform',
+        'ef.constraint.switch_to_space.desc': 'Capture this offset first, then set this entry to 1 and all other entries to 0 without a jump',
+        'ef.constraint.target.desc': 'The bone, controller or locator to constrain to',
+        'ef.constraint.influence.desc': 'Blend weight between original and constrained transform (0-1)',
+        'ef.constraint.space.desc': 'Coordinate space for evaluating the constraint',
+        'ef.constraint.maintain_offset.desc': 'Preserve the initial offset between bone and target',
+        'ef.constraint.reset_offset.desc': 'Recapture the current offset',
+        'ef.constraint.axis.desc': 'Axis used as plane normal or rotation axis',
+        'ef.constraint.offset.desc': 'Shift the plane along its normal',
+        'ef.constraint.prevent_penetration.desc': 'Only push back when penetrating the forbidden side',
+        'ef.constraint.angle.desc': 'Rotation angle around the pivot',
+        'ef.constraint.keep_radius.desc': 'Maintain distance to the rotation axis',
+        'ef.constraint.follow_rotation.desc': 'Also rotate bone orientation around the axis',
+        'ef.constraint.track_axis.desc': 'Bone axis that points toward the target',
+        'ef.constraint.up_axis.desc': 'Axis used to resolve roll orientation',
+        'ef.constraint.lock_axis.desc': 'Axis kept fixed during tracking',
+        'ef.constraint.up_space.desc': 'Source of the up direction',
+        'ef.constraint.damping_angle.desc': 'Maximum rotation per evaluation in degrees',
+        'ef.constraint.source_channel.desc': 'Which transform channel to read from the target',
+        'ef.constraint.target_channel.desc': 'Which transform channel to apply on this bone',
+        'ef.constraint.source_space.desc': 'Coordinate space for reading the source',
+        'ef.constraint.target_space.desc': 'Coordinate space for applying the result',
+        'ef.constraint.quaternion_source_space.desc': 'Read the target quaternion in world or target-local space',
+        'ef.constraint.quaternion_target_space.desc': 'Blend and apply the quaternion in world or owner-local space',
+        'ef.constraint.axis_mapping.desc': 'Which source axis maps to each target axis',
+        'ef.constraint.from_min.desc': 'Input range minimum from the source',
+        'ef.constraint.from_max.desc': 'Input range maximum from the source',
+        'ef.constraint.to_min.desc': 'Output range minimum for the target',
+        'ef.constraint.to_max.desc': 'Output range maximum for the target',
+        'ef.constraint.extrapolate.desc': 'Continue mapping beyond the input range',
+        'ef.constraint.clamp.desc': 'Clamp output to the target range',
+        'ef.constraint.mix_mode.desc': 'How to combine mapped values with existing transform',
+        'ef.constraint.quaternion_mix_mode.desc': 'Use shortest-path spherical interpolation or normalized linear interpolation',
+        'ef.constraint.invert_target.desc': 'Use the inverse of the source quaternion before applying offset and influence',
+        'ef.constraint.set_inverse.desc': 'Recapture the current relative transform as offset',
+        'ef.constraint.bake_selected.desc': 'Bake constraints on the selected bone to keyframes',
+        'ef.constraint.bake_clear.desc': 'Bake and then remove constraints from the selected bone',
+        'ef.constraint.bake_all.desc': 'Bake constraints on all bones and remove them',
+        'ef.constraint.enable': 'Enable constraint',
+        'ef.constraint.disable': 'Disable constraint',
+        'ef.constraint.move_up': 'Move up',
+        'ef.constraint.move_down': 'Move down',
+        'ef.constraint.remove': 'Remove constraint',
+        'ef.constraint.key_influence': 'Set influence keyframe at current time'
     },
     zh: {
         // Actions
@@ -3154,13 +3535,190 @@ const EF_I18N = {
         'ef.constraint.select_bone': '选择一个骨架骨骼以编辑约束',
         'ef.constraint.copy_transform': '复制变换',
         'ef.constraint.copy_position': '复制位置',
+        'ef.constraint.position_blend': '位置混合',
         'ef.constraint.copy_rotation': '复制旋转',
+        'ef.constraint.copy_quaternion': '复制四元数',
+        'ef.constraint.rotation_blend': '旋转混合',
+        'ef.constraint.scale_blend': '缩放混合',
+        'ef.constraint.rotation_difference': '旋转差值',
+        'ef.constraint.distance': '距离限制',
+        'ef.constraint.limit_distance': '限制距离',
+        'ef.constraint.distance_mode': '模式',
+        'ef.constraint.distance_mode_exact': '精确',
+        'ef.constraint.distance_mode_minimum': '最小',
+        'ef.constraint.distance_mode_maximum': '最大',
+        'ef.constraint.distance_mode_initial': '初始',
+        'ef.constraint.distance_value': '距离',
+        'ef.constraint.initial_distance': '初始距离',
+        'ef.constraint.reset_initial_distance': '重设',
+        'ef.constraint.softness': '柔和距离',
+        'ef.constraint.owner_local': '骨骼局部',
+        'ef.constraint.direction': '差值方向',
+        'ef.constraint.a_to_b': 'A 到 B',
+        'ef.constraint.b_to_a': 'B 到 A',
+        'ef.constraint.application_mode': '应用模式',
+        'ef.constraint.difference_strength': '差值强度',
+        'ef.constraint.target_a': '目标 A',
+        'ef.constraint.target_b': '目标 B',
+        'ef.constraint.source_space_a': '源空间 A',
+        'ef.constraint.source_space_b': '源空间 B',
+        'ef.constraint.blend_weight': '混合权重',
+        'ef.constraint.invert_target_a': '反转目标 A',
+        'ef.constraint.invert_target_b': '反转目标 B',
+        'ef.constraint.invert_position_a': '反转目标 A 位移',
+        'ef.constraint.invert_position_b': '反转目标 B 位移',
+        'ef.constraint.position_axes': '位置轴',
+        'ef.constraint.scale_axes': '缩放轴',
+        'ef.constraint.reciprocal_scale_a': '目标 A 倒数缩放',
+        'ef.constraint.reciprocal_scale_b': '目标 B 倒数缩放',
+        'ef.constraint.linear': '线性',
+        'ef.constraint.logarithmic': '对数',
         'ef.constraint.copy_scale': '复制缩放',
+        'ef.constraint.maintain_volume': '保持体积',
+        'ef.constraint.reference_scale': '参考缩放',
+        'ef.constraint.maintain_volume_main_axis.desc': '用于计算当前缩放与参考缩放之比的轴，可选 X、Y 或 Z',
+        'ef.constraint.reset_reference_scale': '重设',
+        'ef.constraint.compensation_mode': '补偿模式',
+        'ef.constraint.compensation_volume': '体积',
+        'ef.constraint.compensation_area': '面积',
+        'ef.constraint.compensation_uniform': '均匀',
+        'ef.constraint.compensation_custom': '自定义',
+        'ef.constraint.exponent': '指数',
+        'ef.constraint.custom_x': 'X 补偿',
+        'ef.constraint.custom_y': 'Y 补偿',
+        'ef.constraint.custom_z': 'Z 补偿',
+        'ef.constraint.min_factor': '最小因子',
+        'ef.constraint.max_factor': '最大因子',
+        'ef.constraint.compensation_weight': '补偿权重',
+        'ef.constraint.stretch_to': '伸缩到',
+        'ef.constraint.main_axis': '主轴',
+        'ef.constraint.original_length': '原始长度',
+        'ef.constraint.rotation_weight': '旋转权重',
+        'ef.constraint.stretch_weight': '伸缩权重',
+        'ef.constraint.min_stretch_ratio': '最小伸缩比',
+        'ef.constraint.max_stretch_ratio': '最大伸缩比',
+        'ef.constraint.volume_mode': '体积模式',
+        'ef.constraint.volume_none': '无',
+        'ef.constraint.volume_preserve': '保持体积',
+        'ef.constraint.volume_exponent': '体积指数',
+        'ef.constraint.capture_stretch': '捕获长度/偏移',
+        'ef.constraint.transform_mapping': '变换映射',
+        'ef.constraint.action_constraint': '动作约束',
+        'ef.constraint.action': '动作',
+        'ef.constraint.driver_channel': '驱动通道',
+        'ef.constraint.driver_axis': '驱动轴',
+        'ef.constraint.input_min': '输入最小值',
+        'ef.constraint.input_max': '输入最大值',
+        'ef.constraint.action_start': '动作开始',
+        'ef.constraint.action_end': '动作结束',
+        'ef.constraint.mapping_mode': '映射',
+        'ef.constraint.mapping_clamp': '钳制',
+        'ef.constraint.mapping_loop': '循环',
+        'ef.constraint.mapping_pingpong': '往返',
+        'ef.constraint.reverse': '反向',
+        'ef.constraint.sample_channels': '采样通道',
+        'ef.constraint.source_channel': '源通道',
+        'ef.constraint.target_channel': '目标通道',
+        'ef.constraint.source_space': '源空间',
+        'ef.constraint.target_space': '目标空间',
+        'ef.constraint.axis_mapping': '轴映射',
+        'ef.constraint.from_min': '源最小',
+        'ef.constraint.from_max': '源最大',
+        'ef.constraint.to_min': '目标最小',
+        'ef.constraint.to_max': '目标最大',
+        'ef.constraint.extrapolate': '外推',
+        'ef.constraint.clamp': '钳制',
+        'ef.constraint.mix_mode': '混合模式',
+        'ef.constraint.before': '前乘',
+        'ef.constraint.after': '后乘',
+        'ef.constraint.channels': '通道',
+        'ef.constraint.shortest_slerp': '最短路径 Slerp',
+        'ef.constraint.normalized_nlerp': '归一化线性 Nlerp',
+        'ef.constraint.invert_target': '反转目标旋转',
+        'ef.constraint.floor_drop': '基面向下取整',
+        'ef.constraint.shrinkwrap': '表面收缩包裹',
+        'ef.constraint.shrinkwrap_mode': '包裹模式',
+        'ef.constraint.shrinkwrap_nearest': '最近表面',
+        'ef.constraint.shrinkwrap_project': '轴向投射',
+        'ef.constraint.project_axis': '投射轴',
+        'ef.constraint.bidirectional': '双向投射',
+        'ef.constraint.flip_normal': '翻转法线',
+        'ef.constraint.floor': '基面',
+        'ef.constraint.pivot': '轴心',
+        'ef.constraint.axis': '轴向',
+        'ef.constraint.drop_axis': '下落轴',
+        'ef.constraint.direction_space': '方向空间',
+        'ef.constraint.surface_offset': '表面偏移',
+        'ef.constraint.max_distance': '最大距离',
+        'ef.constraint.align_rotation': '对齐旋转',
+        'ef.constraint.floor_drop_mode': '模式',
+        'ef.constraint.floor_drop_mode_snap': '吸附',
+        'ef.constraint.floor_drop_mode_above_only': '仅允许侧',
+        'ef.constraint.offset': '偏移',
+        'ef.constraint.prevent_penetration': '仅阻止穿透',
+        'ef.constraint.snap_to_plane': '吸附到平面',
+        'ef.constraint.angle': '角度',
+        'ef.constraint.keep_radius': '保持半径',
+        'ef.constraint.follow_rotation': '旋转跟随',
+        'ef.constraint.target_local': '目标局部',
+        'ef.constraint.replace': '替换',
+        'ef.constraint.add': '相加',
+        'ef.constraint.group_transform': '变换与复制',
+        'ef.constraint.group_blend': '混合与差值',
+        'ef.constraint.group_limit': '限制与表面',
+        'ef.constraint.group_track': '跟踪与路径',
+        'ef.constraint.group_relation': '关系与动作',
+        'ef.constraint.group_advanced': '高级',
+        'ef.constraint.multiply': '相乘',
         'ef.constraint.limit_transform': '限制变换',
         'ef.constraint.limit_position': '限制位置',
         'ef.constraint.limit_rotation': '限制旋转',
         'ef.constraint.limit_scale': '限制缩放',
         'ef.constraint.child_of': '子级关系',
+        'ef.constraint.armature_blend': '骨架混合',
+        'ef.constraint.armature_entries': '骨架目标',
+        'ef.constraint.armature_entry': '目标',
+        'ef.constraint.add_armature_entry': '添加目标',
+        'ef.constraint.remove_armature_entry': '删除目标',
+        'ef.constraint.normalize_weights': '归一化权重',
+        'ef.constraint.capture_armature_offset': '捕获偏移',
+        'ef.constraint.capture_all_offsets': '捕获全部偏移',
+        'ef.constraint.key_armature_weight': '在当前时间设置目标权重关键帧',
+        'ef.constraint.space_switch': '空间切换',
+        'ef.constraint.follow_path': '跟随路径',
+        'ef.constraint.clamp_to': '钳制到路径',
+        'ef.constraint.owner_space': 'Owner 空间',
+        'ef.constraint.path_points': '路径点',
+        'ef.constraint.path_point': '路径点',
+        'ef.constraint.add_path_point': '添加路径点',
+        'ef.constraint.remove_path_point': '删除路径点',
+        'ef.constraint.progress': '进度',
+        'ef.constraint.key_progress': '在当前时间设置路径进度关键帧',
+        'ef.constraint.interpolation': '插值',
+        'ef.constraint.catmull_rom': 'Catmull-Rom',
+        'ef.constraint.closed': '闭合循环',
+        'ef.constraint.forward_axis': '前向轴',
+        'ef.constraint.bank': '倾斜角',
+        'ef.constraint.position_weight': '位置权重',
+        'ef.constraint.maintain_rotation_offset': '保持旋转偏移',
+        'ef.constraint.valid_path_required': '至少需要两个有效且不同的路径目标',
+        'ef.constraint.space_entries': '目标空间',
+        'ef.constraint.space_entry': '空间项',
+        'ef.constraint.add_space': '添加空间',
+        'ef.constraint.remove_space': '删除空间',
+        'ef.constraint.capture_space_offset': '捕获偏移',
+        'ef.constraint.switch_to_space': '切换到该空间',
+        'ef.constraint.key_space_weight': '在当前时间设置该空间权重关键帧',
+        'ef.constraint.track_to': '标准跟踪',
+        'ef.constraint.locked_track': '锁定跟踪',
+        'ef.constraint.damped_track': '阻尼跟踪',
+        'ef.constraint.track_axis': '跟踪轴',
+        'ef.constraint.up_axis': '上轴',
+        'ef.constraint.lock_axis': '锁定轴',
+        'ef.constraint.up_space': '上方向',
+        'ef.constraint.world_up': '世界上方向',
+        'ef.constraint.target_local_up': '目标局部上方向',
+        'ef.constraint.damping_angle': '阻尼角',
         'ef.constraint.target': '目标',
         'ef.constraint.pick_target': '在 3D 视图拾取',
         'ef.constraint.pick_target_hint': '在 3D 视图中点击骨骼或控制器',
@@ -3183,7 +3741,205 @@ const EF_I18N = {
         'ef.constraint.reorder_undo': '重排约束',
         'ef.constraint.edit_undo': '编辑约束',
         'ef.constraint.key_undo': '设置约束影响关键帧',
-        'ef.constraint.bake_undo': '烘焙约束'
+        'ef.constraint.bake_undo': '烘焙约束',
+        'ef.constraint.copy_transform.desc': '以独立源/输出空间复制目标矩阵，支持通道与逐轴控制、替换/前乘/后乘、矩阵偏移和最终独立 Influence',
+        'ef.constraint.action_constraint.desc': '把目标的一个变换轴映射到项目中另一动作的时间，仅采样该 owner 的 BoneAnimator，不预览源动作',
+        'ef.constraint.action.desc': '源项目动画；当前动作及会形成递归依赖的动作不可选',
+        'ef.constraint.driver_channel.desc': '用于驱动源动作时间的目标变换通道',
+        'ef.constraint.driver_axis.desc': '读取驱动值的带正负号目标坐标轴',
+        'ef.constraint.action_source_space.desc': '从目标世界变换或目标局部变换读取驱动值',
+        'ef.constraint.input_range.desc': '把此驱动值范围映射到配置的动作时间范围',
+        'ef.constraint.action_range.desc': '源动作的秒数区间',
+        'ef.constraint.mapping_mode.desc': '在范围端点钳制、循环重复或正反往返',
+        'ef.constraint.reverse.desc': '反向映射源动作时间',
+        'ef.constraint.sample_channels.desc': '分别应用采样的位置、旋转和缩放，并逐通道选择 X、Y、Z',
+        'ef.constraint.action_offset.desc': '位置使用加法、旋转使用四元数差、缩放使用安全逐轴比例保持 owner 偏移',
+        'ef.constraint.copy_transform_source_space.desc': '在世界空间或目标自身局部空间读取完整目标矩阵',
+        'ef.constraint.copy_transform_target_space.desc': '在世界空间或当前骨骼局部空间组合并应用结果',
+        'ef.constraint.copy_transform_mix_mode.desc': '替换按启用通道替换；前乘为 sourceMatrix × ownerMatrix；后乘为 ownerMatrix × sourceMatrix',
+        'ef.constraint.copy_transform_channels.desc': '分别启用位置、旋转、缩放通道，并独立选择各通道的 X、Y、Z 轴',
+        'ef.constraint.copy_transform_offset.desc': '捕获 source⁻¹ × owner；目标、源/输出空间或混合模式变化时自动重捕获',
+        'ef.constraint.copy_position.desc': '复制一个物体的位置数据（可选择连同偏移量一同复制），以便让它们同步移动',
+        'ef.constraint.position_blend.desc': '从两个独立目标逐轴混合位置，再通过单独的最终 Influence 应用到当前骨骼',
+        'ef.constraint.position_blend_target_a.desc': '第一个位置源，可从下拉框选择或在 3D 视图中独立拾取',
+        'ef.constraint.position_blend_target_b.desc': '第二个位置源，同时参与约束依赖排序',
+        'ef.constraint.position_blend_source_space_a.desc': '在世界空间或目标 A 自身局部空间读取位置',
+        'ef.constraint.position_blend_source_space_b.desc': '在世界空间或目标 B 自身局部空间读取位置',
+        'ef.constraint.position_blend_target_space.desc': '在世界空间或当前骨骼局部空间应用混合位置；偏移按此输出空间保存',
+        'ef.constraint.position_blend_weight.desc': '应用最终 Influence 前，在目标 A（0）与目标 B（1）之间混合',
+        'ef.constraint.position_blend_axes.desc': '分别启用混合结果的 X、Y、Z 轴',
+        'ef.constraint.invert_position_a.desc': '混合前反转目标 A 相对输出空间原点的位移',
+        'ef.constraint.invert_position_b.desc': '混合前反转目标 B 相对输出空间原点的位移',
+        'ef.constraint.position_blend_offset.desc': '在输出空间保持或重捕获骨骼偏移；目标、空间、权重和反转变化时自动重捕获',
+        'ef.constraint.copy_rotation.desc': '复制一个物体的旋转数据（可选择连同偏移量一同复制），以便让它们同步旋转',
+        'ef.constraint.copy_quaternion.desc': '以独立源/目标空间和四元数混合方式复制目标旋转，不经过欧拉角',
+        'ef.constraint.rotation_blend.desc': '从两个独立目标混合旋转，再通过单独的最终影响权重应用到当前骨骼',
+        'ef.constraint.rotation_difference.desc': '按指定方向计算旋转差，以独立强度缩放后替换或叠加，再单独应用最终 Influence',
+        'ef.constraint.distance.desc': '将当前骨骼与目标的距离限制在指定范围内，可使用捕获方向或实时方向',
+        'ef.constraint.limit_distance.desc': '以精确、最小、最大或捕获的初始模式限制当前骨骼到目标的距离',
+        'ef.constraint.distance_mode.desc': '选择精确、最小、最大或捕获初始距离的求解方式',
+        'ef.constraint.distance_value.desc': '精确、最小和最大模式使用的距离值',
+        'ef.constraint.initial_distance.desc': '创建约束、切换目标或切换到初始模式时自动捕获的距离',
+        'ef.constraint.reset_initial_distance.desc': '重新捕获当前骨骼到目标的距离',
+        'ef.constraint.softness.desc': '越界深度在此范围内平滑增强修正，达到后应用完整硬限制',
+        'ef.constraint.direction.desc': '选择差值为 A⁻¹ × B 或 B⁻¹ × A',
+        'ef.constraint.application_mode.desc': '替换以差值作为目标旋转；相加使用 当前旋转 × 差值',
+        'ef.constraint.difference_strength.desc': '从单位旋转到完整旋转差进行 Slerp（0-1），与最终 Influence 相互独立',
+        'ef.constraint.rotation_difference_target_space.desc': '在世界空间或骨骼局部空间求值并应用；世界结果会正确转换回局部旋转',
+        'ef.constraint.rotation_difference_offset.desc': '保持或重新捕获完整差值结果的偏移；目标和相关参数变化时自动重新捕获',
+        'ef.constraint.target_a.desc': '第一个旋转源，可用下拉框选择或在 3D 视图拾取',
+        'ef.constraint.target_b.desc': '第二个旋转源，同时参与约束依赖排序',
+        'ef.constraint.source_space_a.desc': '在世界空间或目标 A 自身局部空间读取旋转',
+        'ef.constraint.source_space_b.desc': '在世界空间或目标 B 自身局部空间读取旋转',
+        'ef.constraint.blend_weight.desc': '应用最终影响权重前，在目标 A（0）与目标 B（1）之间混合',
+        'ef.constraint.invert_target_a.desc': '混合前使用目标 A 四元数的逆旋转',
+        'ef.constraint.invert_target_b.desc': '混合前使用目标 B 四元数的逆旋转',
+        'ef.constraint.rotation_blend_mix_mode.desc': '在目标 A 与目标 B 之间使用最短路径 Slerp 或归一化 Nlerp',
+        'ef.constraint.rotation_blend_target_space.desc': '在世界空间或当前骨骼局部空间应用混合旋转',
+        'ef.constraint.rotation_blend_offset.desc': '保持或按当前姿态重新捕获骨骼与混合结果之间的偏移',
+        'ef.constraint.scale_blend.desc': '从两个独立目标逐轴混合缩放，再通过单独的最终 Influence 应用到当前骨骼',
+        'ef.constraint.scale_blend_target_a.desc': '第一个缩放源，可从下拉框选择或在 3D 视图中独立拾取',
+        'ef.constraint.scale_blend_target_b.desc': '第二个缩放源，同时参与约束依赖排序',
+        'ef.constraint.scale_blend_source_space_a.desc': '在世界空间或目标 A 自身局部空间读取缩放',
+        'ef.constraint.scale_blend_source_space_b.desc': '在世界空间或目标 B 自身局部空间读取缩放',
+        'ef.constraint.scale_blend_target_space.desc': '在世界空间或当前骨骼局部空间应用混合缩放',
+        'ef.constraint.scale_blend_weight.desc': '应用最终 Influence 前，在目标 A（0）与目标 B（1）之间混合',
+        'ef.constraint.scale_blend_mix_mode.desc': '线性模式直接插值带符号缩放；对数模式以 epsilon 安全的绝对值混合，并采用权重主导目标的符号，同时精确保持端点',
+        'ef.constraint.scale_blend_axes.desc': '分别启用混合缩放的 X、Y、Z 轴',
+        'ef.constraint.reciprocal_scale_a.desc': '逐轴使用目标 A 缩放的 epsilon 安全倒数',
+        'ef.constraint.reciprocal_scale_b.desc': '逐轴使用目标 B 缩放的 epsilon 安全倒数',
+        'ef.constraint.scale_blend_offset.desc': '保持或重新捕获 owner/blended 逐轴缩放比例；目标、空间、权重、模式和倒数变化时自动重新捕获',
+        'ef.constraint.copy_scale.desc': '复制一个物体的缩放数据（可选择连同偏移量一同复制），以便让它们同步缩放',
+        'ef.constraint.maintain_volume.desc': '无需目标，按主轴当前绝对缩放与参考缩放之比补偿其他轴，并在最后应用独立 Influence',
+        'ef.constraint.reference_scale.desc': '创建、切换主轴或重设时自动捕获的主轴绝对缩放',
+        'ef.constraint.reset_reference_scale.desc': '以 epsilon 安全方式重新捕获当前主轴绝对缩放',
+        'ef.constraint.compensation_mode.desc': '体积使用 ratio^(-exponent/2)，面积使用 ratio^(-exponent)，均匀模式反向平衡三轴以趋向统一体积，自定义模式使用逐轴权重',
+        'ef.constraint.exponent.desc': '补偿指数，范围 0 到 2',
+        'ef.constraint.custom_weight.desc': '逐轴自定义补偿权重，范围 0 到 1；主轴始终不补偿',
+        'ef.constraint.min_factor.desc': '补偿因子的非负下限；上下限会自动整理顺序',
+        'ef.constraint.max_factor.desc': '补偿因子的非负上限；上下限会自动整理顺序',
+        'ef.constraint.compensation_weight.desc': '在最终 Influence 前，从无补偿混合到所选补偿结果',
+        'ef.constraint.stretch_to.desc': '让主轴稳定朝向目标，并按捕获长度伸缩，支持体积补偿与最终 Influence',
+        'ef.constraint.main_axis.desc': '朝向目标并接受纵向缩放的局部轴',
+        'ef.constraint.original_length.desc': '创建或重新捕获约束时记录的参考距离',
+        'ef.constraint.rotation_weight.desc': '应用最终 Influence 前的稳定朝向强度',
+        'ef.constraint.stretch_weight.desc': '应用最终 Influence 前的主轴伸缩强度',
+        'ef.constraint.min_stretch_ratio.desc': '目标距离与原始长度比值的下限',
+        'ef.constraint.max_stretch_ratio.desc': '目标距离与原始长度比值的上限',
+        'ef.constraint.volume_mode.desc': '选择横向轴是否补偿以保持体积',
+        'ef.constraint.volume_exponent.desc': '横向体积补偿的强度',
+        'ef.constraint.capture_stretch.desc': '重新捕获当前目标距离和可选旋转偏移',
+        'ef.constraint.transform_mapping.desc': '将目标物体的变换范围映射到当前骨骼的变换范围',
+        'ef.constraint.shrinkwrap.desc': '仅以骨架骨骼作为所有者，将其移动到目标真实三角形最近点或沿轴投射；目标可以是 Cube、Mesh，或包含真实 Cube/Mesh 子模型的 Group、骨骼、Locator、控制器；后者无真实子模型时不会命中',
+        'ef.constraint.shrinkwrap_mode.desc': '最近表面会遍历目标全部三角形求真实最近点；轴向投射会沿所选轴发射射线，仅在三角形射线未命中且目标 AABB 非退化时回退到 AABB',
+        'ef.constraint.project_axis.desc': '投射射线方向，可按世界空间计算，也可随目标变换旋转',
+        'ef.constraint.bidirectional.desc': '同时沿所选方向及其反方向投射，并采用距离最近的命中',
+        'ef.constraint.flip_normal.desc': '应用表面偏移和旋转对齐前，翻转解析出的三角形或 AABB 表面法线',
+        'ef.constraint.shrinkwrap_up_axis.desc': '与解析出的表面法线对齐的所有者局部轴',
+        'ef.constraint.shrinkwrap_rotation_weight.desc': '将所有者旋转对齐到解析表面法线时使用的混合权重',
+        'ef.constraint.shrinkwrap_rotation_offset.desc': '保持或重新捕获当前世界旋转相对解析表面朝向的偏移',
+        'ef.constraint.floor_drop.desc': '仅沿指定带符号轴把骨骼投射到由目标位置及其局部法线定义的无限平面，并分别控制位置、旋转与最终 Influence',
+        'ef.constraint.floor_drop_target.desc': '提供平面原点和朝向；可选择骨骼、控制器或定位器，也可在 3D 视图拾取',
+        'ef.constraint.drop_axis.desc': '仅用于射线与平面求交的带正负号方向',
+        'ef.constraint.direction_space.desc': '在世界空间解释下落轴，或用目标局部朝向旋转该轴',
+        'ef.constraint.surface_offset.desc': '求交后沿平面法线移动命中位置',
+        'ef.constraint.max_distance.desc': '允许的最大非负射线参数；0 表示无限',
+        'ef.constraint.floor_drop_mode.desc': '吸附接受所有向前命中；仅允许侧要求骨骼位于法线允许侧，且射线朝平面方向',
+        'ef.constraint.align_rotation.desc': '将选定局部上轴对齐平面法线，并保持稳定、合理的投影切向朝向',
+        'ef.constraint.floor_drop_up_axis.desc': '对齐到平面法线的无符号骨骼局部轴',
+        'ef.constraint.floor_drop_rotation_weight.desc': '应用最终 Influence 前的 0 到 1 旋转强度',
+        'ef.constraint.floor_drop_rotation_offset.desc': '保持或重新捕获当前世界旋转相对表面对齐旋转的偏移',
+        'ef.constraint.floor.desc': '将运动限制在目标定义的平面的一侧',
+        'ef.constraint.pivot.desc': '围绕目标的轴心点旋转骨骼',
+        'ef.constraint.limit_position.desc': '将运动限制在指定的轴向上',
+        'ef.constraint.limit_rotation.desc': '将旋转限制在指定的轴向上',
+        'ef.constraint.limit_scale.desc': '将缩放限制在指定的轴向上',
+        'ef.constraint.track_to.desc': '让骨骼指定的轴始终指向目标',
+        'ef.constraint.locked_track.desc': '朝向目标的同时保持指定轴的方向不变',
+        'ef.constraint.damped_track.desc': '以阻尼角限制平滑旋转朝向目标',
+        'ef.constraint.child_of.desc': '将目标物体作为主体的可分离父级',
+        'ef.constraint.armature_blend.desc': '用任意数量的骨架目标及独立动画权重混合变换，支持每项目标源空间、通道逐轴控制、可选偏移和最终 Influence；完全独立于空间切换',
+        'ef.constraint.armature_entries.desc': '有序目标列表；所有有效目标参与依赖排序，且每项拥有稳定独立的权重通道',
+        'ef.constraint.armature_entry.desc': '从下拉框选择该骨架源，或在 3D 视图中单独拾取',
+        'ef.constraint.normalize_weights.desc': '将有效目标权重归一化为 1；关闭时未使用的剩余权重保留当前骨骼变换',
+        'ef.constraint.armature_target_space.desc': '在世界空间或当前骨骼局部空间应用混合结果',
+        'ef.constraint.armature_channels.desc': '分别启用位置、旋转和缩放，再为每个通道逐轴启用 X、Y、Z',
+        'ef.constraint.armature_offset.desc': '按各自源空间与输出空间为单项目标或全部目标捕获 source⁻¹ × owner',
+        'ef.constraint.armature_weight.desc': '独立的 0-1 目标权重，通道名为 ef_armature_weight_<constraintid>_<entryid>',
+        'ef.constraint.space_switch.desc': '以独立动画权重混合任意数量的目标空间，同时保持当前骨骼的世界变换',
+        'ef.constraint.follow_path.desc': '沿独立的多目标世界路径运动，支持进度动画、稳定切线朝向、倾斜、偏移、通道权重和最终 Influence',
+        'ef.constraint.spline_ik.desc': '从选中链尾向父级收集骨骼，沿复用路径以弧长采样和连续平行传输 frame 拟合整链，支持前向/上轴、滚转、偏移、根部跟随、伸展、体积保持与最终 Influence；启用链重叠时按约束栈顺序解决，并可整链烘焙',
+        'ef.constraint.chain_length.desc': '从选中链尾向父级收集的骨骼数量；0 表示使用所有可用父级骨骼',
+        'ef.constraint.root_follow.desc': '分配整链前，将链根移动到拟合路径的起点',
+        'ef.constraint.stretch.desc': '允许整链使用完整路径长度；关闭时保持原始整链长度',
+        'ef.constraint.volume.desc': '按纵向伸展比例的平方根倒数补偿横向缩放',
+        'ef.constraint.roll.desc': '绕连续路径切线附加的滚转角度（度）',
+        'ef.constraint.spline_bake.desc': '烘焙此样条 IK 影响的每根骨骼，包括与其他启用链共享的骨骼',
+        'ef.constraint.clamp_to.desc': '将 Owner 位置的一个带正负号坐标轴按配置输入范围映射为独立世界路径进度，再应用最终 Influence',
+        'ef.constraint.owner_space.desc': '以 Owner 局部或世界空间读取位置；路径目标始终在世界空间求值',
+        'ef.constraint.clamp_driver_axis.desc': '用作路径进度驱动值的带正负号 Owner 位置轴',
+        'ef.constraint.clamp_input_range.desc': '将此 Owner 坐标轴范围映射到 0 到 1 的路径进度；范围相等时进度始终为 0',
+        'ef.constraint.clamp_reverse.desc': '在范围映射后反转路径进度',
+        'ef.constraint.capture_input_range.desc': '将当前带正负号的 Owner 位置轴捕获为输入最小值或最大值',
+        'ef.constraint.path_points.desc': '有序路径目标；所有有效目标参与依赖排序，且至少需要两个不同的有效点',
+        'ef.constraint.path_point.desc': '可从下拉框选择该路径点，或在 3D 视图中单独拾取',
+        'ef.constraint.progress.desc': '路径上的 0 到 1 位置，通过稳定且独立的路径进度通道插帧',
+        'ef.constraint.interpolation.desc': '线性沿直线段运动；Catmull-Rom 生成经过所有路径点的平滑曲线',
+        'ef.constraint.closed.desc': '将最后一个路径点连接回第一个，并连续循环进度',
+        'ef.constraint.path_offset.desc': '添加到路径求值位置的世界空间向量',
+        'ef.constraint.follow_path_rotation.desc': '将选定的局部前向轴对齐到稳定路径切线',
+        'ef.constraint.forward_axis.desc': '对齐到路径切线的带正负号局部轴',
+        'ef.constraint.path_up_axis.desc': '用于稳定滚转的局部轴，不能与前向轴平行',
+        'ef.constraint.bank.desc': '绕路径切线附加的倾斜角度（度）',
+        'ef.constraint.position_weight.desc': '应用最终 Influence 前的 0 到 1 位置强度',
+        'ef.constraint.path_rotation_weight.desc': '应用最终 Influence 前的 0 到 1 旋转强度',
+        'ef.constraint.maintain_rotation_offset.desc': '保持或重新捕获当前世界旋转相对路径朝向的偏移',
+        'ef.constraint.space_entries.desc': '每个目标都参与依赖排序，并拥有稳定且独立的权重动画通道',
+        'ef.constraint.space_entry.desc': '可从下拉框选择该空间目标，或在 3D 视图中单独拾取',
+        'ef.constraint.capture_space_offset.desc': '为该项捕获 targetWorld⁻¹ × ownerWorld，以保持当前世界变换',
+        'ef.constraint.switch_to_space.desc': '先捕获该项偏移，再将该项权重设为 1、其他项设为 0，确保切换无跳变',
+        'ef.constraint.target.desc': '约束目标（骨骼、控制器或定位器）',
+        'ef.constraint.influence.desc': '原始变换与约束变换之间的混合权重（0-1）',
+        'ef.constraint.space.desc': '约束求值使用的坐标空间',
+        'ef.constraint.maintain_offset.desc': '保持骨骼与目标之间的初始偏移',
+        'ef.constraint.reset_offset.desc': '按当前姿态重新捕获偏移',
+        'ef.constraint.axis.desc': '作为平面法线或旋转轴的轴向',
+        'ef.constraint.offset.desc': '沿法线方向移动平面',
+        'ef.constraint.prevent_penetration.desc': '仅在穿透禁止侧时才推回',
+        'ef.constraint.angle.desc': '围绕轴心旋转的角度',
+        'ef.constraint.keep_radius.desc': '保持骨骼到旋转轴的距离',
+        'ef.constraint.follow_rotation.desc': '同时旋转骨骼自身朝向',
+        'ef.constraint.track_axis.desc': '指向目标的骨骼轴向',
+        'ef.constraint.up_axis.desc': '用于确定滚转方向的轴',
+        'ef.constraint.lock_axis.desc': '跟踪时保持不变的轴',
+        'ef.constraint.up_space.desc': '上方向的来源',
+        'ef.constraint.damping_angle.desc': '每次求解的最大旋转角度（度）',
+        'ef.constraint.source_channel.desc': '从目标读取的变换通道',
+        'ef.constraint.target_channel.desc': '应用到当前骨骼的变换通道',
+        'ef.constraint.source_space.desc': '读取源数据的坐标空间',
+        'ef.constraint.target_space.desc': '应用结果的坐标空间',
+        'ef.constraint.quaternion_source_space.desc': '在世界空间或目标自身局部空间读取目标四元数',
+        'ef.constraint.quaternion_target_space.desc': '在世界空间或当前骨骼局部空间混合并应用四元数',
+        'ef.constraint.axis_mapping.desc': '源轴到目标轴的映射关系',
+        'ef.constraint.from_min.desc': '源输入范围最小值',
+        'ef.constraint.from_max.desc': '源输入范围最大值',
+        'ef.constraint.to_min.desc': '目标输出范围最小值',
+        'ef.constraint.to_max.desc': '目标输出范围最大值',
+        'ef.constraint.extrapolate.desc': '超出输入范围后继续按比例映射',
+        'ef.constraint.clamp.desc': '将输出钳制在目标范围内',
+        'ef.constraint.mix_mode.desc': '映射值与现有变换的组合方式',
+        'ef.constraint.quaternion_mix_mode.desc': '选择最短路径球面插值或归一化线性插值',
+        'ef.constraint.invert_target.desc': '在应用偏移和影响权重前使用源四元数的逆旋转',
+        'ef.constraint.set_inverse.desc': '按当前相对变换重新捕获偏移',
+        'ef.constraint.bake_selected.desc': '将选中骨骼的约束烘焙为关键帧',
+        'ef.constraint.bake_clear.desc': '烘焙后删除选中骨骼的约束',
+        'ef.constraint.bake_all.desc': '烘焙所有骨骼的约束并删除',
+        'ef.constraint.enable': '启用约束',
+        'ef.constraint.disable': '禁用约束',
+        'ef.constraint.move_up': '上移',
+        'ef.constraint.move_down': '下移',
+        'ef.constraint.remove': '删除约束',
+        'ef.constraint.key_influence': '在当前时间设置影响关键帧'
     }
 };
 
@@ -3274,7 +4030,8 @@ function efSetupIKSupportInner() {
             const math = Math;
             const effector = bones[ik.effector];
             const target = bones[ik.target];
-            _targetPos.setFromMatrixPosition(target.matrixWorld);
+            if (ik.targetPosition) _targetPos.copy(ik.targetPosition);
+            else _targetPos.setFromMatrixPosition(target.matrixWorld);
             const links = ik.links;
             const iteration = ik.iteration !== undefined ? ik.iteration : 1;
             if (chainBlend < 1.0) {
@@ -4311,6 +5068,7 @@ function efSetupIKSupportInner() {
         const ankleTarget = efGetNodeWorldPosition(controller);
         const poleWorld = efGetNodeWorldPosition(pole);
         const thighLen = hipWorld.distanceTo(kneeRest);
+        const legLen = boneWorldPositions[1].end.distanceTo(boneWorldPositions[1].start);
 
         const hipToPole = poleWorld.clone().sub(hipWorld);
         const poleDir = hipToPole.lengthSq() > 1e-6 ? hipToPole.normalize() : new THREE.Vector3(0, -1, 0);
@@ -4319,7 +5077,6 @@ function efSetupIKSupportInner() {
         // 小腿保持原长，只把末端指向 ankle 控制器方向，避免拉伸
         const kneeToAnkle = ankleTarget.clone().sub(kneeWorld);
         const legDir = kneeToAnkle.lengthSq() > 1e-6 ? kneeToAnkle.normalize() : poleDir.clone();
-        const legLen = boneWorldPositions[1].end.distanceTo(boneWorldPositions[1].start);
         const ankleClamped = kneeWorld.clone().add(legDir.multiplyScalar(legLen));
 
         const fikBones = [
@@ -5093,8 +5850,10 @@ function efSetupIKSupportInner() {
             const clearedConstraintBones = clearConstraints ? constraintBones.filter(bone => nodes.includes(bone)) : [];
             const reparented = bakeObjects && options.clear_parents ? nodes.filter(node => node.parent !== 'root') : [];
             const affectedElements = [...new Set([...constraints, ...clearedConstraintBones, ...reparented, ...(Array.isArray(options.affected_elements) ? options.affected_elements : [])])];
+            const affectedKeyframes = Array.isArray(options.affected_keyframes) ? options.affected_keyframes : [];
+            const affectedAnimations = Array.isArray(options.affected_animations) ? options.affected_animations : [];
             if (!options.overwrite) {
-                Undo.initEdit({animations: [], elements: affectedElements, outliner: affectedElements.length > 0});
+                Undo.initEdit({animations: affectedAnimations, elements: affectedElements, keyframes: affectedKeyframes, outliner: affectedElements.length > 0});
                 editing = true;
                 targetAnimation = new Animation({
                     name: sourceAnimation.name + '_baked',
@@ -5115,7 +5874,7 @@ function efSetupIKSupportInner() {
                         });
                     });
                 });
-                Undo.initEdit({animations: [targetAnimation], elements: affectedElements, outliner: affectedElements.length > 0});
+                Undo.initEdit({animations: [...new Set([targetAnimation, ...affectedAnimations])], elements: affectedElements, keyframes: [...removed, ...affectedKeyframes], outliner: affectedElements.length > 0});
                 editing = true;
                 removed.forEach(keyframe => keyframe.remove());
             }
@@ -5143,7 +5902,7 @@ function efSetupIKSupportInner() {
             constraints.forEach(node => node.remove());
             clearedConstraintBones.forEach(bone => bone.ef_constraints = []);
             if (typeof options.clear_callback === 'function') options.clear_callback();
-            Undo.finishEdit(options.undo_name || tl('ef.ik.bake_undo'), {animations: [targetAnimation], elements: affectedElements, outliner: affectedElements.length > 0});
+            Undo.finishEdit(options.undo_name || tl('ef.ik.bake_undo'), {animations: [...new Set([targetAnimation, ...affectedAnimations])], elements: affectedElements, keyframes: [...created, ...affectedKeyframes], outliner: affectedElements.length > 0});
             editing = false;
             Blockbench.showQuickMessage(options.success_message || tl('ef.ik.baked'));
         } catch (error) {
@@ -5599,11 +6358,193 @@ function efSetupConstraintSupport() {
         });
     }
     const constraintId = () => 'ef_constraint_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+    const armatureEntryId = () => 'ef_armature_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+    const spaceEntryId = () => 'ef_space_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+    const pathPointId = () => 'ef_path_point_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
     const cloneValue = value => JSON.parse(JSON.stringify(value));
-    const findNode = uuid => [...ArmatureBone.all, ...(typeof NullObject !== 'undefined' ? NullObject.all : []), ...(typeof Locator !== 'undefined' ? Locator.all : [])].find(node => node.uuid === uuid);
+    const allConstraintTargets = () => [...new Set([
+        ...ArmatureBone.all,
+        ...(typeof Cube !== 'undefined' ? Cube.all : []),
+        ...(typeof Mesh !== 'undefined' ? Mesh.all : []),
+        ...(typeof Group !== 'undefined' ? Group.all : []),
+        ...(typeof Locator !== 'undefined' ? Locator.all : []),
+        ...(typeof NullObject !== 'undefined' ? NullObject.all : [])
+    ])];
+    const findNode = uuid => allConstraintTargets().find(node => node.uuid === uuid);
     const selectedBone = () => ArmatureBone.selected && ArmatureBone.selected[0];
-    const getStack = bone => Array.isArray(bone && bone.ef_constraints) ? bone.ef_constraints : [];
-    const getInfluenceChannel = constraint => 'ef_influence_' + String(constraint.id).replace(/[^a-zA-Z0-9_]/g, '_');
+    const finiteNonNegative = (value, fallback) => {
+        const number = Number(value);
+        return Number.isFinite(number) ? Math.max(0, number) : fallback;
+    };
+    const distanceModes = ['exact', 'minimum', 'maximum', 'initial'];
+    const normalizeDistanceConstraint = constraint => {
+        if (!constraint || !['distance', 'limit_distance'].includes(constraint.type)) return constraint;
+        const legacyType = constraint.type === 'distance';
+        const legacyDistance = finiteNonNegative(constraint.distance, 0);
+        const hasMin = Number.isFinite(Number(constraint.min_distance));
+        const hasMax = Number.isFinite(Number(constraint.max_distance));
+        const minDistance = hasMin ? finiteNonNegative(constraint.min_distance, 0) : legacyDistance;
+        const maxDistance = hasMax ? finiteNonNegative(constraint.max_distance, 0) : legacyDistance;
+        if (legacyType) {
+            constraint.mode = hasMin && hasMax && minDistance === maxDistance ? 'exact' : hasMin || hasMax ? 'maximum' : 'exact';
+            constraint.distance = constraint.mode === 'exact' ? minDistance : hasMax ? maxDistance : minDistance;
+        }
+        constraint.type = 'limit_distance';
+        if (!distanceModes.includes(constraint.mode)) constraint.mode = 'exact';
+        constraint.distance = finiteNonNegative(constraint.distance, finiteNonNegative(constraint.initial_distance, 0));
+        constraint.initial_distance = finiteNonNegative(constraint.initial_distance, constraint.distance);
+        constraint.softness = finiteNonNegative(constraint.softness, 0);
+        delete constraint.min_distance;
+        delete constraint.max_distance;
+        delete constraint.keep_direction;
+        delete constraint.direction_space;
+        delete constraint.captured_direction;
+        return constraint;
+    };
+    const normalizeCopyConstraint = constraint => {
+        if (!constraint || constraint.type !== 'copy_transform' || !constraint.space || constraint.source_space) return constraint;
+        constraint.type = 'copy_channels';
+        return constraint;
+    };
+    const normalizeArmatureBlend = constraint => {
+        if (!constraint || constraint.type !== 'armature_blend') return constraint;
+        constraint.entries = (Array.isArray(constraint.entries) ? constraint.entries : []).map(entry => ({
+            id: entry && entry.id ? entry.id : armatureEntryId(),
+            target: entry && entry.target ? entry.target : '',
+            weight: THREE.MathUtils.clamp(Number.isFinite(Number(entry && entry.weight)) ? Number(entry.weight) : 0, 0, 1),
+            source_space: entry && entry.source_space === 'local' ? 'local' : 'world',
+            offset_matrix: entry && Array.isArray(entry.offset_matrix) && entry.offset_matrix.length === 16 ? entry.offset_matrix : new THREE.Matrix4().toArray()
+        }));
+        constraint.target_space = constraint.target_space === 'local' ? 'local' : 'world';
+        constraint.normalize_weights = constraint.normalize_weights !== false;
+        constraint.maintain_offset = constraint.maintain_offset === true;
+        constraint.channels = Object.assign({position: true, rotation: true, scale: true}, constraint.channels || {});
+        ['position_axes', 'rotation_axes', 'scale_axes'].forEach(field => constraint[field] = Object.assign({x: true, y: true, z: true}, constraint[field] || {}));
+        return constraint;
+    };
+    const normalizeFloorDrop = constraint => {
+        if (!constraint || constraint.type !== 'floor_drop') return constraint;
+        constraint.drop_axis = ['x', '-x', 'y', '-y', 'z', '-z'].includes(constraint.drop_axis) ? constraint.drop_axis : '-y';
+        constraint.direction_space = constraint.direction_space === 'target' ? 'target' : 'world';
+        constraint.surface_offset = Number.isFinite(Number(constraint.surface_offset)) ? Number(constraint.surface_offset) : 0;
+        constraint.max_distance = finiteNonNegative(constraint.max_distance, 0);
+        constraint.mode = constraint.mode === 'above_only' ? 'above_only' : 'snap';
+        constraint.position_weight = THREE.MathUtils.clamp(Number.isFinite(Number(constraint.position_weight)) ? Number(constraint.position_weight) : 1, 0, 1);
+        constraint.align_rotation = constraint.align_rotation === true;
+        constraint.up_axis = ['x', 'y', 'z'].includes(constraint.up_axis) ? constraint.up_axis : 'y';
+        constraint.rotation_weight = THREE.MathUtils.clamp(Number.isFinite(Number(constraint.rotation_weight)) ? Number(constraint.rotation_weight) : 1, 0, 1);
+        constraint.maintain_rotation_offset = constraint.maintain_rotation_offset === true;
+        constraint.rotation_offset = Array.isArray(constraint.rotation_offset) && constraint.rotation_offset.length === 4 ? constraint.rotation_offset : [0, 0, 0, 1];
+        return constraint;
+    };
+    const normalizeShrinkwrap = constraint => {
+        if (!constraint || constraint.type !== 'shrinkwrap') return constraint;
+        constraint.mode = constraint.mode === 'project' ? 'project' : 'nearest_surface';
+        constraint.project_axis = ['x', '-x', 'y', '-y', 'z', '-z'].includes(constraint.project_axis) ? constraint.project_axis : '-y';
+        constraint.direction_space = constraint.direction_space === 'target' ? 'target' : 'world';
+        constraint.surface_offset = Number.isFinite(Number(constraint.surface_offset)) ? Number(constraint.surface_offset) : 0;
+        constraint.max_distance = finiteNonNegative(constraint.max_distance, 0);
+        constraint.position_weight = THREE.MathUtils.clamp(Number.isFinite(Number(constraint.position_weight)) ? Number(constraint.position_weight) : 1, 0, 1);
+        constraint.align_rotation = constraint.align_rotation === true;
+        constraint.up_axis = ['x', 'y', 'z'].includes(constraint.up_axis) ? constraint.up_axis : 'y';
+        constraint.rotation_weight = THREE.MathUtils.clamp(Number.isFinite(Number(constraint.rotation_weight)) ? Number(constraint.rotation_weight) : 1, 0, 1);
+        constraint.flip_normal = constraint.flip_normal === true;
+        constraint.bidirectional = constraint.bidirectional === true;
+        constraint.maintain_rotation_offset = constraint.maintain_rotation_offset === true;
+        constraint.rotation_offset = Array.isArray(constraint.rotation_offset) && constraint.rotation_offset.length === 4 ? constraint.rotation_offset : [0, 0, 0, 1];
+        return constraint;
+    };
+    const normalizeActionConstraint = constraint => {
+        if (!constraint || constraint.type !== 'action_constraint') return constraint;
+        constraint.action_owner_uuid = typeof constraint.action_owner_uuid === 'string' ? constraint.action_owner_uuid : '';
+        constraint.action_uuid = typeof constraint.action_uuid === 'string' ? constraint.action_uuid : '';
+        constraint.target = typeof constraint.target === 'string' ? constraint.target : '';
+        constraint.driver_channel = ['position', 'rotation', 'scale'].includes(constraint.driver_channel) ? constraint.driver_channel : 'position';
+        constraint.driver_axis = ['x', '-x', 'y', '-y', 'z', '-z'].includes(constraint.driver_axis) ? constraint.driver_axis : 'x';
+        constraint.source_space = constraint.source_space === 'world' ? 'world' : 'local';
+        constraint.input_min = Number.isFinite(Number(constraint.input_min)) ? Number(constraint.input_min) : 0;
+        constraint.input_max = Number.isFinite(Number(constraint.input_max)) ? Number(constraint.input_max) : 1;
+        constraint.action_start = finiteNonNegative(constraint.action_start, 0);
+        constraint.action_end = finiteNonNegative(constraint.action_end, 1);
+        constraint.mapping = ['clamp', 'loop', 'pingpong'].includes(constraint.mapping) ? constraint.mapping : 'clamp';
+        constraint.reverse = constraint.reverse === true;
+        constraint.maintain_offset = constraint.maintain_offset === true;
+        constraint.channels = Object.assign({position: true, rotation: true, scale: true}, constraint.channels || {});
+        ['position_axes', 'rotation_axes', 'scale_axes'].forEach(field => constraint[field] = Object.assign({x: true, y: true, z: true}, constraint[field] || {}));
+        constraint.position_offset = Array.isArray(constraint.position_offset) && constraint.position_offset.length === 3 ? constraint.position_offset : [0, 0, 0];
+        constraint.rotation_offset = Array.isArray(constraint.rotation_offset) && constraint.rotation_offset.length === 4 ? constraint.rotation_offset : [0, 0, 0, 1];
+        constraint.scale_offset = Array.isArray(constraint.scale_offset) && constraint.scale_offset.length === 3 ? constraint.scale_offset : [1, 1, 1];
+        return constraint;
+    };
+    const normalizeFollowPath = constraint => {
+        if (!constraint || !['follow_path', 'clamp_to', 'spline_ik'].includes(constraint.type)) return constraint;
+        constraint.path_points = (Array.isArray(constraint.path_points) ? constraint.path_points : []).map(point => ({id: point && point.id ? point.id : pathPointId(), target: point && point.target ? point.target : ''}));
+        if (constraint.type === 'spline_ik') {
+            constraint.chain_length = Math.max(0, Math.floor(Number(constraint.chain_length) || 0));
+            constraint.forward_axis = ['x', '-x', 'y', '-y', 'z', '-z'].includes(constraint.forward_axis) ? constraint.forward_axis : 'y';
+            constraint.up_axis = ['x', 'y', 'z'].includes(constraint.up_axis) && constraint.forward_axis.replace('-', '') !== constraint.up_axis ? constraint.up_axis : constraint.forward_axis.replace('-', '') === 'z' ? 'y' : 'z';
+            constraint.roll = Number.isFinite(Number(constraint.roll)) ? Number(constraint.roll) : 0;
+            constraint.root_follow = constraint.root_follow !== false;
+            constraint.stretch = constraint.stretch === true;
+            constraint.volume = constraint.volume === true;
+        }
+        if (constraint.type === 'clamp_to') {
+            constraint.driver_axis = ['x', '-x', 'y', '-y', 'z', '-z'].includes(constraint.driver_axis) ? constraint.driver_axis : 'x';
+            constraint.owner_space = constraint.owner_space === 'world' ? 'world' : 'local';
+            constraint.input_min = Number.isFinite(Number(constraint.input_min)) ? Number(constraint.input_min) : 0;
+            constraint.input_max = Number.isFinite(Number(constraint.input_max)) ? Number(constraint.input_max) : 1;
+            constraint.reverse = constraint.reverse === true;
+        }
+        constraint.progress = THREE.MathUtils.clamp(Number.isFinite(Number(constraint.progress)) ? Number(constraint.progress) : 0, 0, 1);
+        constraint.interpolation = constraint.interpolation === 'catmull_rom' ? 'catmull_rom' : 'linear';
+        constraint.closed = constraint.closed === true;
+        constraint.offset = Array.isArray(constraint.offset) && constraint.offset.length === 3 ? constraint.offset.map(value => Number.isFinite(Number(value)) ? Number(value) : 0) : [0, 0, 0];
+        constraint.follow_rotation = constraint.follow_rotation === true;
+        constraint.forward_axis = ['x', '-x', 'y', '-y', 'z', '-z'].includes(constraint.forward_axis) ? constraint.forward_axis : 'z';
+        constraint.up_axis = ['x', 'y', 'z'].includes(constraint.up_axis) && constraint.forward_axis.replace('-', '') !== constraint.up_axis ? constraint.up_axis : constraint.forward_axis.replace('-', '') === 'y' ? 'z' : 'y';
+        constraint.bank = Number.isFinite(Number(constraint.bank)) ? Number(constraint.bank) : 0;
+        constraint.position_weight = THREE.MathUtils.clamp(Number.isFinite(Number(constraint.position_weight)) ? Number(constraint.position_weight) : 1, 0, 1);
+        constraint.rotation_weight = THREE.MathUtils.clamp(Number.isFinite(Number(constraint.rotation_weight)) ? Number(constraint.rotation_weight) : 1, 0, 1);
+        constraint.maintain_rotation_offset = constraint.maintain_rotation_offset === true;
+        constraint.rotation_offset = Array.isArray(constraint.rotation_offset) && constraint.rotation_offset.length === 4 ? constraint.rotation_offset : [0, 0, 0, 1];
+        return constraint;
+    };
+    const getStack = bone => {
+        const stack = Array.isArray(bone && bone.ef_constraints) ? bone.ef_constraints : [];
+        stack.forEach(constraint => {
+            normalizeDistanceConstraint(constraint);
+            normalizeCopyConstraint(constraint);
+            normalizeArmatureBlend(constraint);
+            normalizeActionConstraint(constraint);
+            normalizeFloorDrop(constraint);
+            normalizeShrinkwrap(constraint);
+            normalizeFollowPath(constraint);
+        });
+        return stack;
+    };
+    const safeChannelId = value => String(value).replace(/[^a-zA-Z0-9_]/g, '_');
+    const getInfluenceChannel = constraint => 'ef_influence_' + safeChannelId(constraint.id);
+    const getPathProgressChannel = constraint => 'ef_path_progress_' + safeChannelId(constraint.id);
+    const getArmatureWeightChannel = (constraint, entry) => 'ef_armature_weight_' + safeChannelId(constraint.id) + '_' + safeChannelId(entry.id);
+    const getSpaceWeightChannel = (constraint, entry) => 'ef_space_weight_' + safeChannelId(constraint.id) + '_' + safeChannelId(entry.id);
+    const ensureArmatureWeightChannel = (animator, constraint, entry) => {
+        const channel = getArmatureWeightChannel(constraint, entry);
+        if (animatorPrototype && !animatorPrototype.channels[channel]) animatorPrototype.channels[channel] = {name: tl('ef.constraint.armature_blend') + ' · ' + ((findNode(entry.target) || {}).name || tl('ef.constraint.armature_entry')), mutable: true, transform: true, max_data_points: 1};
+        if (animator && !Array.isArray(animator[channel])) animator[channel] = [];
+        return channel;
+    };
+    const ensurePathProgressChannel = (animator, constraint) => {
+        const channel = getPathProgressChannel(constraint);
+        if (animatorPrototype && !animatorPrototype.channels[channel]) animatorPrototype.channels[channel] = {name: tl('ef.constraint.progress') + ' · ' + constraint.name, mutable: true, transform: true, max_data_points: 1};
+        if (animator && !Array.isArray(animator[channel])) animator[channel] = [];
+        return channel;
+    };
+    const ensureSpaceWeightChannel = (animator, constraint, entry) => {
+        const channel = getSpaceWeightChannel(constraint, entry);
+        if (animatorPrototype && !animatorPrototype.channels[channel]) animatorPrototype.channels[channel] = {name: tl('ef.constraint.space_switch') + ' · ' + (findNode(entry.target) || {}).name, mutable: true, transform: true, max_data_points: 1};
+        if (animator && !Array.isArray(animator[channel])) animator[channel] = [];
+        return channel;
+    };
     const ensureInfluenceChannel = (animator, constraint) => {
         const channel = getInfluenceChannel(constraint);
         if (animatorPrototype && !animatorPrototype.channels[channel]) {
@@ -5618,12 +6559,83 @@ function efSetupConstraintSupport() {
         }
         return channel;
     };
-    ArmatureBone.all.forEach(bone => getStack(bone).forEach(constraint => ensureInfluenceChannel(null, constraint)));
+    ArmatureBone.all.forEach(bone => getStack(bone).forEach(constraint => {
+        ensureInfluenceChannel(null, constraint);
+        if (constraint.type === 'follow_path') ensurePathProgressChannel(null, constraint);
+        if (constraint.type === 'armature_blend' && Array.isArray(constraint.entries)) constraint.entries.forEach(entry => ensureArmatureWeightChannel(null, constraint, entry));
+        if (constraint.type === 'space_switch' && Array.isArray(constraint.entries)) constraint.entries.forEach(entry => ensureSpaceWeightChannel(null, constraint, entry));
+    }));
+    const getPathProgressKeyframes = (bone, constraint) => {
+        const animation = typeof Animation !== 'undefined' && Animation.selected;
+        const animator = animation && animation.animators && animation.animators[bone.uuid];
+        const channel = ensurePathProgressChannel(animator, constraint);
+        return animator && Array.isArray(animator[channel]) ? animator[channel] : [];
+    };
     const getInfluenceKeyframes = (bone, constraint) => {
         const animation = typeof Animation !== 'undefined' && Animation.selected;
         const animator = animation && animation.animators && animation.animators[bone.uuid];
         const channel = ensureInfluenceChannel(animator, constraint);
         return animator && Array.isArray(animator[channel]) ? animator[channel] : [];
+    };
+    const getArmatureWeightKeyframes = (bone, constraint, entry) => {
+        const animation = typeof Animation !== 'undefined' && Animation.selected;
+        const animator = animation && animation.animators && animation.animators[bone.uuid];
+        const channel = ensureArmatureWeightChannel(animator, constraint, entry);
+        return animator && Array.isArray(animator[channel]) ? animator[channel] : [];
+    };
+    const getConstraintKeyframesAcrossAnimations = (bone, constraint, entries) => {
+        const animations = typeof Animation !== 'undefined' && Array.isArray(Animation.all) ? Animation.all : [];
+        const keyframes = [];
+        animations.forEach(animation => {
+            const animator = animation.animators && animation.animators[bone.uuid];
+            if (!animator) return;
+            const influenceChannel = ensureInfluenceChannel(animator, constraint);
+            if (Array.isArray(animator[influenceChannel])) keyframes.push(...animator[influenceChannel]);
+            (entries || []).forEach(entry => {
+                const weightChannel = ensureArmatureWeightChannel(animator, constraint, entry);
+                if (Array.isArray(animator[weightChannel])) keyframes.push(...animator[weightChannel]);
+            });
+        });
+        return {animations, keyframes: [...new Set(keyframes)]};
+    };
+    const getSpaceWeightKeyframes = (bone, constraint, entry) => {
+        const animation = typeof Animation !== 'undefined' && Animation.selected;
+        const animator = animation && animation.animators && animation.animators[bone.uuid];
+        const channel = ensureSpaceWeightChannel(animator, constraint, entry);
+        return animator && Array.isArray(animator[channel]) ? animator[channel] : [];
+    };
+    const armatureWeightAt = (bone, constraint, entry) => {
+        const baseValue = Number(entry.weight);
+        const base = THREE.MathUtils.clamp(Number.isFinite(baseValue) ? baseValue : 0, 0, 1);
+        const animator = Animation.selected && Animation.selected.animators && Animation.selected.animators[bone.uuid];
+        if (!animator) return base;
+        const channel = ensureArmatureWeightChannel(animator, constraint, entry);
+        if (!animator[channel].length) return base;
+        const interpolated = animator.interpolate(channel, false);
+        const value = Array.isArray(interpolated) ? interpolated[0] : interpolated;
+        return THREE.MathUtils.clamp(Number(value), 0, 1);
+    };
+    const spaceWeightAt = (bone, constraint, entry) => {
+        const baseValue = Number(entry.weight);
+        const base = THREE.MathUtils.clamp(Number.isFinite(baseValue) ? baseValue : 0, 0, 1);
+        const animator = Animation.selected && Animation.selected.animators && Animation.selected.animators[bone.uuid];
+        if (!animator) return base;
+        const channel = ensureSpaceWeightChannel(animator, constraint, entry);
+        if (!animator[channel].length) return base;
+        const interpolated = animator.interpolate(channel, false);
+        const value = Array.isArray(interpolated) ? interpolated[0] : interpolated;
+        return THREE.MathUtils.clamp(Number(value), 0, 1);
+    };
+    const pathProgressAt = (bone, constraint) => {
+        const baseValue = Number(constraint.progress);
+        const base = THREE.MathUtils.clamp(Number.isFinite(baseValue) ? baseValue : 0, 0, 1);
+        const animator = Animation.selected && Animation.selected.animators && Animation.selected.animators[bone.uuid];
+        if (!animator) return base;
+        const channel = ensurePathProgressChannel(animator, constraint);
+        if (!animator[channel].length) return base;
+        const interpolated = animator.interpolate(channel, false);
+        const value = Array.isArray(interpolated) ? interpolated[0] : interpolated;
+        return THREE.MathUtils.clamp(Number(value), 0, 1);
     };
     const influenceAt = (bone, constraint) => {
         const base = THREE.MathUtils.clamp(Number(constraint.influence), 0, 1);
@@ -5675,7 +6687,56 @@ function efSetupConstraintSupport() {
         if (space === 'local') return target.mesh.matrix.clone();
         return localFromWorld(bone, target.mesh.matrixWorld);
     };
-    const captureCopyOffset = (bone, constraint) => {
+    const transformInSpace = (node, space) => {
+        node.mesh.updateMatrixWorld(true);
+        return decompose(space === 'world' ? node.mesh.matrixWorld : node.mesh.matrix);
+    };
+    const channelValues = (transform, channel) => {
+        if (channel === 'position') return transform.position.toArray();
+        if (channel === 'scale') return transform.scale.toArray();
+        const euler = new THREE.Euler().setFromQuaternion(transform.quaternion, Format.euler_order || 'ZYX');
+        return [Math.radToDeg(euler.x), Math.radToDeg(euler.y), Math.radToDeg(euler.z)];
+    };
+    const setChannelValues = (transform, channel, values) => {
+        if (channel === 'position') transform.position.fromArray(values);
+        else if (channel === 'scale') transform.scale.fromArray(values);
+        else transform.quaternion.setFromEuler(new THREE.Euler(Math.degToRad(values[0]), Math.degToRad(values[1]), Math.degToRad(values[2]), Format.euler_order || 'ZYX'));
+    };
+    const applyTransformMapping = (bone, constraint, influence) => {
+        const target = findNode(constraint.target);
+        if (!target || !target.mesh || target === bone) return;
+        const sourceChannel = ['position', 'rotation', 'scale'].includes(constraint.source_channel) ? constraint.source_channel : 'position';
+        const targetChannel = ['position', 'rotation', 'scale'].includes(constraint.target_channel) ? constraint.target_channel : 'position';
+        const source = channelValues(transformInSpace(target, constraint.source_space === 'world' ? 'world' : 'local'), sourceChannel);
+        const axes = Array.isArray(constraint.axis_mapping) ? constraint.axis_mapping : [0, 1, 2];
+        const fromMin = Array.isArray(constraint.from_min) ? constraint.from_min : [0, 0, 0];
+        const fromMax = Array.isArray(constraint.from_max) ? constraint.from_max : [1, 1, 1];
+        const toMin = Array.isArray(constraint.to_min) ? constraint.to_min : [0, 0, 0];
+        const toMax = Array.isArray(constraint.to_max) ? constraint.to_max : [1, 1, 1];
+        const mapped = [0, 1, 2].map(axis => {
+            const sourceAxis = THREE.MathUtils.clamp(Math.floor(Number(axes[axis]) || 0), 0, 2);
+            const low = Number(fromMin[axis]);
+            const high = Number(fromMax[axis]);
+            const start = Number(toMin[axis]);
+            const end = Number(toMax[axis]);
+            const denominator = high - low;
+            let factor = Math.abs(denominator) > 1e-8 ? (source[sourceAxis] - low) / denominator : 0;
+            if (constraint.extrapolate !== true) factor = THREE.MathUtils.clamp(factor, 0, 1);
+            return THREE.MathUtils.lerp(Number.isFinite(start) ? start : 0, Number.isFinite(end) ? end : 0, factor);
+        });
+        const targetSpace = constraint.target_space === 'world' ? 'world' : 'local';
+        const currentSpace = transformInSpace(bone, targetSpace);
+        const currentValues = channelValues(currentSpace, targetChannel);
+        const mode = ['replace', 'add', 'multiply'].includes(constraint.mix_mode) ? constraint.mix_mode : 'replace';
+        const desiredValues = mapped.map((value, axis) => mode === 'add' ? currentValues[axis] + value : mode === 'multiply' ? currentValues[axis] * value : value);
+        const blendedValues = currentValues.map((value, axis) => THREE.MathUtils.lerp(value, desiredValues[axis], influence));
+        setChannelValues(currentSpace, targetChannel, blendedValues);
+        const localMatrix = targetSpace === 'world' ? localFromWorld(bone, compose(currentSpace)) : compose(currentSpace);
+        bone.mesh.matrix.copy(localMatrix);
+        bone.mesh.matrix.decompose(bone.mesh.position, bone.mesh.quaternion, bone.mesh.scale);
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const captureCopyChannelsOffset = (bone, constraint) => {
         const target = findNode(constraint.target);
         if (!bone || !bone.mesh || !target || !target.mesh || target === bone) {
             constraint.position_offset = [0, 0, 0];
@@ -5691,14 +6752,14 @@ function efSetupConstraintSupport() {
         constraint.rotation_offset = source.quaternion.clone().invert().multiply(owner.quaternion).normalize().toArray();
         constraint.scale_offset = ['x', 'y', 'z'].map(axis => Math.abs(source.scale[axis]) > 1e-8 ? owner.scale[axis] / source.scale[axis] : 1);
     };
-    const applyCopy = (bone, constraint, influence) => {
+    const applyCopyChannels = (bone, constraint, influence) => {
         const target = findNode(constraint.target);
         if (!target || !target.mesh || target === bone) return;
         const current = decompose(bone.mesh.matrix);
         const source = decompose(targetLocal(bone, target, constraint.space));
         const axes = constraint.axes || {};
         if (constraint.maintain_offset) {
-            if (!Array.isArray(constraint.position_offset) || constraint.position_offset.length !== 3 || !Array.isArray(constraint.rotation_offset) || constraint.rotation_offset.length !== 4 || !Array.isArray(constraint.scale_offset) || constraint.scale_offset.length !== 3) captureCopyOffset(bone, constraint);
+            if (!Array.isArray(constraint.position_offset) || constraint.position_offset.length !== 3 || !Array.isArray(constraint.rotation_offset) || constraint.rotation_offset.length !== 4 || !Array.isArray(constraint.scale_offset) || constraint.scale_offset.length !== 3) captureCopyChannelsOffset(bone, constraint);
             if (axes.position !== false) source.position.add(new THREE.Vector3().fromArray(constraint.position_offset));
             if (axes.rotation !== false) source.quaternion.multiply(new THREE.Quaternion().fromArray(constraint.rotation_offset)).normalize();
             if (axes.scale !== false) ['x', 'y', 'z'].forEach((axis, index) => {
@@ -5710,6 +6771,355 @@ function efSetupConstraintSupport() {
         if (axes.rotation === false) blended.quaternion.copy(current.quaternion);
         bone.mesh.matrix.copy(compose(blended));
         bone.mesh.matrix.decompose(bone.mesh.position, bone.mesh.quaternion, bone.mesh.scale);
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const copyTransformSourceMatrix = (target, constraint) => {
+        target.mesh.updateMatrixWorld(true);
+        return (constraint.source_space === 'local' ? target.mesh.matrix : target.mesh.matrixWorld).clone();
+    };
+    const copyTransformOwnerMatrix = (bone, constraint) => {
+        bone.mesh.updateMatrixWorld(true);
+        return (constraint.target_space === 'world' ? bone.mesh.matrixWorld : bone.mesh.matrix).clone();
+    };
+    const captureCopyTransformOffset = (bone, constraint) => {
+        const target = findNode(constraint.target);
+        if (!bone || !bone.mesh || !target || !target.mesh || target === bone) {
+            constraint.offset_matrix = new THREE.Matrix4().toArray();
+            return;
+        }
+        if (typeof Canvas !== 'undefined' && Canvas.scene) Canvas.scene.updateMatrixWorld(true);
+        const source = copyTransformSourceMatrix(target, constraint);
+        const owner = copyTransformOwnerMatrix(bone, constraint);
+        constraint.offset_matrix = source.invert().multiply(owner).toArray();
+    };
+    const filteredCopyTransformSource = (matrix, constraint) => {
+        const source = decompose(matrix);
+        const channels = constraint.channels || {};
+        const positionAxes = constraint.position_axes || {};
+        const rotationAxes = constraint.rotation_axes || {};
+        const scaleAxes = constraint.scale_axes || {};
+        if (channels.position === false) source.position.set(0, 0, 0);
+        else ['x', 'y', 'z'].forEach(axis => { if (positionAxes[axis] === false) source.position[axis] = 0; });
+        const euler = new THREE.Euler().setFromQuaternion(source.quaternion, Format.euler_order || 'ZYX');
+        if (channels.rotation === false) euler.set(0, 0, 0, Format.euler_order || 'ZYX');
+        else ['x', 'y', 'z'].forEach(axis => { if (rotationAxes[axis] === false) euler[axis] = 0; });
+        source.quaternion.setFromEuler(euler).normalize();
+        if (channels.scale === false) source.scale.set(1, 1, 1);
+        else ['x', 'y', 'z'].forEach(axis => { if (scaleAxes[axis] === false) source.scale[axis] = 1; });
+        return compose(source);
+    };
+    const applyCopyTransform = (bone, constraint, influence) => {
+        const target = findNode(constraint.target);
+        if (!target || !target.mesh || target === bone) return;
+        const ownerMatrix = copyTransformOwnerMatrix(bone, constraint);
+        let sourceMatrix = copyTransformSourceMatrix(target, constraint);
+        if (constraint.maintain_offset === true) {
+            if (!Array.isArray(constraint.offset_matrix) || constraint.offset_matrix.length !== 16) captureCopyTransformOffset(bone, constraint);
+            sourceMatrix.multiply(new THREE.Matrix4().fromArray(constraint.offset_matrix));
+        }
+        const mode = ['replace', 'before', 'after'].includes(constraint.mix_mode) ? constraint.mix_mode : 'replace';
+        let desired;
+        if (mode === 'before') desired = filteredCopyTransformSource(sourceMatrix, constraint).multiply(ownerMatrix);
+        else if (mode === 'after') desired = ownerMatrix.clone().multiply(filteredCopyTransformSource(sourceMatrix, constraint));
+        else {
+            const current = decompose(ownerMatrix);
+            const source = decompose(sourceMatrix);
+            const channels = constraint.channels || {};
+            const positionAxes = constraint.position_axes || {};
+            const rotationAxes = constraint.rotation_axes || {};
+            const scaleAxes = constraint.scale_axes || {};
+            if (channels.position !== false) ['x', 'y', 'z'].forEach(axis => { if (positionAxes[axis] !== false) current.position[axis] = source.position[axis]; });
+            if (channels.rotation !== false) {
+                const order = Format.euler_order || 'ZYX';
+                const currentEuler = new THREE.Euler().setFromQuaternion(current.quaternion, order);
+                const sourceEuler = new THREE.Euler().setFromQuaternion(source.quaternion, order);
+                ['x', 'y', 'z'].forEach(axis => { if (rotationAxes[axis] !== false) currentEuler[axis] = sourceEuler[axis]; });
+                current.quaternion.setFromEuler(currentEuler).normalize();
+            }
+            if (channels.scale !== false) ['x', 'y', 'z'].forEach(axis => { if (scaleAxes[axis] !== false) current.scale[axis] = source.scale[axis]; });
+            desired = compose(current);
+        }
+        const current = decompose(ownerMatrix);
+        const targetTransform = decompose(desired);
+        const channels = constraint.channels || {};
+        const positionAxes = constraint.position_axes || {};
+        const rotationAxes = constraint.rotation_axes || {};
+        const scaleAxes = constraint.scale_axes || {};
+        if (channels.position !== false) ['x', 'y', 'z'].forEach(axis => { if (positionAxes[axis] !== false) current.position[axis] = THREE.MathUtils.lerp(current.position[axis], targetTransform.position[axis], influence); });
+        if (channels.rotation !== false) {
+            const order = Format.euler_order || 'ZYX';
+            const currentEuler = new THREE.Euler().setFromQuaternion(current.quaternion, order);
+            const targetEuler = new THREE.Euler().setFromQuaternion(targetTransform.quaternion, order);
+            ['x', 'y', 'z'].forEach(axis => { if (rotationAxes[axis] === false) targetEuler[axis] = currentEuler[axis]; });
+            current.quaternion.slerp(new THREE.Quaternion().setFromEuler(targetEuler), influence).normalize();
+        }
+        if (channels.scale !== false) ['x', 'y', 'z'].forEach(axis => { if (scaleAxes[axis] !== false) current.scale[axis] = THREE.MathUtils.lerp(current.scale[axis], targetTransform.scale[axis], influence); });
+        const resultMatrix = compose(current);
+        const localMatrix = constraint.target_space === 'world' ? localFromWorld(bone, resultMatrix) : resultMatrix;
+        bone.mesh.matrix.copy(localMatrix);
+        bone.mesh.matrix.decompose(bone.mesh.position, bone.mesh.quaternion, bone.mesh.scale);
+        bone.mesh.rotation.setFromQuaternion(bone.mesh.quaternion, Format.euler_order || 'ZYX');
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const positionInSpace = (node, space) => {
+        node.mesh.updateMatrixWorld(true);
+        return space === 'world' ? node.mesh.getWorldPosition(new THREE.Vector3()) : node.mesh.position.clone();
+    };
+    const positionBlendSource = (target, space, invert) => {
+        const source = positionInSpace(target, space === 'local' ? 'local' : 'world');
+        return invert === true ? source.negate() : source;
+    };
+    const positionBlendDesired = constraint => {
+        const targetA = findNode(constraint.target_a);
+        const targetB = findNode(constraint.target_b);
+        if (!targetA || !targetA.mesh || !targetB || !targetB.mesh) return null;
+        const sourceA = positionBlendSource(targetA, constraint.source_space_a, constraint.invert_target_a);
+        const sourceB = positionBlendSource(targetB, constraint.source_space_b, constraint.invert_target_b);
+        const weightValue = Number(constraint.blend_weight);
+        const weight = THREE.MathUtils.clamp(Number.isFinite(weightValue) ? weightValue : 0.5, 0, 1);
+        return sourceA.lerp(sourceB, weight);
+    };
+    const capturePositionBlendOffset = (bone, constraint) => {
+        if (typeof Canvas !== 'undefined' && Canvas.scene) Canvas.scene.updateMatrixWorld(true);
+        const desired = bone && bone.mesh ? positionBlendDesired(constraint) : null;
+        if (!desired) {
+            constraint.position_offset = [0, 0, 0];
+            return;
+        }
+        const owner = positionInSpace(bone, constraint.target_space === 'local' ? 'local' : 'world');
+        constraint.position_offset = owner.sub(desired).toArray();
+    };
+    const applyPositionBlend = (bone, constraint, influence) => {
+        const targetA = findNode(constraint.target_a);
+        const targetB = findNode(constraint.target_b);
+        if (!targetA || !targetA.mesh || targetA === bone || !targetB || !targetB.mesh || targetB === bone) return;
+        const targetSpace = constraint.target_space === 'local' ? 'local' : 'world';
+        const current = positionInSpace(bone, targetSpace);
+        const desired = positionBlendDesired(constraint);
+        if (!desired) return;
+        if (constraint.maintain_offset === true) {
+            if (!Array.isArray(constraint.position_offset) || constraint.position_offset.length !== 3) capturePositionBlendOffset(bone, constraint);
+            desired.add(new THREE.Vector3().fromArray(constraint.position_offset));
+        }
+        const enabledAxes = constraint.position_axes || {};
+        const result = current.clone();
+        ['x', 'y', 'z'].forEach(axis => {
+            if (enabledAxes[axis] !== false) result[axis] = THREE.MathUtils.lerp(current[axis], desired[axis], influence);
+        });
+        const local = targetSpace === 'world' && bone.mesh.parent ? bone.mesh.parent.worldToLocal(result.clone()) : result;
+        bone.mesh.position.copy(local);
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const scaleBlendEpsilon = 1e-8;
+    const scaleInSpace = (node, space) => {
+        node.mesh.updateMatrixWorld(true);
+        return decompose(space === 'world' ? node.mesh.matrixWorld : node.mesh.matrix).scale;
+    };
+    const safeScaleDenominator = value => {
+        const number = Number(value);
+        if (!Number.isFinite(number)) return 1;
+        if (Math.abs(number) >= scaleBlendEpsilon) return number;
+        return number < 0 ? -scaleBlendEpsilon : scaleBlendEpsilon;
+    };
+    const scaleBlendSource = (target, space, reciprocal) => {
+        const source = scaleInSpace(target, space === 'local' ? 'local' : 'world');
+        if (reciprocal === true) ['x', 'y', 'z'].forEach(axis => source[axis] = 1 / safeScaleDenominator(source[axis]));
+        return source;
+    };
+    const logarithmicScaleBlend = (a, b, weight) => {
+        if (weight <= 0) return a;
+        if (weight >= 1) return b;
+        const magnitude = Math.exp(THREE.MathUtils.lerp(Math.log(Math.max(Math.abs(a), scaleBlendEpsilon)), Math.log(Math.max(Math.abs(b), scaleBlendEpsilon)), weight));
+        const dominant = weight < 0.5 ? a : b;
+        return (dominant < 0 ? -1 : 1) * magnitude;
+    };
+    const scaleBlendDesired = constraint => {
+        const targetA = findNode(constraint.target_a);
+        const targetB = findNode(constraint.target_b);
+        if (!targetA || !targetA.mesh || !targetB || !targetB.mesh) return null;
+        const sourceA = scaleBlendSource(targetA, constraint.source_space_a, constraint.reciprocal_target_a);
+        const sourceB = scaleBlendSource(targetB, constraint.source_space_b, constraint.reciprocal_target_b);
+        const weightValue = Number(constraint.blend_weight);
+        const weight = THREE.MathUtils.clamp(Number.isFinite(weightValue) ? weightValue : 0.5, 0, 1);
+        const logarithmic = constraint.mix_mode === 'logarithmic';
+        return new THREE.Vector3(...['x', 'y', 'z'].map(axis => logarithmic ? logarithmicScaleBlend(sourceA[axis], sourceB[axis], weight) : THREE.MathUtils.lerp(sourceA[axis], sourceB[axis], weight)));
+    };
+    const captureScaleBlendOffset = (bone, constraint) => {
+        if (typeof Canvas !== 'undefined' && Canvas.scene) Canvas.scene.updateMatrixWorld(true);
+        const desired = bone && bone.mesh ? scaleBlendDesired(constraint) : null;
+        if (!desired) {
+            constraint.scale_offset = [1, 1, 1];
+            return;
+        }
+        const owner = scaleInSpace(bone, constraint.target_space === 'world' ? 'world' : 'local');
+        constraint.scale_offset = ['x', 'y', 'z'].map(axis => owner[axis] / safeScaleDenominator(desired[axis]));
+    };
+    const applyScaleBlend = (bone, constraint, influence) => {
+        const targetA = findNode(constraint.target_a);
+        const targetB = findNode(constraint.target_b);
+        if (!targetA || !targetA.mesh || targetA === bone || !targetB || !targetB.mesh || targetB === bone) return;
+        const targetSpace = constraint.target_space === 'world' ? 'world' : 'local';
+        const currentTransform = transformInSpace(bone, targetSpace);
+        const desired = scaleBlendDesired(constraint);
+        if (!desired) return;
+        if (constraint.maintain_offset === true) {
+            if (!Array.isArray(constraint.scale_offset) || constraint.scale_offset.length !== 3) captureScaleBlendOffset(bone, constraint);
+            ['x', 'y', 'z'].forEach((axis, index) => {
+                const ratio = Number(constraint.scale_offset[index]);
+                desired[axis] *= Number.isFinite(ratio) ? ratio : 1;
+            });
+        }
+        const enabledAxes = constraint.scale_axes || {};
+        ['x', 'y', 'z'].forEach(axis => {
+            if (enabledAxes[axis] !== false) currentTransform.scale[axis] = THREE.MathUtils.lerp(currentTransform.scale[axis], desired[axis], influence);
+        });
+        const localMatrix = targetSpace === 'world' ? localFromWorld(bone, compose(currentTransform)) : compose(currentTransform);
+        bone.mesh.matrix.copy(localMatrix);
+        bone.mesh.matrix.decompose(bone.mesh.position, bone.mesh.quaternion, bone.mesh.scale);
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const quaternionInSpace = (node, space) => {
+        node.mesh.updateMatrixWorld(true);
+        return (space === 'world' ? node.mesh.getWorldQuaternion(new THREE.Quaternion()) : node.mesh.quaternion.clone()).normalize();
+    };
+    const copyQuaternionSource = (target, constraint) => {
+        const source = quaternionInSpace(target, constraint.source_space === 'world' ? 'world' : 'local');
+        return constraint.invert_target === true ? source.invert().normalize() : source;
+    };
+    const captureQuaternionOffset = (bone, constraint) => {
+        const target = findNode(constraint.target);
+        if (!bone || !bone.mesh || !target || !target.mesh || target === bone) {
+            constraint.rotation_offset = [0, 0, 0, 1];
+            return;
+        }
+        if (typeof Canvas !== 'undefined' && Canvas.scene) Canvas.scene.updateMatrixWorld(true);
+        const source = copyQuaternionSource(target, constraint);
+        const owner = quaternionInSpace(bone, constraint.target_space === 'world' ? 'world' : 'local');
+        constraint.rotation_offset = source.clone().invert().multiply(owner).normalize().toArray();
+    };
+    const nlerpQuaternion = (current, target, influence) => {
+        const adjusted = target.clone();
+        if (current.dot(adjusted) < 0) adjusted.set(-adjusted.x, -adjusted.y, -adjusted.z, -adjusted.w);
+        return new THREE.Quaternion(
+            THREE.MathUtils.lerp(current.x, adjusted.x, influence),
+            THREE.MathUtils.lerp(current.y, adjusted.y, influence),
+            THREE.MathUtils.lerp(current.z, adjusted.z, influence),
+            THREE.MathUtils.lerp(current.w, adjusted.w, influence)
+        ).normalize();
+    };
+    const applyCopyQuaternion = (bone, constraint, influence) => {
+        const target = findNode(constraint.target);
+        if (!target || !target.mesh || target === bone) return;
+        const targetSpace = constraint.target_space === 'world' ? 'world' : 'local';
+        const current = quaternionInSpace(bone, targetSpace);
+        const desired = copyQuaternionSource(target, constraint);
+        if (constraint.maintain_offset === true) {
+            if (!Array.isArray(constraint.rotation_offset) || constraint.rotation_offset.length !== 4) captureQuaternionOffset(bone, constraint);
+            desired.multiply(new THREE.Quaternion().fromArray(constraint.rotation_offset)).normalize();
+        }
+        const blended = constraint.mix_mode === 'nlerp'
+            ? nlerpQuaternion(current, desired, influence)
+            : current.clone().slerp(desired, influence).normalize();
+        const local = targetSpace === 'world' && bone.mesh.parent
+            ? bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(blended).normalize()
+            : blended;
+        bone.mesh.quaternion.copy(local);
+        bone.mesh.rotation.setFromQuaternion(local, Format.euler_order || 'ZYX');
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const rotationBlendSource = (target, space, invert) => {
+        const source = quaternionInSpace(target, space === 'local' ? 'local' : 'world');
+        return invert === true ? source.invert().normalize() : source;
+    };
+    const rotationBlendDesired = constraint => {
+        const targetA = findNode(constraint.target_a);
+        const targetB = findNode(constraint.target_b);
+        if (!targetA || !targetA.mesh || !targetB || !targetB.mesh) return null;
+        const sourceA = rotationBlendSource(targetA, constraint.source_space_a, constraint.invert_target_a);
+        const sourceB = rotationBlendSource(targetB, constraint.source_space_b, constraint.invert_target_b);
+        const weight = THREE.MathUtils.clamp(Number(constraint.blend_weight), 0, 1);
+        return constraint.mix_mode === 'nlerp'
+            ? nlerpQuaternion(sourceA, sourceB, weight)
+            : sourceA.clone().slerp(sourceB, weight).normalize();
+    };
+    const rotationDifferenceValue = constraint => {
+        const targetA = findNode(constraint.target_a);
+        const targetB = findNode(constraint.target_b);
+        if (!targetA || !targetA.mesh || !targetB || !targetB.mesh) return null;
+        const sourceA = quaternionInSpace(targetA, constraint.source_space_a === 'world' ? 'world' : 'local');
+        const sourceB = quaternionInSpace(targetB, constraint.source_space_b === 'world' ? 'world' : 'local');
+        return constraint.direction === 'b_to_a'
+            ? sourceB.invert().multiply(sourceA).normalize()
+            : sourceA.invert().multiply(sourceB).normalize();
+    };
+    const rotationDifferenceDesired = (bone, constraint) => {
+        const rawDifference = rotationDifferenceValue(constraint);
+        if (!rawDifference) return null;
+        const strengthValue = Number(constraint.difference_strength);
+        const strength = THREE.MathUtils.clamp(Number.isFinite(strengthValue) ? strengthValue : 1, 0, 1);
+        const difference = new THREE.Quaternion().slerp(rawDifference, strength).normalize();
+        const targetSpace = constraint.target_space === 'world' ? 'world' : 'local';
+        const current = quaternionInSpace(bone, targetSpace);
+        return constraint.application_mode === 'replace' ? difference : current.multiply(difference).normalize();
+    };
+    const captureRotationDifferenceOffset = (bone, constraint) => {
+        if (typeof Canvas !== 'undefined' && Canvas.scene) Canvas.scene.updateMatrixWorld(true);
+        const desired = bone && bone.mesh ? rotationDifferenceDesired(bone, constraint) : null;
+        if (!desired) {
+            constraint.rotation_offset = [0, 0, 0, 1];
+            return;
+        }
+        const owner = quaternionInSpace(bone, constraint.target_space === 'world' ? 'world' : 'local');
+        constraint.rotation_offset = desired.invert().multiply(owner).normalize().toArray();
+    };
+    const applyRotationDifference = (bone, constraint, influence) => {
+        const targetA = findNode(constraint.target_a);
+        const targetB = findNode(constraint.target_b);
+        if (!targetA || !targetA.mesh || targetA === bone || !targetB || !targetB.mesh || targetB === bone) return;
+        const targetSpace = constraint.target_space === 'world' ? 'world' : 'local';
+        const current = quaternionInSpace(bone, targetSpace);
+        const desired = rotationDifferenceDesired(bone, constraint);
+        if (!desired) return;
+        if (constraint.maintain_offset === true) {
+            if (!Array.isArray(constraint.rotation_offset) || constraint.rotation_offset.length !== 4) captureRotationDifferenceOffset(bone, constraint);
+            desired.multiply(new THREE.Quaternion().fromArray(constraint.rotation_offset)).normalize();
+        }
+        const result = current.clone().slerp(desired, influence).normalize();
+        const local = targetSpace === 'world' && bone.mesh.parent
+            ? bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(result).normalize()
+            : result;
+        bone.mesh.quaternion.copy(local);
+        bone.mesh.rotation.setFromQuaternion(local, Format.euler_order || 'ZYX');
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const captureRotationBlendOffset = (bone, constraint) => {
+        if (typeof Canvas !== 'undefined' && Canvas.scene) Canvas.scene.updateMatrixWorld(true);
+        const desired = bone && bone.mesh ? rotationBlendDesired(constraint) : null;
+        if (!desired) {
+            constraint.rotation_offset = [0, 0, 0, 1];
+            return;
+        }
+        const owner = quaternionInSpace(bone, constraint.target_space === 'local' ? 'local' : 'world');
+        constraint.rotation_offset = desired.clone().invert().multiply(owner).normalize().toArray();
+    };
+    const applyRotationBlend = (bone, constraint, influence) => {
+        const targetA = findNode(constraint.target_a);
+        const targetB = findNode(constraint.target_b);
+        if (!targetA || !targetA.mesh || targetA === bone || !targetB || !targetB.mesh || targetB === bone) return;
+        const targetSpace = constraint.target_space === 'local' ? 'local' : 'world';
+        const current = quaternionInSpace(bone, targetSpace);
+        const desired = rotationBlendDesired(constraint);
+        if (!desired) return;
+        if (constraint.maintain_offset === true) {
+            if (!Array.isArray(constraint.rotation_offset) || constraint.rotation_offset.length !== 4) captureRotationBlendOffset(bone, constraint);
+            desired.multiply(new THREE.Quaternion().fromArray(constraint.rotation_offset)).normalize();
+        }
+        const result = current.clone().slerp(desired, influence).normalize();
+        const local = targetSpace === 'world' && bone.mesh.parent
+            ? bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(result).normalize()
+            : result;
+        bone.mesh.quaternion.copy(local);
+        bone.mesh.rotation.setFromQuaternion(local, Format.euler_order || 'ZYX');
         bone.mesh.updateMatrixWorld(true);
     };
     const applyLimit = (bone, constraint, influence) => {
@@ -5727,6 +7137,1038 @@ function efSetupConstraintSupport() {
         limited.scale.lerp(new THREE.Vector3().fromArray(scale), influence);
         bone.mesh.matrix.copy(compose(limited));
         bone.mesh.matrix.decompose(bone.mesh.position, bone.mesh.quaternion, bone.mesh.scale);
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const constraintAxis = (target, axisName, space) => {
+        const negative = String(axisName || '').startsWith('-');
+        const axis = String(axisName || 'y').replace('-', '').toLowerCase();
+        const vector = axis === 'x' ? new THREE.Vector3(1, 0, 0) : axis === 'z' ? new THREE.Vector3(0, 0, 1) : new THREE.Vector3(0, 1, 0);
+        if (space === 'target' && target && target.mesh) vector.applyQuaternion(target.mesh.getWorldQuaternion(new THREE.Quaternion()).normalize());
+        if (negative) vector.negate();
+        return vector.normalize();
+    };
+    const applyFloor = (bone, constraint, influence) => {
+        const target = findNode(constraint.target);
+        if (!target || !target.mesh || target === bone) return;
+        target.mesh.updateMatrixWorld(true);
+        bone.mesh.updateMatrixWorld(true);
+        const normal = constraintAxis(target, constraint.axis, constraint.space);
+        const planePoint = target.mesh.getWorldPosition(new THREE.Vector3()).addScaledVector(normal, Number(constraint.offset) || 0);
+        const currentWorld = bone.mesh.getWorldPosition(new THREE.Vector3());
+        const distance = currentWorld.clone().sub(planePoint).dot(normal);
+        if (constraint.prevent_penetration !== false && distance >= 0) return;
+        const desiredWorld = currentWorld.clone().addScaledVector(normal, -distance);
+        const blendedWorld = currentWorld.clone().lerp(desiredWorld, influence);
+        const local = bone.mesh.parent ? bone.mesh.parent.worldToLocal(blendedWorld.clone()) : blendedWorld;
+        bone.mesh.position.copy(local);
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const applyPivot = (bone, constraint, influence) => {
+        const target = findNode(constraint.target);
+        if (!target || !target.mesh || target === bone) return;
+        target.mesh.updateMatrixWorld(true);
+        bone.mesh.updateMatrixWorld(true);
+        const axis = constraintAxis(target, constraint.axis, constraint.space);
+        const center = target.mesh.getWorldPosition(new THREE.Vector3());
+        const currentWorld = bone.mesh.getWorldPosition(new THREE.Vector3());
+        const relative = currentWorld.clone().sub(center);
+        const axial = axis.clone().multiplyScalar(relative.dot(axis));
+        const radial = relative.clone().sub(axial);
+        const angle = Math.degToRad(Number(constraint.angle) || 0);
+        const desiredWorld = constraint.keep_radius === false
+            ? center.clone().add(axial)
+            : center.clone().add(axial).add(radial.applyAxisAngle(axis, angle));
+        const blendedWorld = currentWorld.clone().lerp(desiredWorld, influence);
+        const local = bone.mesh.parent ? bone.mesh.parent.worldToLocal(blendedWorld.clone()) : blendedWorld;
+        bone.mesh.position.copy(local);
+        if (constraint.follow_rotation === true) {
+            const delta = new THREE.Quaternion().setFromAxisAngle(axis, angle);
+            const currentWorldQuaternion = bone.mesh.getWorldQuaternion(new THREE.Quaternion());
+            const desiredWorldQuaternion = delta.multiply(currentWorldQuaternion);
+            const parentWorldQuaternion = bone.mesh.parent ? bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion()) : new THREE.Quaternion();
+            const desiredLocalQuaternion = parentWorldQuaternion.invert().multiply(desiredWorldQuaternion);
+            bone.mesh.quaternion.slerp(desiredLocalQuaternion, influence);
+        }
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const axisVector = axisName => {
+        const name = String(axisName || 'z').toLowerCase();
+        const vector = name.includes('x') ? new THREE.Vector3(1, 0, 0) : name.includes('y') ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(0, 0, 1);
+        return name.startsWith('-') ? vector.negate() : vector;
+    };
+    const captureInitialDistance = (bone, constraint) => {
+        const target = findNode(constraint.target);
+        if (!bone || !bone.mesh || !target || !target.mesh || target === bone) {
+            constraint.initial_distance = 0;
+            return;
+        }
+        bone.mesh.updateMatrixWorld(true);
+        target.mesh.updateMatrixWorld(true);
+        constraint.initial_distance = bone.mesh.getWorldPosition(new THREE.Vector3()).distanceTo(target.mesh.getWorldPosition(new THREE.Vector3()));
+    };
+    const applyLimitDistance = (bone, constraint, influence) => {
+        const target = findNode(constraint.target);
+        if (!target || !target.mesh || target === bone) return;
+        normalizeDistanceConstraint(constraint);
+        bone.mesh.updateMatrixWorld(true);
+        target.mesh.updateMatrixWorld(true);
+        const currentWorld = bone.mesh.getWorldPosition(new THREE.Vector3());
+        const targetWorld = target.mesh.getWorldPosition(new THREE.Vector3());
+        const currentDirection = currentWorld.clone().sub(targetWorld);
+        const currentDistance = currentDirection.length();
+        const limit = constraint.mode === 'initial' ? constraint.initial_distance : constraint.distance;
+        let desiredDistance = currentDistance;
+        if (constraint.mode === 'exact' || constraint.mode === 'initial') desiredDistance = limit;
+        else if (constraint.mode === 'minimum' && currentDistance < limit) desiredDistance = limit;
+        else if (constraint.mode === 'maximum' && currentDistance > limit) desiredDistance = limit;
+        const violationDepth = Math.abs(currentDistance - desiredDistance);
+        if (violationDepth <= 0) return;
+        const normalizedDepth = constraint.softness > 0 ? THREE.MathUtils.clamp(violationDepth / constraint.softness, 0, 1) : 1;
+        const softenedInfluence = normalizedDepth * normalizedDepth * (3 - 2 * normalizedDepth);
+        const direction = currentDistance >= 1e-5 ? currentDirection.normalize() : new THREE.Vector3(1, 0, 0);
+        const desiredWorld = targetWorld.clone().addScaledVector(direction, desiredDistance);
+        const blendedWorld = currentWorld.lerp(desiredWorld, softenedInfluence * influence);
+        const local = bone.mesh.parent ? bone.mesh.parent.worldToLocal(blendedWorld.clone()) : blendedWorld;
+        bone.mesh.position.copy(local);
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const trackingDirection = (bone, target) => target.mesh.getWorldPosition(new THREE.Vector3()).sub(bone.mesh.getWorldPosition(new THREE.Vector3()));
+    const trackingUp = (target, constraint) => {
+        const up = new THREE.Vector3(0, 1, 0);
+        return constraint.up_space === 'target' ? up.applyQuaternion(target.mesh.getWorldQuaternion(new THREE.Quaternion())).normalize() : up;
+    };
+    const orientAxes = (primaryLocal, secondaryLocal, primaryWorld, secondaryWorld) => {
+        const primary = primaryWorld.clone().normalize();
+        const localSecondary = secondaryLocal.clone().sub(primaryLocal.clone().multiplyScalar(secondaryLocal.dot(primaryLocal))).normalize();
+        const desiredSecondary = secondaryWorld.clone().sub(primary.clone().multiplyScalar(secondaryWorld.dot(primary)));
+        const fallback = Math.abs(primary.y) < 0.999 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
+        if (desiredSecondary.lengthSq() < 1e-10) desiredSecondary.copy(fallback).sub(primary.clone().multiplyScalar(fallback.dot(primary)));
+        desiredSecondary.normalize();
+        const swing = new THREE.Quaternion().setFromUnitVectors(primaryLocal.clone().normalize(), primary);
+        const swungSecondary = localSecondary.applyQuaternion(swing).normalize();
+        const angle = Math.atan2(primary.dot(swungSecondary.clone().cross(desiredSecondary)), THREE.MathUtils.clamp(swungSecondary.dot(desiredSecondary), -1, 1));
+        return new THREE.Quaternion().setFromAxisAngle(primary, angle).multiply(swing).normalize();
+    };
+    const closestPointOnTriangle = (point, a, b, c) => {
+        const ab = b.clone().sub(a);
+        const ac = c.clone().sub(a);
+        const ap = point.clone().sub(a);
+        const d1 = ab.dot(ap);
+        const d2 = ac.dot(ap);
+        if (d1 <= 0 && d2 <= 0) return a.clone();
+        const bp = point.clone().sub(b);
+        const d3 = ab.dot(bp);
+        const d4 = ac.dot(bp);
+        if (d3 >= 0 && d4 <= d3) return b.clone();
+        const vc = d1 * d4 - d3 * d2;
+        if (vc <= 0 && d1 >= 0 && d3 <= 0) return a.clone().addScaledVector(ab, d1 / (d1 - d3));
+        const cp = point.clone().sub(c);
+        const d5 = ab.dot(cp);
+        const d6 = ac.dot(cp);
+        if (d6 >= 0 && d5 <= d6) return c.clone();
+        const vb = d5 * d2 - d1 * d6;
+        if (vb <= 0 && d2 >= 0 && d6 <= 0) return a.clone().addScaledVector(ac, d2 / (d2 - d6));
+        const va = d3 * d6 - d5 * d4;
+        if (va <= 0 && d4 - d3 >= 0 && d5 - d6 >= 0) return b.clone().addScaledVector(c.clone().sub(b), (d4 - d3) / ((d4 - d3) + (d5 - d6)));
+        const denominator = 1 / (va + vb + vc);
+        return a.clone().addScaledVector(ab, vb * denominator).addScaledVector(ac, vc * denominator);
+    };
+    const rayTriangleIntersection = (origin, direction, a, b, c) => {
+        const edge1 = b.clone().sub(a);
+        const edge2 = c.clone().sub(a);
+        const p = direction.clone().cross(edge2);
+        const determinant = edge1.dot(p);
+        if (Math.abs(determinant) < 1e-9) return null;
+        const inverse = 1 / determinant;
+        const tVector = origin.clone().sub(a);
+        const u = tVector.dot(p) * inverse;
+        if (u < 0 || u > 1) return null;
+        const q = tVector.clone().cross(edge1);
+        const v = direction.dot(q) * inverse;
+        if (v < 0 || u + v > 1) return null;
+        const distance = edge2.dot(q) * inverse;
+        return distance >= 0 ? distance : null;
+    };
+    const isConstraintModelElement = node => {
+        const cube = typeof Cube !== 'undefined' && node instanceof Cube;
+        const mesh = typeof Mesh !== 'undefined' && node instanceof Mesh;
+        return cube || mesh;
+    };
+    const targetModelElements = target => {
+        const elements = [];
+        const visited = new Set();
+        const collect = node => {
+            if (!node || visited.has(node)) return;
+            visited.add(node);
+            if (isConstraintModelElement(node)) {
+                if (node.visibility !== false && node.mesh && node.mesh.visible !== false) elements.push(node);
+                return;
+            }
+            if (Array.isArray(node.children)) node.children.forEach(collect);
+        };
+        collect(target);
+        return elements;
+    };
+    const targetGeometry = target => targetModelElements(target).map(element => {
+        const object = element.mesh;
+        object.updateMatrixWorld(true);
+        const geometry = object.geometry;
+        const position = geometry && geometry.attributes && geometry.attributes.position;
+        return position ? {object, geometry, position} : null;
+    }).filter(Boolean);
+    const targetBounds = geometryEntries => {
+        const box = new THREE.Box3();
+        geometryEntries.forEach(({object, position}) => {
+            for (let index = 0; index < position.count; index++) {
+                box.expandByPoint(new THREE.Vector3().fromBufferAttribute(position, index).applyMatrix4(object.matrixWorld));
+            }
+        });
+        const size = box.getSize(new THREE.Vector3());
+        return size.x > 1e-8 && size.y > 1e-8 && size.z > 1e-8 ? box : null;
+    };
+    const targetTriangles = geometryEntries => {
+        const triangles = [];
+        geometryEntries.forEach(({object, geometry, position}) => {
+            const index = geometry.index;
+            const count = index ? index.count : position.count;
+            for (let offset = 0; offset + 2 < count; offset += 3) {
+                const ia = index ? index.getX(offset) : offset;
+                const ib = index ? index.getX(offset + 1) : offset + 1;
+                const ic = index ? index.getX(offset + 2) : offset + 2;
+                const a = new THREE.Vector3().fromBufferAttribute(position, ia).applyMatrix4(object.matrixWorld);
+                const b = new THREE.Vector3().fromBufferAttribute(position, ib).applyMatrix4(object.matrixWorld);
+                const c = new THREE.Vector3().fromBufferAttribute(position, ic).applyMatrix4(object.matrixWorld);
+                const normal = b.clone().sub(a).cross(c.clone().sub(a));
+                if (normal.lengthSq() > 1e-12) triangles.push({a, b, c, normal: normal.normalize()});
+            }
+        });
+        return triangles;
+    };
+    const boxSurfaceFrame = (point, box) => {
+        if (!box || box.isEmpty()) return null;
+        const closest = point.clone().clamp(box.min, box.max);
+        let bestDistance = Infinity;
+        let normal = new THREE.Vector3(0, 1, 0);
+        const faces = [
+            ['x', box.min.x, -1], ['x', box.max.x, 1],
+            ['y', box.min.y, -1], ['y', box.max.y, 1],
+            ['z', box.min.z, -1], ['z', box.max.z, 1]
+        ];
+        if (box.containsPoint(point)) {
+            faces.forEach(([axis, value, sign]) => {
+                const distance = Math.abs(point[axis] - value);
+                if (distance < bestDistance) {
+                    bestDistance = distance;
+                    closest.copy(point);
+                    closest[axis] = value;
+                    normal.set(0, 0, 0)[axis] = sign;
+                }
+            });
+        } else {
+            const delta = point.clone().sub(closest);
+            if (delta.lengthSq() > 1e-12) normal.copy(delta).normalize();
+        }
+        return {point: closest, normal};
+    };
+    const rayAabbIntersection = (origin, direction, box) => {
+        if (!box || box.isEmpty()) return null;
+        const ray = new THREE.Ray(origin, direction);
+        const point = ray.intersectBox(box, new THREE.Vector3());
+        if (!point) return null;
+        const frame = boxSurfaceFrame(point, box);
+        return frame ? {point, normal: frame.normal, distance: point.distanceTo(origin)} : null;
+    };
+    const shrinkwrapSurfaceFrame = (bone, constraint) => {
+        const target = findNode(constraint.target);
+        if (!bone || !bone.mesh || !target || !target.mesh || target === bone) return null;
+        normalizeShrinkwrap(constraint);
+        bone.mesh.updateMatrixWorld(true);
+        target.mesh.updateMatrixWorld(true);
+        const origin = bone.mesh.getWorldPosition(new THREE.Vector3());
+        const geometryEntries = targetGeometry(target);
+        if (!geometryEntries.length) return null;
+        const triangles = targetTriangles(geometryEntries);
+        const box = targetBounds(geometryEntries);
+        let frame = null;
+        if (constraint.mode === 'project') {
+            const direction = axisVector(constraint.project_axis);
+            if (constraint.direction_space === 'target') direction.applyQuaternion(target.mesh.getWorldQuaternion(new THREE.Quaternion())).normalize();
+            const directions = constraint.bidirectional === true ? [direction, direction.clone().negate()] : [direction];
+            directions.forEach(rayDirection => {
+                triangles.forEach(triangle => {
+                    const distance = rayTriangleIntersection(origin, rayDirection, triangle.a, triangle.b, triangle.c);
+                    if (distance !== null && (!frame || distance < frame.distance)) frame = {point: origin.clone().addScaledVector(rayDirection, distance), normal: triangle.normal.clone(), distance};
+                });
+            });
+            if (!frame) directions.forEach(rayDirection => {
+                const boxFrame = rayAabbIntersection(origin, rayDirection, box);
+                if (boxFrame && (!frame || boxFrame.distance < frame.distance)) frame = boxFrame;
+            });
+        } else {
+            triangles.forEach(triangle => {
+                const point = closestPointOnTriangle(origin, triangle.a, triangle.b, triangle.c);
+                const distance = point.distanceTo(origin);
+                if (!frame || distance < frame.distance) frame = {point, normal: triangle.normal.clone(), distance};
+            });
+            if (!frame) {
+                const fallback = boxSurfaceFrame(origin, box);
+                if (fallback) frame = {point: fallback.point, normal: fallback.normal, distance: fallback.point.distanceTo(origin)};
+            }
+        }
+        const maxDistance = finiteNonNegative(constraint.max_distance, 0);
+        if (!frame || (maxDistance > 0 && frame.distance > maxDistance)) return null;
+        if (constraint.flip_normal === true) frame.normal.negate();
+        frame.point.addScaledVector(frame.normal, constraint.surface_offset);
+        return frame;
+    };
+    const desiredShrinkwrapWorldQuaternion = (bone, constraint, frame) => {
+        const upLocal = axisVector(constraint.up_axis || 'y');
+        const tangentLocal = constraint.up_axis === 'x' ? axisVector('z') : axisVector('x');
+        const currentWorld = bone.mesh.getWorldQuaternion(new THREE.Quaternion()).normalize();
+        const tangentWorld = tangentLocal.clone().applyQuaternion(currentWorld);
+        tangentWorld.addScaledVector(frame.normal, -tangentWorld.dot(frame.normal));
+        return orientAxes(upLocal, tangentLocal, frame.normal, tangentWorld);
+    };
+    const captureShrinkwrapRotationOffset = (bone, constraint) => {
+        const frame = shrinkwrapSurfaceFrame(bone, constraint);
+        const desired = frame ? desiredShrinkwrapWorldQuaternion(bone, constraint, frame) : null;
+        constraint.rotation_offset = desired ? desired.invert().multiply(bone.mesh.getWorldQuaternion(new THREE.Quaternion())).normalize().toArray() : [0, 0, 0, 1];
+    };
+    const applyShrinkwrap = (bone, constraint, influence) => {
+        const frame = shrinkwrapSurfaceFrame(bone, constraint);
+        if (!frame) return;
+        const currentWorldPosition = bone.mesh.getWorldPosition(new THREE.Vector3());
+        const positionWeight = THREE.MathUtils.clamp(Number(constraint.position_weight), 0, 1) * influence;
+        const blendedWorldPosition = currentWorldPosition.lerp(frame.point, positionWeight);
+        bone.mesh.position.copy(bone.mesh.parent ? bone.mesh.parent.worldToLocal(blendedWorldPosition) : blendedWorldPosition);
+        if (constraint.align_rotation === true) {
+            const currentWorld = bone.mesh.getWorldQuaternion(new THREE.Quaternion()).normalize();
+            const desiredWorld = desiredShrinkwrapWorldQuaternion(bone, constraint, frame);
+            if (constraint.maintain_rotation_offset === true) desiredWorld.multiply(new THREE.Quaternion().fromArray(constraint.rotation_offset || [0, 0, 0, 1])).normalize();
+            const rotationWeight = THREE.MathUtils.clamp(Number(constraint.rotation_weight), 0, 1) * influence;
+            const weightedWorld = currentWorld.slerp(desiredWorld, rotationWeight).normalize();
+            const parentWorld = bone.mesh.parent ? bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion()) : new THREE.Quaternion();
+            bone.mesh.quaternion.copy(parentWorld.invert().multiply(weightedWorld).normalize());
+            bone.mesh.rotation.setFromQuaternion(bone.mesh.quaternion, Format.euler_order || 'ZYX');
+        }
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const floorDropFrame = (bone, constraint) => {
+        const target = findNode(constraint.target);
+        if (!bone || !bone.mesh || !target || !target.mesh || target === bone) return null;
+        normalizeFloorDrop(constraint);
+        bone.mesh.updateMatrixWorld(true);
+        target.mesh.updateMatrixWorld(true);
+        const targetWorldQuaternion = target.mesh.getWorldQuaternion(new THREE.Quaternion()).normalize();
+        const normal = new THREE.Vector3(0, 1, 0).applyQuaternion(targetWorldQuaternion).normalize();
+        const direction = axisVector(constraint.drop_axis);
+        if (constraint.direction_space === 'target') direction.applyQuaternion(targetWorldQuaternion).normalize();
+        const origin = bone.mesh.getWorldPosition(new THREE.Vector3());
+        const planePoint = target.mesh.getWorldPosition(new THREE.Vector3());
+        const signedDistance = origin.clone().sub(planePoint).dot(normal);
+        const denominator = direction.dot(normal);
+        if (Math.abs(denominator) < 1e-8) return null;
+        if (constraint.mode === 'above_only' && (signedDistance < -1e-8 || denominator >= -1e-8)) return null;
+        const t = -signedDistance / denominator;
+        const maxDistance = finiteNonNegative(constraint.max_distance, 0);
+        if (t < -1e-8 || (maxDistance > 0 && t - maxDistance > 1e-8)) return null;
+        const hit = origin.clone().addScaledVector(direction, Math.max(0, t)).addScaledVector(normal, constraint.surface_offset);
+        return {target, targetWorldQuaternion, normal, direction, origin, hit, t: Math.max(0, t)};
+    };
+    const desiredFloorDropWorldQuaternion = (bone, constraint, frame) => {
+        const upLocal = axisVector(constraint.up_axis || 'y');
+        const tangentLocal = constraint.up_axis === 'x' ? axisVector('z') : axisVector('x');
+        const currentWorld = bone.mesh.getWorldQuaternion(new THREE.Quaternion()).normalize();
+        const tangentWorld = tangentLocal.clone().applyQuaternion(currentWorld);
+        tangentWorld.addScaledVector(frame.normal, -tangentWorld.dot(frame.normal));
+        if (tangentWorld.lengthSq() < 1e-10) {
+            tangentWorld.copy(new THREE.Vector3(1, 0, 0).applyQuaternion(frame.targetWorldQuaternion));
+            tangentWorld.addScaledVector(frame.normal, -tangentWorld.dot(frame.normal));
+        }
+        return orientAxes(upLocal, tangentLocal, frame.normal, tangentWorld);
+    };
+    const captureFloorDropRotationOffset = (bone, constraint) => {
+        const frame = floorDropFrame(bone, constraint);
+        const desired = frame ? desiredFloorDropWorldQuaternion(bone, constraint, frame) : null;
+        constraint.rotation_offset = desired ? desired.invert().multiply(bone.mesh.getWorldQuaternion(new THREE.Quaternion())).normalize().toArray() : [0, 0, 0, 1];
+    };
+    const applyFloorDrop = (bone, constraint, influence) => {
+        const frame = floorDropFrame(bone, constraint);
+        if (!frame) return;
+        const positionWeight = THREE.MathUtils.clamp(Number(constraint.position_weight), 0, 1) * influence;
+        const blendedWorldPosition = frame.origin.clone().lerp(frame.hit, positionWeight);
+        bone.mesh.position.copy(bone.mesh.parent ? bone.mesh.parent.worldToLocal(blendedWorldPosition) : blendedWorldPosition);
+        if (constraint.align_rotation === true) {
+            let desiredWorld = desiredFloorDropWorldQuaternion(bone, constraint, frame);
+            if (constraint.maintain_rotation_offset === true) desiredWorld.multiply(new THREE.Quaternion().fromArray(constraint.rotation_offset)).normalize();
+            const currentWorld = bone.mesh.getWorldQuaternion(new THREE.Quaternion()).normalize();
+            const rotationWeight = THREE.MathUtils.clamp(Number(constraint.rotation_weight), 0, 1) * influence;
+            const weightedWorld = currentWorld.slerp(desiredWorld, rotationWeight).normalize();
+            const parentWorld = bone.mesh.parent ? bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion()) : new THREE.Quaternion();
+            bone.mesh.quaternion.copy(parentWorld.invert().multiply(weightedWorld).normalize());
+            bone.mesh.rotation.setFromQuaternion(bone.mesh.quaternion, Format.euler_order || 'ZYX');
+        }
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const desiredTrackingWorldQuaternion = (bone, target, constraint) => {
+        const direction = trackingDirection(bone, target);
+        if (direction.lengthSq() < 1e-10) return null;
+        const trackAxis = axisVector(constraint.track_axis || 'z');
+        if (constraint.type === 'damped_track') {
+            const currentWorld = bone.mesh.getWorldQuaternion(new THREE.Quaternion());
+            const currentTrack = trackAxis.clone().applyQuaternion(currentWorld).normalize();
+            const targetDirection = direction.normalize();
+            const fullAngle = currentTrack.angleTo(targetDirection);
+            if (fullAngle < 1e-8) return currentWorld;
+            const limit = THREE.MathUtils.clamp(Math.degToRad(Number(constraint.damping_angle) || 0), 0, Math.PI);
+            const factor = limit > 0 ? Math.min(1, limit / fullAngle) : 1;
+            return new THREE.Quaternion().setFromUnitVectors(currentTrack, targetDirection).slerp(new THREE.Quaternion(), 1 - factor).multiply(currentWorld).normalize();
+        }
+        if (constraint.type === 'locked_track') {
+            const lockAxis = axisVector(constraint.lock_axis || 'y');
+            if (Math.abs(trackAxis.dot(lockAxis)) > 0.999) return null;
+            const currentWorld = bone.mesh.getWorldQuaternion(new THREE.Quaternion());
+            const lockedWorld = lockAxis.clone().applyQuaternion(currentWorld).normalize();
+            const projected = direction.sub(lockedWorld.clone().multiplyScalar(direction.dot(lockedWorld)));
+            if (projected.lengthSq() < 1e-10) return currentWorld;
+            return orientAxes(trackAxis, lockAxis, projected, lockedWorld);
+        }
+        const upAxis = axisVector(constraint.up_axis || 'y');
+        if (Math.abs(trackAxis.dot(upAxis)) > 0.999) return null;
+        return orientAxes(trackAxis, upAxis, direction, trackingUp(target, constraint));
+    };
+    const captureTrackOffset = (bone, constraint) => {
+        const target = findNode(constraint.target);
+        if (!bone || !bone.mesh || !target || !target.mesh || target === bone) {
+            constraint.rotation_offset = [0, 0, 0, 1];
+            return;
+        }
+        bone.mesh.updateMatrixWorld(true);
+        target.mesh.updateMatrixWorld(true);
+        const desired = desiredTrackingWorldQuaternion(bone, target, constraint);
+        constraint.rotation_offset = desired ? desired.clone().invert().multiply(bone.mesh.getWorldQuaternion(new THREE.Quaternion())).normalize().toArray() : [0, 0, 0, 1];
+    };
+    const applyTracking = (bone, constraint, influence) => {
+        const target = findNode(constraint.target);
+        if (!target || !target.mesh || target === bone) return;
+        bone.mesh.updateMatrixWorld(true);
+        target.mesh.updateMatrixWorld(true);
+        const desiredWorld = desiredTrackingWorldQuaternion(bone, target, constraint);
+        if (!desiredWorld) return;
+        if (constraint.maintain_offset === true) desiredWorld.multiply(new THREE.Quaternion().fromArray(constraint.rotation_offset || [0, 0, 0, 1])).normalize();
+        const parentWorld = bone.mesh.parent ? bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion()) : new THREE.Quaternion();
+        const desiredLocal = parentWorld.invert().multiply(desiredWorld).normalize();
+        bone.mesh.quaternion.slerp(desiredLocal, influence).normalize();
+        bone.mesh.rotation.setFromQuaternion(bone.mesh.quaternion, Format.euler_order || 'ZYX');
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const captureStretchTo = (bone, constraint) => {
+        const target = findNode(constraint.target);
+        if (!bone || !bone.mesh || !target || !target.mesh || target === bone) {
+            constraint.original_length = 0;
+            constraint.rotation_offset = [0, 0, 0, 1];
+            return;
+        }
+        if (typeof Canvas !== 'undefined' && Canvas.scene) Canvas.scene.updateMatrixWorld(true);
+        bone.mesh.updateMatrixWorld(true);
+        target.mesh.updateMatrixWorld(true);
+        const ownerPosition = bone.mesh.getWorldPosition(new THREE.Vector3());
+        const targetPosition = target.mesh.getWorldPosition(new THREE.Vector3());
+        constraint.original_length = ownerPosition.distanceTo(targetPosition);
+        const direction = targetPosition.sub(ownerPosition);
+        const mainAxis = axisVector(constraint.main_axis || 'y');
+        const upAxis = axisVector(constraint.up_axis || 'z');
+        const currentWorld = bone.mesh.getWorldQuaternion(new THREE.Quaternion()).normalize();
+        const stableUp = upAxis.clone().applyQuaternion(currentWorld).normalize();
+        const desired = direction.lengthSq() >= 1e-10 && Math.abs(mainAxis.dot(upAxis)) < 0.999
+            ? orientAxes(mainAxis, upAxis, direction, stableUp)
+            : currentWorld;
+        constraint.rotation_offset = constraint.maintain_offset === true
+            ? desired.clone().invert().multiply(currentWorld).normalize().toArray()
+            : [0, 0, 0, 1];
+    };
+    const captureMaintainVolumeReference = (bone, constraint) => {
+        const axis = ['x', 'y', 'z'].includes(constraint.main_axis) ? constraint.main_axis : 'x';
+        const scale = bone && bone.mesh ? Math.abs(Number(bone.mesh.scale[axis])) : 1;
+        constraint.reference_scale = Math.max(1e-8, Number.isFinite(scale) ? scale : 1);
+    };
+    const applyMaintainVolume = (bone, constraint, influence) => {
+        const axes = ['x', 'y', 'z'];
+        const mainAxis = axes.includes(constraint.main_axis) ? constraint.main_axis : 'x';
+        const currentScale = bone.mesh.scale.clone();
+        const referenceScale = Math.max(1e-8, Math.abs(Number(constraint.reference_scale)) || 1);
+        const currentMainScale = Math.max(1e-8, Math.abs(Number(currentScale[mainAxis])) || 0);
+        const ratio = Math.max(1e-8, currentMainScale / referenceScale);
+        const exponentValue = Number(constraint.exponent);
+        const compensationWeightValue = Number(constraint.compensation_weight);
+        const exponent = THREE.MathUtils.clamp(Number.isFinite(exponentValue) ? exponentValue : 1, 0, 2);
+        const compensationWeight = THREE.MathUtils.clamp(Number.isFinite(compensationWeightValue) ? compensationWeightValue : 1, 0, 1);
+        let minimum = finiteNonNegative(constraint.min_factor, 0);
+        let maximum = finiteNonNegative(constraint.max_factor, 100);
+        if (minimum > maximum) [minimum, maximum] = [maximum, minimum];
+        const mode = ['volume', 'area', 'uniform', 'custom'].includes(constraint.mode) ? constraint.mode : 'volume';
+        const desiredScale = currentScale.clone();
+        axes.forEach(axis => {
+            if (axis === mainAxis && mode !== 'uniform') return;
+            const customWeightValue = Number(constraint['custom_' + axis]);
+            const customWeight = THREE.MathUtils.clamp(Number.isFinite(customWeightValue) ? customWeightValue : 1, 0, 1);
+            const axisExponent = mode === 'volume' ? exponent / 2 : mode === 'uniform' ? exponent / 3 : mode === 'custom' ? exponent * customWeight : exponent;
+            const rawFactor = Math.pow(ratio, -axisExponent);
+            const factor = THREE.MathUtils.clamp(Number.isFinite(rawFactor) ? rawFactor : 1, minimum, maximum);
+            const weightedFactor = THREE.MathUtils.lerp(1, factor, compensationWeight);
+            desiredScale[axis] = currentScale[axis] * weightedFactor;
+        });
+        bone.mesh.scale.lerp(desiredScale, influence);
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const applyStretchTo = (bone, constraint, influence) => {
+        const target = findNode(constraint.target);
+        if (!target || !target.mesh || target === bone) return;
+        bone.mesh.updateMatrixWorld(true);
+        target.mesh.updateMatrixWorld(true);
+        const ownerPosition = bone.mesh.getWorldPosition(new THREE.Vector3());
+        const direction = target.mesh.getWorldPosition(new THREE.Vector3()).sub(ownerPosition);
+        const distance = direction.length();
+        if (distance < 1e-8) return;
+        const mainAxis = axisVector(constraint.main_axis || 'y');
+        const upAxis = axisVector(constraint.up_axis || 'z');
+        if (Math.abs(mainAxis.dot(upAxis)) > 0.999) return;
+        const currentLocal = bone.mesh.quaternion.clone().normalize();
+        const currentWorld = bone.mesh.getWorldQuaternion(new THREE.Quaternion()).normalize();
+        const stableUp = upAxis.clone().applyQuaternion(currentWorld).normalize();
+        const desiredWorld = orientAxes(mainAxis, upAxis, direction, stableUp);
+        if (constraint.maintain_offset === true) desiredWorld.multiply(new THREE.Quaternion().fromArray(constraint.rotation_offset || [0, 0, 0, 1])).normalize();
+        const rotationWeight = THREE.MathUtils.clamp(Number(constraint.rotation_weight), 0, 1);
+        const weightedWorld = currentWorld.clone().slerp(desiredWorld, rotationWeight).normalize();
+        const parentWorld = bone.mesh.parent ? bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion()) : new THREE.Quaternion();
+        const weightedLocal = parentWorld.invert().multiply(weightedWorld).normalize();
+        bone.mesh.quaternion.copy(currentLocal.slerp(weightedLocal, influence).normalize());
+        bone.mesh.rotation.setFromQuaternion(bone.mesh.quaternion, Format.euler_order || 'ZYX');
+        const originalLength = Math.max(1e-8, Number(constraint.original_length) || distance);
+        let minimum = finiteNonNegative(constraint.min_stretch_ratio, 0);
+        let maximum = finiteNonNegative(constraint.max_stretch_ratio, 100);
+        if (minimum > maximum) [minimum, maximum] = [maximum, minimum];
+        const clampedRatio = THREE.MathUtils.clamp(distance / originalLength, minimum, maximum);
+        const stretchWeight = THREE.MathUtils.clamp(Number(constraint.stretch_weight), 0, 1);
+        const longitudinal = THREE.MathUtils.lerp(1, clampedRatio, stretchWeight);
+        const exponent = THREE.MathUtils.clamp(Number(constraint.volume_exponent) || 0, 0, 1);
+        const volumeFactor = Math.pow(clampedRatio, -exponent / 2);
+        const transverse = constraint.volume_mode === 'preserve' ? THREE.MathUtils.lerp(1, volumeFactor, stretchWeight) : 1;
+        const mainIndex = Math.abs(mainAxis.x) > 0.5 ? 0 : Math.abs(mainAxis.y) > 0.5 ? 1 : 2;
+        const desiredScale = bone.mesh.scale.clone();
+        ['x', 'y', 'z'].forEach((axis, index) => desiredScale[axis] *= index === mainIndex ? longitudinal : transverse);
+        bone.mesh.scale.lerp(desiredScale, influence);
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const pathTargets = (bone, constraint) => {
+        const seen = new Set();
+        return (Array.isArray(constraint.path_points) ? constraint.path_points : []).map(point => findNode(point && point.target)).filter(target => {
+            if (!target || !target.mesh || target === bone || seen.has(target.uuid)) return false;
+            seen.add(target.uuid);
+            target.mesh.updateMatrixWorld(true);
+            return true;
+        });
+    };
+    const pathPositions = (bone, constraint) => pathTargets(bone, constraint).map(target => target.mesh.getWorldPosition(new THREE.Vector3()));
+    const collectSplineChain = (tail, chainLength) => {
+        const chain = [];
+        let current = tail;
+        const limit = Math.max(0, Math.floor(Number(chainLength) || 0));
+        while (current instanceof ArmatureBone && (!limit || chain.length < limit)) {
+            chain.push(current);
+            current = current.parent instanceof ArmatureBone ? current.parent : null;
+        }
+        return chain.reverse();
+    };
+    const catmullRomVector = (p0, p1, p2, p3, t) => {
+        const t2 = t * t;
+        const t3 = t2 * t;
+        return new THREE.Vector3().copy(p1).multiplyScalar(2).add(p2.clone().sub(p0).multiplyScalar(t)).add(p0.clone().multiplyScalar(2).sub(p1.clone().multiplyScalar(5)).add(p2.clone().multiplyScalar(4)).sub(p3).multiplyScalar(t2)).add(p0.clone().negate().add(p1.clone().multiplyScalar(3)).sub(p2.clone().multiplyScalar(3)).add(p3).multiplyScalar(t3)).multiplyScalar(0.5);
+    };
+    const catmullRomTangent = (p0, p1, p2, p3, t) => {
+        const t2 = t * t;
+        return p2.clone().sub(p0).add(p0.clone().multiplyScalar(2).sub(p1.clone().multiplyScalar(5)).add(p2.clone().multiplyScalar(4)).sub(p3).multiplyScalar(2 * t)).add(p0.clone().negate().add(p1.clone().multiplyScalar(3)).sub(p2.clone().multiplyScalar(3)).add(p3).multiplyScalar(3 * t2)).multiplyScalar(0.5);
+    };
+    const evaluatePath = (points, progress, interpolation, closed) => {
+        const count = points.length;
+        if (count < 2) return null;
+        const segmentCount = closed ? count : count - 1;
+        const scaled = THREE.MathUtils.clamp(progress, 0, 1) * segmentCount;
+        const segment = Math.min(Math.floor(scaled), segmentCount - 1);
+        const t = scaled - segment;
+        const at = index => closed ? points[(index % count + count) % count] : points[THREE.MathUtils.clamp(index, 0, count - 1)];
+        const p1 = at(segment);
+        const p2 = at(segment + 1);
+        if (interpolation !== 'catmull_rom') return {position: p1.clone().lerp(p2, t), tangent: p2.clone().sub(p1)};
+        return {position: catmullRomVector(at(segment - 1), p1, p2, at(segment + 2), t), tangent: catmullRomTangent(at(segment - 1), p1, p2, at(segment + 2), t)};
+    };
+    const stablePathTangent = (points, progress, interpolation, closed, tangent) => {
+        if (tangent && tangent.lengthSq() >= 1e-10) return tangent.normalize();
+        const steps = Math.max(8, points.length * 4);
+        for (let step = 1; step <= steps; step++) {
+            const delta = step / (steps * Math.max(1, closed ? points.length : points.length - 1));
+            const beforeProgress = closed ? (progress - delta + 1) % 1 : Math.max(0, progress - delta);
+            const afterProgress = closed ? (progress + delta) % 1 : Math.min(1, progress + delta);
+            const before = evaluatePath(points, beforeProgress, interpolation, closed);
+            const after = evaluatePath(points, afterProgress, interpolation, closed);
+            const candidate = after && before ? after.position.clone().sub(before.position) : new THREE.Vector3();
+            if (candidate.lengthSq() >= 1e-10) return candidate.normalize();
+        }
+        return null;
+    };
+    const buildPathArcLut = (points, interpolation, closed) => {
+        const divisions = Math.max(32, points.length * (interpolation === 'catmull_rom' ? 32 : 8));
+        const entries = [];
+        let total = 0;
+        let previous = evaluatePath(points, 0, interpolation, closed);
+        if (!previous) return {entries, total};
+        entries.push({progress: 0, length: 0, position: previous.position.clone(), tangent: previous.tangent.clone()});
+        for (let index = 1; index <= divisions; index++) {
+            const progress = index / divisions;
+            const evaluated = evaluatePath(points, progress, interpolation, closed);
+            total += evaluated.position.distanceTo(previous.position);
+            entries.push({progress, length: total, position: evaluated.position.clone(), tangent: evaluated.tangent.clone()});
+            previous = evaluated;
+        }
+        return {entries, total};
+    };
+    const evaluatePathAtLength = (points, interpolation, closed, lut, length) => {
+        if (!lut.entries.length) return null;
+        const target = THREE.MathUtils.clamp(length, 0, lut.total);
+        let low = 0;
+        let high = lut.entries.length - 1;
+        while (low + 1 < high) {
+            const middle = (low + high) >> 1;
+            if (lut.entries[middle].length < target) low = middle;
+            else high = middle;
+        }
+        const start = lut.entries[low];
+        const end = lut.entries[high];
+        const span = end.length - start.length;
+        const alpha = span > 1e-8 ? (target - start.length) / span : 0;
+        return evaluatePath(points, THREE.MathUtils.lerp(start.progress, end.progress, alpha), interpolation, closed);
+    };
+    const transportSplineFrames = samples => {
+        if (!samples.length) return samples;
+        let tangent = samples[0].tangent.clone().normalize();
+        let normal = Math.abs(tangent.y) < 0.999 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
+        normal.addScaledVector(tangent, -normal.dot(tangent)).normalize();
+        samples[0].normal = normal.clone();
+        samples[0].binormal = tangent.clone().cross(normal).normalize();
+        for (let index = 1; index < samples.length; index++) {
+            const nextTangent = samples[index].tangent.clone().normalize();
+            const dot = THREE.MathUtils.clamp(tangent.dot(nextTangent), -1, 1);
+            if (dot < 0.999999) {
+                let axis = tangent.clone().cross(nextTangent);
+                if (axis.lengthSq() < 1e-10) axis = normal.clone();
+                else axis.normalize();
+                normal.applyAxisAngle(axis, Math.acos(dot));
+            }
+            normal.addScaledVector(nextTangent, -normal.dot(nextTangent));
+            if (normal.lengthSq() < 1e-10) normal.copy(Math.abs(nextTangent.y) < 0.999 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0)).addScaledVector(nextTangent, -normal.dot(nextTangent));
+            normal.normalize();
+            samples[index].normal = normal.clone();
+            samples[index].binormal = nextTangent.clone().cross(normal).normalize();
+            tangent = nextTangent;
+        }
+        return samples;
+    };
+    const desiredPathWorldQuaternion = (bone, constraint, evaluated, points, progress) => {
+        const forward = axisVector(constraint.forward_axis || 'z');
+        const up = axisVector(constraint.up_axis || 'y');
+        if (Math.abs(forward.dot(up)) > 0.999) return null;
+        const tangent = stablePathTangent(points, progress, constraint.interpolation, constraint.closed === true, evaluated.tangent);
+        if (!tangent) return null;
+        const worldUp = Math.abs(tangent.y) < 0.999 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
+        const desired = orientAxes(forward, up, tangent, worldUp);
+        const bank = Number(constraint.bank);
+        if (Number.isFinite(bank) && Math.abs(bank) > 1e-8) desired.premultiply(new THREE.Quaternion().setFromAxisAngle(tangent, Math.degToRad(bank))).normalize();
+        return desired;
+    };
+    const applyClampTo = (bone, constraint, influence) => {
+        const points = pathPositions(bone, constraint);
+        if (points.length < 2) return;
+        bone.mesh.updateMatrixWorld(true);
+        const ownerPosition = constraint.owner_space === 'world' ? bone.mesh.getWorldPosition(new THREE.Vector3()) : bone.mesh.position;
+        const axis = constraint.driver_axis.replace('-', '');
+        const sign = constraint.driver_axis.startsWith('-') ? -1 : 1;
+        const value = ownerPosition[axis] * sign;
+        const inputMin = Number(constraint.input_min);
+        const inputMax = Number(constraint.input_max);
+        let progress = 0;
+        if (inputMin !== inputMax) {
+            progress = THREE.MathUtils.clamp((value - inputMin) / (inputMax - inputMin), 0, 1);
+            if (constraint.reverse === true) progress = 1 - progress;
+        }
+        const evaluated = evaluatePath(points, progress, constraint.interpolation, constraint.closed === true);
+        if (!evaluated) return;
+        const offset = Array.isArray(constraint.offset) && constraint.offset.length === 3 ? new THREE.Vector3().fromArray(constraint.offset) : new THREE.Vector3();
+        const currentWorldPosition = bone.mesh.getWorldPosition(new THREE.Vector3());
+        const blendedWorldPosition = currentWorldPosition.lerp(evaluated.position.add(offset), influence);
+        bone.mesh.position.copy(bone.mesh.parent ? bone.mesh.parent.worldToLocal(blendedWorldPosition) : blendedWorldPosition);
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const capturePathRotationOffset = (bone, constraint) => {
+        const points = pathPositions(bone, constraint);
+        const progress = pathProgressAt(bone, constraint);
+        const evaluated = evaluatePath(points, progress, constraint.interpolation, constraint.closed === true);
+        const desired = evaluated && bone && bone.mesh ? desiredPathWorldQuaternion(bone, constraint, evaluated, points, progress) : null;
+        constraint.rotation_offset = desired ? desired.invert().multiply(bone.mesh.getWorldQuaternion(new THREE.Quaternion())).normalize().toArray() : [0, 0, 0, 1];
+    };
+    const applySplineIK = (tail, constraint, influence, writtenBones) => {
+        normalizeFollowPath(constraint);
+        const chain = collectSplineChain(tail, constraint.chain_length);
+        const points = pathPositions(tail, constraint);
+        if (chain.length < 2 || points.length < 2 || writtenBones && chain.some(bone => writtenBones.has(bone.uuid))) return;
+        if (writtenBones) chain.forEach(bone => writtenBones.add(bone.uuid));
+        const interpolation = constraint.interpolation;
+        const closed = constraint.closed === true;
+        const lut = buildPathArcLut(points, interpolation, closed);
+        if (lut.total < 1e-8) return;
+        chain.forEach(bone => bone.mesh.updateMatrixWorld(true));
+        const originalWorld = chain.map(bone => decompose(bone.mesh.matrixWorld));
+        const segmentLengths = chain.slice(1).map((bone, index) => originalWorld[index].position.distanceTo(originalWorld[index + 1].position));
+        const chainLength = segmentLengths.reduce((sum, length) => sum + length, 0);
+        if (chainLength < 1e-8) return;
+        const fittedLength = constraint.stretch === true ? lut.total : Math.min(chainLength, lut.total);
+        const stretchRatio = fittedLength / chainLength;
+        const samples = [];
+        let distance = 0;
+        chain.forEach((bone, index) => {
+            if (index > 0) distance += segmentLengths[index - 1] * stretchRatio;
+            const evaluated = evaluatePathAtLength(points, interpolation, closed, lut, distance);
+            if (evaluated) samples.push({position: evaluated.position, tangent: stablePathTangent(points, distance / lut.total, interpolation, closed, evaluated.tangent)});
+        });
+        if (samples.length !== chain.length || samples.some(sample => !sample.tangent)) return;
+        transportSplineFrames(samples);
+        const offset = Array.isArray(constraint.offset) && constraint.offset.length === 3 ? new THREE.Vector3().fromArray(constraint.offset) : new THREE.Vector3();
+        const rootShift = constraint.root_follow === false ? originalWorld[0].position.clone().sub(samples[0].position).sub(offset) : new THREE.Vector3();
+        const forward = axisVector(constraint.forward_axis);
+        const up = axisVector(constraint.up_axis);
+        const roll = Math.degToRad(Number(constraint.roll) || 0);
+        const desiredWorld = samples.map((sample, index) => {
+            const tangent = sample.tangent.clone().normalize();
+            const normal = sample.normal.clone();
+            if (Math.abs(roll) > 1e-8) normal.applyAxisAngle(tangent, roll).normalize();
+            const quaternion = orientAxes(forward, up, tangent, normal);
+            const scale = originalWorld[index].scale.clone();
+            const mainAxis = constraint.forward_axis.replace('-', '');
+            if (constraint.stretch === true) scale[mainAxis] *= stretchRatio;
+            if (constraint.volume === true && constraint.stretch === true) {
+                const transverse = 1 / Math.sqrt(Math.max(1e-8, stretchRatio));
+                ['x', 'y', 'z'].forEach(axis => { if (axis !== mainAxis) scale[axis] *= transverse; });
+            }
+            return {position: sample.position.clone().add(offset).add(rootShift), quaternion, scale};
+        });
+        chain.forEach((bone, index) => {
+            const desiredMatrix = compose(desiredWorld[index]);
+            const desiredLocal = bone.mesh.parent ? bone.mesh.parent.matrixWorld.clone().invert().multiply(desiredMatrix) : desiredMatrix;
+            const current = decompose(bone.mesh.matrix);
+            const target = decompose(desiredLocal);
+            current.position.lerp(target.position, influence);
+            current.quaternion.slerp(target.quaternion, influence).normalize();
+            current.scale.lerp(target.scale, influence);
+            bone.mesh.matrix.copy(compose(current));
+            bone.mesh.matrix.decompose(bone.mesh.position, bone.mesh.quaternion, bone.mesh.scale);
+            bone.mesh.rotation.setFromQuaternion(bone.mesh.quaternion, Format.euler_order || 'ZYX');
+            bone.mesh.updateMatrixWorld(true);
+        });
+    };
+    const applyFollowPath = (bone, constraint, influence) => {
+        const points = pathPositions(bone, constraint);
+        if (points.length < 2) return;
+        const progress = pathProgressAt(bone, constraint);
+        const evaluated = evaluatePath(points, progress, constraint.interpolation, constraint.closed === true);
+        if (!evaluated) return;
+        const offset = Array.isArray(constraint.offset) && constraint.offset.length === 3 ? new THREE.Vector3().fromArray(constraint.offset) : new THREE.Vector3();
+        const currentWorldPosition = bone.mesh.getWorldPosition(new THREE.Vector3());
+        const positionWeight = THREE.MathUtils.clamp(Number(constraint.position_weight), 0, 1) * influence;
+        const desiredWorldPosition = evaluated.position.add(offset);
+        const blendedWorldPosition = currentWorldPosition.lerp(desiredWorldPosition, positionWeight);
+        bone.mesh.position.copy(bone.mesh.parent ? bone.mesh.parent.worldToLocal(blendedWorldPosition.clone()) : blendedWorldPosition);
+        if (constraint.follow_rotation === true) {
+            let desiredWorld = desiredPathWorldQuaternion(bone, constraint, evaluated, points, progress);
+            if (desiredWorld) {
+                if (constraint.maintain_rotation_offset === true) desiredWorld.multiply(new THREE.Quaternion().fromArray(constraint.rotation_offset || [0, 0, 0, 1])).normalize();
+                const currentWorld = bone.mesh.getWorldQuaternion(new THREE.Quaternion()).normalize();
+                const rotationWeight = THREE.MathUtils.clamp(Number(constraint.rotation_weight), 0, 1) * influence;
+                const weightedWorld = currentWorld.slerp(desiredWorld, rotationWeight).normalize();
+                const parentWorld = bone.mesh.parent ? bone.mesh.parent.getWorldQuaternion(new THREE.Quaternion()) : new THREE.Quaternion();
+                bone.mesh.quaternion.copy(parentWorld.invert().multiply(weightedWorld).normalize());
+                bone.mesh.rotation.setFromQuaternion(bone.mesh.quaternion, Format.euler_order || 'ZYX');
+            }
+        }
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const armatureSourceMatrix = entry => {
+        const target = findNode(entry && entry.target);
+        if (!target || !target.mesh) return null;
+        target.mesh.updateMatrixWorld(true);
+        return (entry.source_space === 'local' ? target.mesh.matrix : target.mesh.matrixWorld).clone();
+    };
+    const armatureOwnerMatrix = (bone, constraint) => {
+        bone.mesh.updateMatrixWorld(true);
+        return (constraint.target_space === 'local' ? bone.mesh.matrix : bone.mesh.matrixWorld).clone();
+    };
+    const captureArmatureOffset = (bone, constraint, entry) => {
+        const source = armatureSourceMatrix(entry);
+        if (!bone || !bone.mesh || !source || findNode(entry.target) === bone) {
+            if (entry) entry.offset_matrix = new THREE.Matrix4().toArray();
+            return false;
+        }
+        if (typeof Canvas !== 'undefined' && Canvas.scene) Canvas.scene.updateMatrixWorld(true);
+        entry.offset_matrix = source.invert().multiply(armatureOwnerMatrix(bone, constraint)).toArray();
+        return true;
+    };
+    const applyArmatureBlend = (bone, constraint, influence) => {
+        const currentMatrix = armatureOwnerMatrix(bone, constraint);
+        const current = decompose(currentMatrix);
+        const valid = (Array.isArray(constraint.entries) ? constraint.entries : []).map(entry => {
+            const target = findNode(entry.target);
+            const source = armatureSourceMatrix(entry);
+            const weight = armatureWeightAt(bone, constraint, entry);
+            if (!target || target === bone || !source || weight <= 0) return null;
+            if (constraint.maintain_offset === true) source.multiply(new THREE.Matrix4().fromArray(entry.offset_matrix));
+            return {transform: decompose(source), weight};
+        }).filter(Boolean);
+        const totalWeight = valid.reduce((sum, item) => sum + item.weight, 0);
+        if (totalWeight <= 1e-8) return;
+        const normalize = constraint.normalize_weights !== false;
+        const targetTotal = normalize ? 1 : Math.min(1, totalWeight);
+        const desired = {
+            position: current.position.clone().multiplyScalar(1 - targetTotal),
+            quaternion: normalize ? null : current.quaternion.clone(),
+            scale: current.scale.clone().multiplyScalar(1 - targetTotal)
+        };
+        let accumulatedRotationWeight = normalize ? 0 : 1 - targetTotal;
+        valid.forEach(item => {
+            const weight = normalize ? item.weight / totalWeight : item.weight * targetTotal / totalWeight;
+            desired.position.addScaledVector(item.transform.position, weight);
+            desired.scale.addScaledVector(item.transform.scale, weight);
+            if (!desired.quaternion) desired.quaternion = item.transform.quaternion.clone().normalize();
+            else {
+                const step = weight / (accumulatedRotationWeight + weight);
+                desired.quaternion.slerp(item.transform.quaternion, step).normalize();
+            }
+            accumulatedRotationWeight += weight;
+        });
+        if (!desired.quaternion) return;
+        const channels = constraint.channels || {};
+        ['position', 'scale'].forEach(channel => {
+            if (channels[channel] === false) desired[channel].copy(current[channel]);
+            else ['x', 'y', 'z'].forEach(axis => { if (constraint[channel + '_axes'] && constraint[channel + '_axes'][axis] === false) desired[channel][axis] = current[channel][axis]; });
+        });
+        if (channels.rotation === false) desired.quaternion.copy(current.quaternion);
+        else {
+            const order = Format.euler_order || 'ZYX';
+            const currentEuler = new THREE.Euler().setFromQuaternion(current.quaternion, order);
+            const desiredEuler = new THREE.Euler().setFromQuaternion(desired.quaternion, order);
+            ['x', 'y', 'z'].forEach(axis => { if (constraint.rotation_axes && constraint.rotation_axes[axis] === false) desiredEuler[axis] = currentEuler[axis]; });
+            desired.quaternion.setFromEuler(desiredEuler).normalize();
+        }
+        current.position.lerp(desired.position, influence);
+        current.quaternion.slerp(desired.quaternion, influence).normalize();
+        current.scale.lerp(desired.scale, influence);
+        const result = compose(current);
+        const local = constraint.target_space === 'world' ? localFromWorld(bone, result) : result;
+        bone.mesh.matrix.copy(local);
+        bone.mesh.matrix.decompose(bone.mesh.position, bone.mesh.quaternion, bone.mesh.scale);
+        bone.mesh.rotation.setFromQuaternion(bone.mesh.quaternion, Format.euler_order || 'ZYX');
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const captureSpaceOffset = (bone, entry) => {
+        const target = findNode(entry && entry.target);
+        if (!bone || !bone.mesh || !target || !target.mesh || target === bone) {
+            if (entry) entry.offset_matrix = new THREE.Matrix4().toArray();
+            return false;
+        }
+        if (typeof Canvas !== 'undefined' && Canvas.scene) Canvas.scene.updateMatrixWorld(true);
+        target.mesh.updateMatrixWorld(true);
+        bone.mesh.updateMatrixWorld(true);
+        entry.offset_matrix = target.mesh.matrixWorld.clone().invert().multiply(bone.mesh.matrixWorld).toArray();
+        return true;
+    };
+    const applySpaceSwitch = (bone, constraint, influence) => {
+        const entries = Array.isArray(constraint.entries) ? constraint.entries : [];
+        const weighted = entries.map(entry => ({entry, target: findNode(entry.target), weight: spaceWeightAt(bone, constraint, entry)})).filter(item => item.target && item.target.mesh && item.target !== bone && item.weight > 0);
+        const totalWeight = weighted.reduce((sum, item) => sum + item.weight, 0);
+        if (totalWeight <= 1e-8) return;
+        let blendedPosition = new THREE.Vector3();
+        let blendedScale = new THREE.Vector3();
+        let blendedQuaternion = null;
+        let accumulatedWeight = 0;
+        weighted.forEach(item => {
+            item.target.mesh.updateMatrixWorld(true);
+            const offset = Array.isArray(item.entry.offset_matrix) && item.entry.offset_matrix.length === 16 ? new THREE.Matrix4().fromArray(item.entry.offset_matrix) : new THREE.Matrix4();
+            const transform = decompose(item.target.mesh.matrixWorld.clone().multiply(offset));
+            const normalizedWeight = item.weight / totalWeight;
+            blendedPosition.addScaledVector(transform.position, normalizedWeight);
+            blendedScale.addScaledVector(transform.scale, normalizedWeight);
+            if (!blendedQuaternion) blendedQuaternion = transform.quaternion.clone().normalize();
+            else {
+                const step = normalizedWeight / (accumulatedWeight + normalizedWeight);
+                blendedQuaternion.slerp(transform.quaternion, step).normalize();
+            }
+            accumulatedWeight += normalizedWeight;
+        });
+        if (!blendedQuaternion) return;
+        const current = decompose(bone.mesh.matrix);
+        const desired = decompose(localFromWorld(bone, new THREE.Matrix4().compose(blendedPosition, blendedQuaternion, blendedScale)));
+        current.position.lerp(desired.position, influence);
+        current.quaternion.slerp(desired.quaternion, influence).normalize();
+        current.scale.lerp(desired.scale, influence);
+        bone.mesh.matrix.copy(compose(current));
+        bone.mesh.matrix.decompose(bone.mesh.position, bone.mesh.quaternion, bone.mesh.scale);
+        bone.mesh.updateMatrixWorld(true);
+    };
+    const findAnimation = uuid => (typeof Animation !== 'undefined' && Array.isArray(Animation.all) ? Animation.all : []).find(animation => animation.uuid === uuid);
+    const actionConstraintOwnerUuid = constraint => constraint.action_owner_uuid || (Animation.selected && Animation.selected.uuid) || '';
+    const actionDependencies = actionUuid => {
+        const dependencies = new Set();
+        ArmatureBone.all.forEach(owner => getStack(owner).forEach(constraint => {
+            if (constraint && constraint.type === 'action_constraint' && constraint.enabled !== false && actionConstraintOwnerUuid(constraint) === actionUuid && constraint.action_uuid) dependencies.add(constraint.action_uuid);
+        }));
+        return dependencies;
+    };
+    const actionCreatesRecursion = (ownerUuid, sourceUuid) => {
+        if (!ownerUuid || !sourceUuid || ownerUuid === sourceUuid) return true;
+        const visited = new Set();
+        const pending = [sourceUuid];
+        while (pending.length) {
+            const uuid = pending.pop();
+            if (uuid === ownerUuid) return true;
+            if (visited.has(uuid)) continue;
+            visited.add(uuid);
+            actionDependencies(uuid).forEach(dependency => pending.push(dependency));
+        }
+        return false;
+    };
+    const availableActions = constraint => {
+        const ownerUuid = actionConstraintOwnerUuid(constraint || {});
+        return (typeof Animation !== 'undefined' && Array.isArray(Animation.all) ? Animation.all : []).filter(animation => !actionCreatesRecursion(ownerUuid, animation.uuid));
+    };
+    const getActionAnimator = (action, bone) => {
+        if (!action || !bone || !action.animators) return null;
+        const direct = action.animators[bone.uuid];
+        return direct && direct instanceof BoneAnimator ? direct : null;
+    };
+    const sampleActionChannel = (action, animator, bone, channel, time, fallback) => {
+        if (!animator || !Array.isArray(animator[channel]) || !animator[channel].length) return fallback.slice();
+        const previousTimelineTime = Timeline.time;
+        const previousLoop = action.loop;
+        const previousGroup = animator.group;
+        const previousElement = animator.element;
+        try {
+            Timeline.time = time;
+            action.loop = 'once';
+            animator.group = bone;
+            animator.element = bone;
+            Animator.resetLastValues();
+            const value = animator.interpolate(channel, false);
+            return Array.isArray(value) ? value.map((entry, index) => Number.isFinite(Number(entry)) ? Number(entry) : fallback[index]) : fallback.slice();
+        } finally {
+            Timeline.time = previousTimelineTime;
+            action.loop = previousLoop;
+            animator.group = previousGroup;
+            animator.element = previousElement;
+        }
+    };
+    const sampleActionTransform = (action, bone, time) => {
+        const animator = getActionAnimator(action, bone);
+        if (!animator) return null;
+        const restPosition = bone.mesh.fix_position ? bone.mesh.fix_position.clone() : new THREE.Vector3().fromArray(bone.origin || [0, 0, 0]);
+        const restRotation = bone.mesh.fix_rotation ? bone.mesh.fix_rotation.clone() : new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+        const positionOffset = sampleActionChannel(action, animator, bone, 'position', time, [0, 0, 0]);
+        const rotationOffset = sampleActionChannel(action, animator, bone, 'rotation', time, [0, 0, 0]);
+        const scale = sampleActionChannel(action, animator, bone, 'scale', time, [1, 1, 1]);
+        const quaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+            restRotation.x + Math.degToRad(rotationOffset[0]),
+            restRotation.y + Math.degToRad(rotationOffset[1]),
+            restRotation.z + Math.degToRad(rotationOffset[2]),
+            restRotation.order || Format.euler_order || 'ZYX'
+        ));
+        return {
+            position: restPosition.add(new THREE.Vector3().fromArray(positionOffset)),
+            quaternion,
+            scale: new THREE.Vector3().fromArray(scale)
+        };
+    };
+    const actionDriverValue = (bone, constraint) => {
+        const target = findNode(constraint.target);
+        if (!target || !target.mesh) return null;
+        target.mesh.updateMatrixWorld(true);
+        const transform = constraint.source_space === 'world' ? decompose(target.mesh.matrixWorld) : decompose(target.mesh.matrix);
+        const values = constraint.driver_channel === 'rotation'
+            ? new THREE.Euler().setFromQuaternion(transform.quaternion, Format.euler_order || 'ZYX')
+            : transform[constraint.driver_channel];
+        const axis = constraint.driver_axis.replace('-', '');
+        let value = Number(values[axis]) || 0;
+        if (constraint.driver_channel === 'rotation') value = Math.radToDeg(value);
+        return constraint.driver_axis.startsWith('-') ? -value : value;
+    };
+    const mapActionTime = (constraint, driver) => {
+        if (!Number.isFinite(driver)) return Number(constraint.action_start) || 0;
+        const minimum = Number(constraint.input_min);
+        const maximum = Number(constraint.input_max);
+        let factor = Math.abs(maximum - minimum) < 1e-8 ? 0 : (driver - minimum) / (maximum - minimum);
+        if (constraint.mapping === 'loop') factor = ((factor % 1) + 1) % 1;
+        else if (constraint.mapping === 'pingpong') {
+            factor = ((factor % 2) + 2) % 2;
+            if (factor > 1) factor = 2 - factor;
+        } else factor = THREE.MathUtils.clamp(factor, 0, 1);
+        if (constraint.reverse === true) factor = 1 - factor;
+        return THREE.MathUtils.lerp(Number(constraint.action_start) || 0, Number(constraint.action_end) || 0, factor);
+    };
+    const safeScaleRatio = (owner, sampled) => Math.abs(sampled) > 1e-8 ? owner / sampled : 1;
+    const captureActionOffset = (bone, constraint) => {
+        normalizeActionConstraint(constraint);
+        const action = findAnimation(constraint.action_uuid);
+        const driver = actionDriverValue(bone, constraint);
+        const sampled = action && driver !== null && sampleActionTransform(action, bone, mapActionTime(constraint, driver));
+        if (!sampled) {
+            constraint.position_offset = [0, 0, 0];
+            constraint.rotation_offset = [0, 0, 0, 1];
+            constraint.scale_offset = [1, 1, 1];
+            return false;
+        }
+        const current = decompose(bone.mesh.matrix);
+        constraint.position_offset = current.position.clone().sub(sampled.position).toArray();
+        constraint.rotation_offset = sampled.quaternion.clone().invert().multiply(current.quaternion).normalize().toArray();
+        constraint.scale_offset = [safeScaleRatio(current.scale.x, sampled.scale.x), safeScaleRatio(current.scale.y, sampled.scale.y), safeScaleRatio(current.scale.z, sampled.scale.z)];
+        return true;
+    };
+    const applyActionConstraint = (bone, constraint, influence) => {
+        normalizeActionConstraint(constraint);
+        const currentAction = Animation.selected;
+        if (!currentAction) return;
+        if (!constraint.action_owner_uuid) constraint.action_owner_uuid = currentAction.uuid;
+        if (constraint.action_owner_uuid !== currentAction.uuid || actionCreatesRecursion(currentAction.uuid, constraint.action_uuid)) return;
+        const action = findAnimation(constraint.action_uuid);
+        const driver = actionDriverValue(bone, constraint);
+        const sampled = action && driver !== null && sampleActionTransform(action, bone, mapActionTime(constraint, driver));
+        if (!sampled) return;
+        const desired = {
+            position: sampled.position.clone(),
+            quaternion: sampled.quaternion.clone(),
+            scale: sampled.scale.clone()
+        };
+        if (constraint.maintain_offset === true) {
+            desired.position.add(new THREE.Vector3().fromArray(constraint.position_offset));
+            desired.quaternion.multiply(new THREE.Quaternion().fromArray(constraint.rotation_offset)).normalize();
+            desired.scale.multiply(new THREE.Vector3().fromArray(constraint.scale_offset));
+        }
+        const current = decompose(bone.mesh.matrix);
+        const blended = blendTransform(current, desired, influence, {
+            position: constraint.channels.position !== false,
+            rotation: constraint.channels.rotation !== false,
+            scale: constraint.channels.scale !== false,
+            position_axes: constraint.position_axes,
+            rotation_axes: constraint.rotation_axes,
+            scale_axes: constraint.scale_axes
+        });
+        bone.mesh.matrix.copy(compose(blended));
+        bone.mesh.matrix.decompose(bone.mesh.position, bone.mesh.quaternion, bone.mesh.scale);
+        bone.mesh.rotation.setFromQuaternion(bone.mesh.quaternion, Format.euler_order || 'ZYX');
         bone.mesh.updateMatrixWorld(true);
     };
     const applyChildOf = (bone, constraint, influence) => {
@@ -5756,14 +8198,44 @@ function efSetupConstraintSupport() {
                 let changed = false;
                 pending.forEach(bone => {
                     if (done.has(bone.uuid)) return;
-                    const dependencies = getStack(bone).map(item => findNode(item.target)).filter(target => target instanceof ArmatureBone && pending.includes(target));
+                    const dependencies = getStack(bone).flatMap(item => {
+                        if (!item) return [];
+                        if (['position_blend', 'rotation_blend', 'scale_blend', 'rotation_difference'].includes(item.type)) return [findNode(item.target_a), findNode(item.target_b)];
+                        if (item.type === 'armature_blend') return (Array.isArray(item.entries) ? item.entries : []).map(entry => findNode(entry.target));
+                        if (item.type === 'space_switch') return (Array.isArray(item.entries) ? item.entries : []).map(entry => findNode(entry.target));
+                        if (['follow_path', 'clamp_to', 'spline_ik'].includes(item.type)) return (Array.isArray(item.path_points) ? item.path_points : []).map(point => findNode(point.target));
+                        return [findNode(item.target)];
+                    }).filter(target => target instanceof ArmatureBone && pending.includes(target));
                     if (dependencies.some(target => !done.has(target.uuid)) && pass < pending.length) return;
                     getStack(bone).forEach(constraint => {
                         if (!constraint || constraint.enabled === false) return;
                         const influence = influenceAt(bone, constraint);
                         if (influence <= 0) return;
-                        if (constraint.type === 'copy_transform') applyCopy(bone, constraint, influence);
+                        if (constraint.type === 'action_constraint') applyActionConstraint(bone, constraint, influence);
+                        else if (constraint.type === 'copy_channels') applyCopyChannels(bone, constraint, influence);
+                        else if (constraint.type === 'copy_transform') applyCopyTransform(bone, constraint, influence);
+                        else if (constraint.type === 'position_blend') applyPositionBlend(bone, constraint, influence);
+                        else if (constraint.type === 'copy_quaternion') applyCopyQuaternion(bone, constraint, influence);
+                        else if (constraint.type === 'rotation_blend') applyRotationBlend(bone, constraint, influence);
+                        else if (constraint.type === 'scale_blend') applyScaleBlend(bone, constraint, influence);
+                        else if (constraint.type === 'rotation_difference') applyRotationDifference(bone, constraint, influence);
+                        else if (constraint.type === 'transform_mapping') applyTransformMapping(bone, constraint, influence);
                         else if (constraint.type === 'limit_transform') applyLimit(bone, constraint, influence);
+                        else if (constraint.type === 'floor_drop') applyFloorDrop(bone, constraint, influence);
+                        else if (constraint.type === 'shrinkwrap') applyShrinkwrap(bone, constraint, influence);
+                        else if (constraint.type === 'floor') applyFloor(bone, constraint, influence);
+                        else if (constraint.type === 'limit_distance') applyLimitDistance(bone, constraint, influence);
+                        else if (constraint.type === 'pivot') applyPivot(bone, constraint, influence);
+                        else if (constraint.type === 'clamp_to') applyClampTo(bone, constraint, influence);
+                        else if (constraint.type === 'follow_path') applyFollowPath(bone, constraint, influence);
+                        else if (constraint.type === 'spline_ik') applySplineIK(bone, constraint, influence, splineWrittenBones);
+                        else if (constraint.type === 'track_to') applyTracking(bone, constraint, influence);
+                        else if (constraint.type === 'maintain_volume') applyMaintainVolume(bone, constraint, influence);
+                        else if (constraint.type === 'stretch_to') applyStretchTo(bone, constraint, influence);
+                        else if (constraint.type === 'locked_track') applyTracking(bone, constraint, influence);
+                        else if (constraint.type === 'damped_track') applyTracking(bone, constraint, influence);
+                        else if (constraint.type === 'armature_blend') applyArmatureBlend(bone, constraint, influence);
+                        else if (constraint.type === 'space_switch') applySpaceSwitch(bone, constraint, influence);
                         else if (constraint.type === 'child_of') applyChildOf(bone, constraint, influence);
                     });
                     done.add(bone.uuid);
@@ -5805,13 +8277,85 @@ function efSetupConstraintSupport() {
     const createConstraint = type => {
         const bone = selectedBone();
         if (!bone) return;
-        const target = ArmatureBone.all.find(item => item !== bone);
+        const target = allConstraintTargets().find(item => item !== bone && item.mesh);
         const copyChannel = ['copy_position', 'copy_rotation', 'copy_scale'].includes(type) && type.slice(5);
         const limitChannel = ['limit_position', 'limit_rotation', 'limit_scale'].includes(type) && type.slice(6);
-        const runtimeType = copyChannel ? 'copy_transform' : limitChannel ? 'limit_transform' : type;
-        const base = {id: constraintId(), type: runtimeType, name: tl('ef.constraint.' + type), enabled: true, target: target ? target.uuid : '', influence: 1};
+        const requestedType = type === 'distance' ? 'limit_distance' : type;
+        const runtimeType = copyChannel ? 'copy_channels' : limitChannel ? 'limit_transform' : requestedType;
+        const base = {id: constraintId(), type: runtimeType, name: tl('ef.constraint.' + requestedType), enabled: true, target: target ? target.uuid : '', influence: 1};
+        if (type === 'maintain_volume') {
+            delete base.target;
+            Object.assign(base, {main_axis: 'x', reference_scale: 1, mode: 'volume', exponent: 1, custom_x: 0, custom_y: 1, custom_z: 1, min_factor: 0, max_factor: 100, compensation_weight: 1});
+            captureMaintainVolumeReference(bone, base);
+        }
         if (copyChannel) Object.assign(base, {space: 'world', maintain_offset: false, position_offset: [0, 0, 0], rotation_offset: [0, 0, 0, 1], scale_offset: [1, 1, 1], axes: {position: copyChannel === 'position', rotation: copyChannel === 'rotation', scale: copyChannel === 'scale', position_axes: {x: true, y: true, z: true}, rotation_axes: {x: true, y: true, z: true}, scale_axes: {x: true, y: true, z: true}}});
+        if (type === 'copy_transform') Object.assign(base, {source_space: 'world', target_space: 'world', mix_mode: 'replace', maintain_offset: false, offset_matrix: new THREE.Matrix4().toArray(), channels: {position: true, rotation: true, scale: true}, position_axes: {x: true, y: true, z: true}, rotation_axes: {x: true, y: true, z: true}, scale_axes: {x: true, y: true, z: true}});
+        if (type === 'copy_quaternion') Object.assign(base, {source_space: 'world', target_space: 'world', maintain_offset: false, rotation_offset: [0, 0, 0, 1], invert_target: false, mix_mode: 'slerp'});
+        if (type === 'position_blend') {
+            const targets = ArmatureBone.all.filter(item => item !== bone);
+            delete base.target;
+            Object.assign(base, {target_a: targets[0] ? targets[0].uuid : '', target_b: targets[1] ? targets[1].uuid : '', source_space_a: 'world', source_space_b: 'world', target_space: 'world', blend_weight: 0.5, position_axes: {x: true, y: true, z: true}, invert_target_a: false, invert_target_b: false, maintain_offset: false, position_offset: [0, 0, 0]});
+        }
+        if (type === 'scale_blend') {
+            const targets = ArmatureBone.all.filter(item => item !== bone);
+            delete base.target;
+            Object.assign(base, {target_a: targets[0] ? targets[0].uuid : '', target_b: targets[1] ? targets[1].uuid : '', source_space_a: 'world', source_space_b: 'world', target_space: 'world', blend_weight: 0.5, mix_mode: 'linear', scale_axes: {x: true, y: true, z: true}, reciprocal_target_a: false, reciprocal_target_b: false, maintain_offset: false, scale_offset: [1, 1, 1]});
+        }
+        if (type === 'rotation_blend' || type === 'rotation_difference') {
+            const targets = ArmatureBone.all.filter(item => item !== bone);
+            delete base.target;
+            Object.assign(base, type === 'rotation_blend'
+                ? {target_a: targets[0] ? targets[0].uuid : '', target_b: targets[1] ? targets[1].uuid : '', source_space_a: 'world', source_space_b: 'world', target_space: 'world', invert_target_a: false, invert_target_b: false, blend_weight: 0.5, mix_mode: 'slerp', maintain_offset: false, rotation_offset: [0, 0, 0, 1]}
+                : {target_a: targets[0] ? targets[0].uuid : '', target_b: targets[1] ? targets[1].uuid : '', source_space_a: 'local', source_space_b: 'local', target_space: 'local', direction: 'a_to_b', application_mode: 'add', difference_strength: 1, maintain_offset: false, rotation_offset: [0, 0, 0, 1]});
+        }
+        if (type === 'transform_mapping') Object.assign(base, {source_channel: 'position', target_channel: 'position', source_space: 'local', target_space: 'local', axis_mapping: [0, 1, 2], from_min: [0, 0, 0], from_max: [1, 1, 1], to_min: [0, 0, 0], to_max: [1, 1, 1], extrapolate: false, mix_mode: 'replace'});
+        if (type === 'action_constraint') {
+            const action = (typeof Animation !== 'undefined' && Array.isArray(Animation.all) ? Animation.all : []).find(candidate => Animation.selected && !actionCreatesRecursion(Animation.selected.uuid, candidate.uuid));
+            Object.assign(base, {action_owner_uuid: Animation.selected ? Animation.selected.uuid : '', action_uuid: action ? action.uuid : '', driver_channel: 'position', driver_axis: 'x', source_space: 'local', input_min: 0, input_max: 1, action_start: 0, action_end: action ? Number(action.length) || 0 : 1, mapping: 'clamp', reverse: false, channels: {position: true, rotation: true, scale: true}, position_axes: {x: true, y: true, z: true}, rotation_axes: {x: true, y: true, z: true}, scale_axes: {x: true, y: true, z: true}, maintain_offset: false, position_offset: [0, 0, 0], rotation_offset: [0, 0, 0, 1], scale_offset: [1, 1, 1]});
+        }
+        if (type === 'floor_drop') Object.assign(base, {drop_axis: '-y', direction_space: 'world', surface_offset: 0, max_distance: 0, mode: 'snap', position_weight: 1, align_rotation: false, up_axis: 'y', rotation_weight: 1, maintain_rotation_offset: false, rotation_offset: [0, 0, 0, 1]});
+        if (type === 'shrinkwrap') Object.assign(base, {mode: 'nearest_surface', project_axis: '-y', direction_space: 'world', bidirectional: false, surface_offset: 0, max_distance: 0, position_weight: 1, align_rotation: false, up_axis: 'y', rotation_weight: 1, flip_normal: false, maintain_rotation_offset: false, rotation_offset: [0, 0, 0, 1]});
+        if (type === 'floor') Object.assign(base, {axis: 'y', offset: 0, space: 'world', prevent_penetration: true});
+        if (requestedType === 'limit_distance') {
+            Object.assign(base, {mode: 'initial', distance: 0, initial_distance: 0, softness: 0});
+            captureInitialDistance(bone, base);
+            base.distance = base.initial_distance;
+        }
+        if (type === 'pivot') Object.assign(base, {axis: 'y', angle: 0, space: 'world', keep_radius: true, follow_rotation: false});
+        if (type === 'clamp_to') {
+            const targets = ArmatureBone.all.filter(item => item !== bone).slice(0, 2);
+            delete base.target;
+            Object.assign(base, {path_points: targets.map(item => ({id: pathPointId(), target: item.uuid})), driver_axis: 'x', owner_space: 'local', input_min: 0, input_max: 1, reverse: false, interpolation: 'linear', closed: false, offset: [0, 0, 0]});
+        }
+        if (type === 'follow_path') {
+            const targets = ArmatureBone.all.filter(item => item !== bone).slice(0, 2);
+            delete base.target;
+            Object.assign(base, {path_points: targets.map(item => ({id: pathPointId(), target: item.uuid})), progress: 0, interpolation: 'linear', closed: false, offset: [0, 0, 0], follow_rotation: false, forward_axis: 'z', up_axis: 'y', bank: 0, position_weight: 1, rotation_weight: 1, maintain_rotation_offset: false, rotation_offset: [0, 0, 0, 1]});
+        }
+        if (type === 'spline_ik') {
+            const targets = ArmatureBone.all.filter(item => item !== bone).slice(0, 2);
+            delete base.target;
+            Object.assign(base, {path_points: targets.map(item => ({id: pathPointId(), target: item.uuid})), chain_length: Math.min(3, collectSplineChain(bone, 0).length), interpolation: 'catmull_rom', closed: false, offset: [0, 0, 0], forward_axis: 'y', up_axis: 'z', roll: 0, root_follow: true, stretch: false, volume: false});
+        }
+        if (type === 'track_to') Object.assign(base, {track_axis: 'z', up_axis: 'y', up_space: 'world', maintain_offset: false, rotation_offset: [0, 0, 0, 1]});
+        if (type === 'stretch_to') {
+            Object.assign(base, {main_axis: 'y', up_axis: 'z', original_length: 0, rotation_weight: 1, stretch_weight: 1, min_stretch_ratio: 0, max_stretch_ratio: 100, volume_mode: 'preserve', volume_exponent: 1, maintain_offset: false, rotation_offset: [0, 0, 0, 1]});
+            captureStretchTo(bone, base);
+        }
+        if (type === 'locked_track') Object.assign(base, {track_axis: 'z', lock_axis: 'y', maintain_offset: false, rotation_offset: [0, 0, 0, 1]});
+        if (type === 'damped_track') Object.assign(base, {track_axis: 'z', damping_angle: 30, maintain_offset: false, rotation_offset: [0, 0, 0, 1]});
         if (limitChannel) Object.assign(base, {limit_channel: limitChannel, position_axes: [limitChannel === 'position', limitChannel === 'position', limitChannel === 'position'], position_min: [-16, -16, -16], position_max: [16, 16, 16], rotation_axes: [limitChannel === 'rotation', limitChannel === 'rotation', limitChannel === 'rotation'], rotation_min: [-180, -180, -180], rotation_max: [180, 180, 180], scale_axes: [limitChannel === 'scale', limitChannel === 'scale', limitChannel === 'scale'], scale_min: [0, 0, 0], scale_max: [4, 4, 4]});
+        if (type === 'armature_blend') {
+            delete base.target;
+            const entry = {id: armatureEntryId(), target: target ? target.uuid : '', weight: 1, source_space: 'world', offset_matrix: new THREE.Matrix4().toArray()};
+            Object.assign(base, {entries: [entry], target_space: 'world', normalize_weights: true, maintain_offset: false, channels: {position: true, rotation: true, scale: true}, position_axes: {x: true, y: true, z: true}, rotation_axes: {x: true, y: true, z: true}, scale_axes: {x: true, y: true, z: true}});
+        }
+        if (type === 'space_switch') {
+            delete base.target;
+            const entry = {id: spaceEntryId(), target: target ? target.uuid : '', weight: 1, offset_matrix: new THREE.Matrix4().toArray()};
+            captureSpaceOffset(bone, entry);
+            base.entries = [entry];
+        }
         if (type === 'child_of') {
             if (target && target.mesh) {
                 target.mesh.updateMatrixWorld(true);
@@ -5821,18 +8365,57 @@ function efSetupConstraintSupport() {
         }
         mutate(bone, tl('ef.constraint.add_undo'), stack => stack.push(base));
     };
-    const assignTarget = (bone, index, value) => {
+    const assignTarget = (bone, index, value, field) => {
         const target = findNode(value);
         mutate(bone, tl('ef.constraint.edit_undo'), stack => {
             const item = stack[index];
             if (!item) return;
-            item.target = value;
-            if (item.type === 'copy_transform') captureCopyOffset(bone, item);
+            const targetField = ['position_blend', 'rotation_blend', 'scale_blend', 'rotation_difference'].includes(item.type) && ['target_a', 'target_b'].includes(field) ? field : 'target';
+            item[targetField] = value;
+            if (item.type === 'position_blend' && item.maintain_offset === true) capturePositionBlendOffset(bone, item);
+            if (item.type === 'rotation_blend' && item.maintain_offset === true) captureRotationBlendOffset(bone, item);
+            if (item.type === 'scale_blend' && item.maintain_offset === true) captureScaleBlendOffset(bone, item);
+            if (item.type === 'action_constraint' && item.maintain_offset === true) captureActionOffset(bone, item);
+            if (item.type === 'copy_channels') captureCopyChannelsOffset(bone, item);
+            if (item.type === 'copy_transform' && item.maintain_offset === true) captureCopyTransformOffset(bone, item);
+            if (item.type === 'limit_distance') captureInitialDistance(bone, item);
+            if (item.type === 'copy_quaternion' && item.maintain_offset === true) captureQuaternionOffset(bone, item);
+            if (item.type === 'floor_drop' && item.maintain_rotation_offset === true) captureFloorDropRotationOffset(bone, item);
+            if (item.type === 'shrinkwrap' && item.maintain_rotation_offset === true) captureShrinkwrapRotationOffset(bone, item);
+            if (['track_to', 'locked_track', 'damped_track'].includes(item.type) && item.maintain_offset === true) captureTrackOffset(bone, item);
+            if (item.type === 'stretch_to') captureStretchTo(bone, item);
             if (item.type === 'child_of' && target && target.mesh) {
                 target.mesh.updateMatrixWorld(true);
                 bone.mesh.updateMatrixWorld(true);
                 item.inverse_matrix = target.mesh.matrixWorld.clone().invert().multiply(bone.mesh.matrixWorld).toArray();
             }
+        });
+    };
+    const assignArmatureTarget = (bone, constraintIndex, entryIndex, value) => {
+        mutate(bone, tl('ef.constraint.edit_undo'), stack => {
+            const constraint = stack[constraintIndex];
+            const entry = constraint && Array.isArray(constraint.entries) && constraint.entries[entryIndex];
+            if (!entry) return;
+            entry.target = value;
+            if (constraint.maintain_offset === true) captureArmatureOffset(bone, constraint, entry);
+        });
+    };
+    const assignSpaceTarget = (bone, constraintIndex, entryIndex, value) => {
+        mutate(bone, tl('ef.constraint.edit_undo'), stack => {
+            const constraint = stack[constraintIndex];
+            const entry = constraint && Array.isArray(constraint.entries) && constraint.entries[entryIndex];
+            if (!entry) return;
+            entry.target = value;
+            captureSpaceOffset(bone, entry);
+        });
+    };
+    const assignPathTarget = (bone, constraintIndex, pointIndex, value) => {
+        mutate(bone, tl('ef.constraint.edit_undo'), stack => {
+            const constraint = stack[constraintIndex];
+            const point = constraint && Array.isArray(constraint.path_points) && constraint.path_points[pointIndex];
+            if (!point) return;
+            point.target = value;
+            if (constraint.maintain_rotation_offset === true) capturePathRotationOffset(bone, constraint);
         });
     };
     if (originalConstraintRaycast) {
@@ -5841,7 +8424,10 @@ function efSetupConstraintSupport() {
             if (!pickingTarget) return hit;
             const target = hit && hit.element;
             if (target && target !== pickingTarget.bone && findNode(target.uuid)) {
-                assignTarget(pickingTarget.bone, pickingTarget.index, target.uuid);
+                if (Number.isInteger(pickingTarget.pointIndex)) assignPathTarget(pickingTarget.bone, pickingTarget.index, pickingTarget.pointIndex, target.uuid);
+                else if (Number.isInteger(pickingTarget.armatureEntryIndex)) assignArmatureTarget(pickingTarget.bone, pickingTarget.index, pickingTarget.armatureEntryIndex, target.uuid);
+                else if (Number.isInteger(pickingTarget.entryIndex)) assignSpaceTarget(pickingTarget.bone, pickingTarget.index, pickingTarget.entryIndex, target.uuid);
+                else assignTarget(pickingTarget.bone, pickingTarget.index, target.uuid, pickingTarget.field);
                 pickingTarget = null;
                 return hit;
             }
@@ -5859,16 +8445,32 @@ function efSetupConstraintSupport() {
             scale: bone.mesh.scale.toArray()
         };
     };
+    const constraintBelongsToAnimation = (constraint, animation) => constraint.type !== 'action_constraint' || !constraint.action_owner_uuid || constraint.action_owner_uuid === animation.uuid;
     const bake = (bones, clear) => {
         const animation = Animation.selected;
-        bones = bones.filter(bone => getStack(bone).length);
-        if (!animation || !bones.length) return Blockbench.showQuickMessage(tl('ef.constraint.nothing'));
+        if (!animation) return Blockbench.showQuickMessage(tl('ef.constraint.nothing'));
+        const requestedBones = new Set(bones);
+        const requestedSplineBones = new Set(ArmatureBone.all.flatMap(owner => requestedBones.has(owner) ? getStack(owner).filter(constraint => constraintBelongsToAnimation(constraint, animation) && constraint.type === 'spline_ik').flatMap(constraint => collectSplineChain(owner, constraint.chain_length)) : []));
+        bones = [...new Set([...bones, ...requestedSplineBones])].filter(bone => requestedSplineBones.has(bone) || getStack(bone).some(constraint => constraintBelongsToAnimation(constraint, animation)));
+        if (!bones.length) return Blockbench.showQuickMessage(tl('ef.constraint.nothing'));
         const rate = Math.clamp(Number(animation.snapping) || 20, 1, 500);
         const bakeAction = globalThis.efBakeVisualAction;
         if (typeof bakeAction !== 'function') return Blockbench.showQuickMessage(tl('ef.constraint.nothing'));
+        const armatureKeyData = clear ? bones.flatMap(bone => getStack(bone).filter(constraint => constraintBelongsToAnimation(constraint, animation) && constraint.type === 'armature_blend').map(constraint => getConstraintKeyframesAcrossAnimations(bone, constraint, constraint.entries))) : [];
+        const constraintKeys = clear ? [...new Set([
+            ...bones.flatMap(bone => getStack(bone).filter(constraint => constraintBelongsToAnimation(constraint, animation) && constraint.type !== 'armature_blend').flatMap(constraint => [
+                ...getInfluenceKeyframes(bone, constraint),
+                ...(constraint.type === 'follow_path' ? getPathProgressKeyframes(bone, constraint) : []),
+                ...(constraint.type === 'space_switch' && Array.isArray(constraint.entries) ? constraint.entries.flatMap(entry => getSpaceWeightKeyframes(bone, constraint, entry)) : [])
+            ])),
+            ...armatureKeyData.flatMap(data => data.keyframes)
+        ])] : [];
+        const affectedAnimations = [...new Set([animation, ...armatureKeyData.flatMap(data => data.animations)])];
         const completed = bakeAction({
             nodes: bones,
             affected_elements: clear ? bones : [],
+            affected_keyframes: constraintKeys,
+            affected_animations: affectedAnimations,
             bake_data: 'pose',
             visual_keying: true,
             frame_start: 0,
@@ -5876,7 +8478,10 @@ function efSetupConstraintSupport() {
             frame_step: 1,
             overwrite: true,
             clean_curves: true,
-            clear_callback: clear ? () => bones.forEach(bone => bone.ef_constraints = []) : null,
+            clear_callback: clear ? () => {
+                constraintKeys.forEach(keyframe => keyframe.remove());
+                bones.forEach(bone => bone.ef_constraints = getStack(bone).filter(constraint => !constraintBelongsToAnimation(constraint, animation)));
+            } : null,
             undo_name: tl('ef.constraint.bake_undo'),
             success_message: tl('ef.constraint.baked')
         });
@@ -5889,28 +8494,199 @@ function efSetupConstraintSupport() {
         },
         methods: {
             add(type) { createConstraint(type); },
+            bakeSpline(index) { const item = this.bone && getStack(this.bone)[index]; if (!item || item.type !== 'spline_ik') return; const affected = new Set(collectSplineChain(this.bone, item.chain_length)); let changed = true; while (changed) { changed = false; ArmatureBone.all.forEach(owner => getStack(owner).filter(constraint => constraint.type === 'spline_ik' && constraint.enabled !== false).forEach(constraint => { const chain = collectSplineChain(owner, constraint.chain_length); if (!chain.some(bone => affected.has(bone))) return; chain.forEach(bone => { if (!affected.has(bone)) { affected.add(bone); changed = true; } }); })); } bake([...affected], false); },
             remove(index) {
                 const bone = this.bone;
                 const item = bone && getStack(bone)[index];
                 const animation = Animation.selected;
-                const keys = item ? getInfluenceKeyframes(bone, item) : [];
+                const allArmatureKeys = item && item.type === 'armature_blend' ? getConstraintKeyframesAcrossAnimations(bone, item, item.entries) : null;
+                const keys = item ? allArmatureKeys ? allArmatureKeys.keyframes : [
+                    ...getInfluenceKeyframes(bone, item),
+                    ...(item.type === 'follow_path' ? getPathProgressKeyframes(bone, item) : []),
+                    ...(item.type === 'space_switch' && Array.isArray(item.entries) ? item.entries.flatMap(entry => getSpaceWeightKeyframes(bone, item, entry)) : [])
+                ] : [];
                 mutate(bone, tl('ef.constraint.remove_undo'), stack => {
                     stack.splice(index, 1);
                     keys.forEach(keyframe => keyframe.remove());
-                }, animation && keys.length ? {animations: [animation], keyframes: keys} : undefined);
+                }, keys.length ? {animations: allArmatureKeys ? allArmatureKeys.animations : [animation], keyframes: keys} : undefined);
             },
             move(index, offset) { const bone = this.bone; mutate(bone, tl('ef.constraint.reorder_undo'), stack => { const item = stack.splice(index, 1)[0]; stack.splice(index + offset, 0, item); }); },
             toggle(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => stack[index].enabled = stack[index].enabled === false); },
             set(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { if (stack[index]) stack[index][field] = value; }); },
-            setTarget(index, value) { assignTarget(this.bone, index, value); },
-            setCopySpace(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item.space = value; captureCopyOffset(bone, item); }); },
-            setMaintainOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item.maintain_offset = value; if (value) captureCopyOffset(bone, item); }); },
-            resetCopyOffset(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) captureCopyOffset(bone, item); }); },
-            pickTarget(index) { if (!this.bone || !this.stack[index]) return; pickingTarget = {bone: this.bone, index}; Blockbench.showQuickMessage(tl('ef.constraint.pick_target_hint')); },
+            setTarget(index, value, field) { assignTarget(this.bone, index, value, field); },
+            actionOptions(item) { return availableActions(item); },
+            setActionTarget(index, value) { assignTarget(this.bone, index, value); },
+            pickActionTarget(index) { this.pickTarget(index); },
+            setActionField(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeActionConstraint(stack[index]); if (!item) return; if (field === 'action_uuid' && actionCreatesRecursion(item.action_owner_uuid, value)) return; item[field] = value; if (field === 'action_uuid') { const action = findAnimation(value); item.action_end = action ? Number(action.length) || 0 : item.action_end; } if (item.maintain_offset === true) captureActionOffset(bone, item); }); },
+            setActionNumber(index, field, value) { const number = Number(value); if (!Number.isFinite(number)) return; this.setActionField(index, field, field === 'action_start' || field === 'action_end' ? Math.max(0, number) : number); },
+            setActionChannel(index, channel, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeActionConstraint(stack[index]); if (item) item.channels[channel] = value; }); },
+            setActionAxis(index, channel, axis, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeActionConstraint(stack[index]); if (item) item[channel + '_axes'][axis] = value; }); },
+            setActionOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeActionConstraint(stack[index]); if (!item) return; item.maintain_offset = value; if (value) captureActionOffset(bone, item); else { item.position_offset = [0, 0, 0]; item.rotation_offset = [0, 0, 0, 1]; item.scale_offset = [1, 1, 1]; } }); },
+            resetActionOffset(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeActionConstraint(stack[index]); if (item) captureActionOffset(bone, item); }); },
+            setCopySpace(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item.space = value; captureCopyChannelsOffset(bone, item); }); },
+            setMaintainOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item.maintain_offset = value; if (value) captureCopyChannelsOffset(bone, item); }); },
+            setCopyTransformField(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item[field] = value; if (item.maintain_offset === true && ['source_space', 'target_space', 'mix_mode'].includes(field)) captureCopyTransformOffset(bone, item); }); },
+            setCopyTransformOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item.maintain_offset = value; if (value) captureCopyTransformOffset(bone, item); else item.offset_matrix = new THREE.Matrix4().toArray(); }); },
+            resetCopyTransformOffset(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) captureCopyTransformOffset(bone, item); }); },
+            setCopyTransformChannel(index, channel, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; if (!item.channels) item.channels = {position: true, rotation: true, scale: true}; item.channels[channel] = value; }); },
+            setCopyTransformAxis(index, channel, axis, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; const field = channel + '_axes'; if (!item[field]) item[field] = {x: true, y: true, z: true}; item[field][axis] = value; }); },
+            setQuaternionField(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item[field] = value; if (item.maintain_offset === true) captureQuaternionOffset(bone, item); }); },
+            setQuaternionOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item.maintain_offset = value; if (value) captureQuaternionOffset(bone, item); else item.rotation_offset = [0, 0, 0, 1]; }); },
+            resetQuaternionOffset(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) captureQuaternionOffset(bone, item); }); },
+            setPositionBlendField(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item[field] = field === 'blend_weight' ? THREE.MathUtils.clamp(Number(value), 0, 1) : value; if (item.maintain_offset === true) capturePositionBlendOffset(bone, item); }); },
+            setPositionBlendAxis(index, axis, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; if (!item.position_axes) item.position_axes = {x: true, y: true, z: true}; item.position_axes[axis] = value; }); },
+            setPositionBlendOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item.maintain_offset = value; if (value) capturePositionBlendOffset(bone, item); else item.position_offset = [0, 0, 0]; }); },
+            resetPositionBlendOffset(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) capturePositionBlendOffset(bone, item); }); },
+            setRotationBlendField(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item[field] = value; if (item.maintain_offset === true) captureRotationBlendOffset(bone, item); }); },
+            setRotationBlendOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item.maintain_offset = value; if (value) captureRotationBlendOffset(bone, item); else item.rotation_offset = [0, 0, 0, 1]; }); },
+            resetRotationBlendOffset(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) captureRotationBlendOffset(bone, item); }); },
+            setScaleBlendField(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item[field] = field === 'blend_weight' ? THREE.MathUtils.clamp(Number(value), 0, 1) : value; if (item.maintain_offset === true) captureScaleBlendOffset(bone, item); }); },
+            setScaleBlendAxis(index, axis, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; if (!item.scale_axes) item.scale_axes = {x: true, y: true, z: true}; item.scale_axes[axis] = value; }); },
+            setScaleBlendOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item.maintain_offset = value; if (value) captureScaleBlendOffset(bone, item); else item.scale_offset = [1, 1, 1]; }); },
+            resetScaleBlendOffset(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) captureScaleBlendOffset(bone, item); }); },
+            setTrackField(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item[field] = value; if (item.maintain_offset === true) captureTrackOffset(bone, item); }); },
+            setDistanceValue(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeDistanceConstraint(stack[index]); if (item) item[field] = finiteNonNegative(value, 0); }); },
+            setDistanceMode(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeDistanceConstraint(stack[index]); if (!item || !distanceModes.includes(value)) return; item.mode = value; if (value === 'initial') captureInitialDistance(bone, item); }); },
+            resetInitialDistance(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeDistanceConstraint(stack[index]); if (item) captureInitialDistance(bone, item); }); },
+            setFloorDropField(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeFloorDrop(stack[index]); if (!item) return; item[field] = value; normalizeFloorDrop(item); if (item.maintain_rotation_offset === true && ['up_axis', 'direction_space', 'drop_axis'].includes(field)) captureFloorDropRotationOffset(bone, item); }); },
+            setFloorDropNumber(index, field, value) { const number = Number(value); if (!Number.isFinite(number)) return; this.setFloorDropField(index, field, ['position_weight', 'rotation_weight'].includes(field) ? THREE.MathUtils.clamp(number, 0, 1) : field === 'max_distance' ? Math.max(0, number) : number); },
+            setShrinkwrapField(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeShrinkwrap(stack[index]); if (!item) return; item[field] = value; normalizeShrinkwrap(item); if (item.maintain_rotation_offset === true) captureShrinkwrapRotationOffset(bone, item); }); },
+            setShrinkwrapNumber(index, field, value) { const number = Number(value); if (!Number.isFinite(number)) return; this.setShrinkwrapField(index, field, ['position_weight', 'rotation_weight'].includes(field) ? THREE.MathUtils.clamp(number, 0, 1) : field === 'max_distance' ? Math.max(0, number) : number); },
+            setShrinkwrapRotationOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeShrinkwrap(stack[index]); if (!item) return; item.maintain_rotation_offset = value; if (value) captureShrinkwrapRotationOffset(bone, item); else item.rotation_offset = [0, 0, 0, 1]; }); },
+            resetShrinkwrapRotationOffset(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeShrinkwrap(stack[index]); if (item) captureShrinkwrapRotationOffset(bone, item); }); },
+            setFloorDropRotationOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeFloorDrop(stack[index]); if (!item) return; item.maintain_rotation_offset = value; if (value) captureFloorDropRotationOffset(bone, item); else item.rotation_offset = [0, 0, 0, 1]; }); },
+            resetFloorDropRotationOffset(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeFloorDrop(stack[index]); if (item) captureFloorDropRotationOffset(bone, item); }); },
+            setTrackOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item.maintain_offset = value; if (value) captureTrackOffset(bone, item); else item.rotation_offset = [0, 0, 0, 1]; }); },
+            resetTrackOffset(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) captureTrackOffset(bone, item); }); },
+            setMaintainVolumeAxis(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item || !['x', 'y', 'z'].includes(value)) return; item.main_axis = value; captureMaintainVolumeReference(bone, item); }); },
+            setMaintainVolumeNumber(index, field, value) { const number = Number(value); if (!Number.isFinite(number)) return; const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; if (field === 'exponent') item[field] = THREE.MathUtils.clamp(number, 0, 2); else if (field === 'compensation_weight' || field.startsWith('custom_')) item[field] = THREE.MathUtils.clamp(number, 0, 1); else item[field] = Math.max(0, number); if (field === 'min_factor' || field === 'max_factor') { const minimum = finiteNonNegative(item.min_factor, 0); const maximum = finiteNonNegative(item.max_factor, 100); item.min_factor = Math.min(minimum, maximum); item.max_factor = Math.max(minimum, maximum); } }); },
+            resetMaintainVolumeReference(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) captureMaintainVolumeReference(bone, item); }); },
+            setStretchField(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item[field] = value; if (['main_axis', 'up_axis', 'maintain_offset'].includes(field)) captureStretchTo(bone, item); }); },
+            setStretchNumber(index, field, value) { const number = Number(value); if (!Number.isFinite(number)) return; const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; if (field === 'volume_exponent') { item[field] = THREE.MathUtils.clamp(number, 0, 1); return; } item[field] = Math.max(0, number); if (field === 'min_stretch_ratio' || field === 'max_stretch_ratio') { const minimum = finiteNonNegative(item.min_stretch_ratio, 0); const maximum = finiteNonNegative(item.max_stretch_ratio, 100); item.min_stretch_ratio = Math.min(minimum, maximum); item.max_stretch_ratio = Math.max(minimum, maximum); } }); },
+            captureStretch(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) captureStretchTo(bone, item); }); },
+            resetCopyOffset(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) captureCopyChannelsOffset(bone, item); }); },
+            pickTarget(index, field) { if (!this.bone || !this.stack[index]) return; pickingTarget = {bone: this.bone, index, field}; Blockbench.showQuickMessage(tl('ef.constraint.pick_target_hint')); },
+            addPathPoint(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item || !['follow_path', 'clamp_to'].includes(item.type)) return; if (!Array.isArray(item.path_points)) item.path_points = []; const target = this.targets.find(candidate => !item.path_points.some(point => point.target === candidate.uuid)) || this.targets[0]; item.path_points.push({id: pathPointId(), target: target ? target.uuid : ''}); if (item.maintain_rotation_offset === true) capturePathRotationOffset(bone, item); }); },
+            removePathPoint(index, pointIndex) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item || !Array.isArray(item.path_points)) return; item.path_points.splice(pointIndex, 1); if (item.maintain_rotation_offset === true) capturePathRotationOffset(bone, item); }); },
+            movePathPoint(index, pointIndex, offset) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; const points = item && item.path_points; if (!Array.isArray(points)) return; const point = points.splice(pointIndex, 1)[0]; points.splice(pointIndex + offset, 0, point); if (item.maintain_rotation_offset === true) capturePathRotationOffset(bone, item); }); },
+            setPathTarget(index, pointIndex, value) { assignPathTarget(this.bone, index, pointIndex, value); },
+            pathValid(item) { const valid = new Set((item && Array.isArray(item.path_points) ? item.path_points : []).map(point => point.target).filter(uuid => uuid && this.targets.some(target => target.uuid === uuid))); return valid.size >= 2; },
+            pickPathTarget(index, pointIndex) { if (!this.bone || !this.stack[index]) return; pickingTarget = {bone: this.bone, index, pointIndex}; Blockbench.showQuickMessage(tl('ef.constraint.pick_target_hint')); },
+            setPathField(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item[field] = value; if (item.maintain_rotation_offset === true && ['interpolation', 'closed', 'forward_axis', 'up_axis', 'bank'].includes(field)) capturePathRotationOffset(bone, item); }); },
+            setPathNumber(index, field, value) { const number = Number(value); if (!Number.isFinite(number)) return; const normalized = ['progress', 'position_weight', 'rotation_weight'].includes(field) ? THREE.MathUtils.clamp(number, 0, 1) : number; this.setPathField(index, field, normalized); },
+            captureClampInput(index, field) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = normalizeFollowPath(stack[index]); if (!item || item.type !== 'clamp_to') return; bone.mesh.updateMatrixWorld(true); const position = item.owner_space === 'world' ? bone.mesh.getWorldPosition(new THREE.Vector3()) : bone.mesh.position; const axis = item.driver_axis.replace('-', ''); const sign = item.driver_axis.startsWith('-') ? -1 : 1; item[field] = position[axis] * sign; }); },
+            setPathOffset(index, axis, value) { const number = Number(value); if (!Number.isFinite(number)) return; const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; if (!Array.isArray(item.offset)) item.offset = [0, 0, 0]; item.offset[axis] = number; }); },
+            setPathRotationOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item.maintain_rotation_offset = value; if (value) capturePathRotationOffset(bone, item); else item.rotation_offset = [0, 0, 0, 1]; }); },
+            resetPathRotationOffset(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) capturePathRotationOffset(bone, item); }); },
+            addSpaceEntry(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item || item.type !== 'space_switch') return; if (!Array.isArray(item.entries)) item.entries = []; const target = this.targets.find(candidate => !item.entries.some(entry => entry.target === candidate.uuid)) || this.targets[0]; const entry = {id: spaceEntryId(), target: target ? target.uuid : '', weight: 0, offset_matrix: new THREE.Matrix4().toArray()}; captureSpaceOffset(bone, entry); item.entries.push(entry); }); },
+            removeSpaceEntry(index, entryIndex) { const bone = this.bone; const item = bone && getStack(bone)[index]; const entry = item && item.entries && item.entries[entryIndex]; const animation = Animation.selected; const keys = entry ? getSpaceWeightKeyframes(bone, item, entry) : []; mutate(bone, tl('ef.constraint.edit_undo'), stack => { if (stack[index] && Array.isArray(stack[index].entries)) stack[index].entries.splice(entryIndex, 1); keys.forEach(keyframe => keyframe.remove()); }, animation && keys.length ? {animations: [animation], keyframes: keys} : undefined); },
+            moveSpaceEntry(index, entryIndex, offset) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const entries = stack[index] && stack[index].entries; if (!Array.isArray(entries)) return; const entry = entries.splice(entryIndex, 1)[0]; entries.splice(entryIndex + offset, 0, entry); }); },
+            setSpaceTarget(index, entryIndex, value) { assignSpaceTarget(this.bone, index, entryIndex, value); },
+            pickSpaceTarget(index, entryIndex) { if (!this.bone || !this.stack[index]) return; pickingTarget = {bone: this.bone, index, entryIndex}; Blockbench.showQuickMessage(tl('ef.constraint.pick_target_hint')); },
+            setSpaceWeight(index, entryIndex, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const entry = stack[index] && stack[index].entries && stack[index].entries[entryIndex]; if (entry) entry.weight = THREE.MathUtils.clamp(Number(value), 0, 1); }); },
+            captureSpaceEntry(index, entryIndex) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const entry = stack[index] && stack[index].entries && stack[index].entries[entryIndex]; if (entry) captureSpaceOffset(bone, entry); }); },
+            switchToSpace(index, entryIndex) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; const entry = item && item.entries && item.entries[entryIndex]; if (!entry || !captureSpaceOffset(bone, entry)) return; item.entries.forEach((candidate, candidateIndex) => candidate.weight = candidateIndex === entryIndex ? 1 : 0); }); },
+            addArmatureEntry(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item || item.type !== 'armature_blend') return; const target = this.targets.find(candidate => !item.entries.some(entry => entry.target === candidate.uuid)) || this.targets[0]; const entry = {id: armatureEntryId(), target: target ? target.uuid : '', weight: 0, source_space: 'world', offset_matrix: new THREE.Matrix4().toArray()}; if (item.maintain_offset === true) captureArmatureOffset(bone, item, entry); item.entries.push(entry); }); },
+            removeArmatureEntry(index, entryIndex) { const bone = this.bone; const item = bone && getStack(bone)[index]; const entry = item && item.entries && item.entries[entryIndex]; const allKeys = entry ? getConstraintKeyframesAcrossAnimations(bone, item, [entry]) : {animations: [], keyframes: []}; const influenceKeys = new Set(getConstraintKeyframesAcrossAnimations(bone, item, []).keyframes); const keys = allKeys.keyframes.filter(keyframe => !influenceKeys.has(keyframe)); mutate(bone, tl('ef.constraint.edit_undo'), stack => { if (stack[index] && Array.isArray(stack[index].entries)) stack[index].entries.splice(entryIndex, 1); keys.forEach(keyframe => keyframe.remove()); }, keys.length ? {animations: allKeys.animations, keyframes: keys} : undefined); },
+            moveArmatureEntry(index, entryIndex, offset) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const entries = stack[index] && stack[index].entries; if (!Array.isArray(entries)) return; const entry = entries.splice(entryIndex, 1)[0]; entries.splice(entryIndex + offset, 0, entry); }); },
+            setArmatureTarget(index, entryIndex, value) { assignArmatureTarget(this.bone, index, entryIndex, value); },
+            pickArmatureTarget(index, entryIndex) { if (!this.bone || !this.stack[index]) return; pickingTarget = {bone: this.bone, index, armatureEntryIndex: entryIndex}; Blockbench.showQuickMessage(tl('ef.constraint.pick_target_hint')); },
+            setArmatureWeight(index, entryIndex, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const entry = stack[index] && stack[index].entries && stack[index].entries[entryIndex]; if (entry) entry.weight = THREE.MathUtils.clamp(Number(value), 0, 1); }); },
+            setArmatureSourceSpace(index, entryIndex, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; const entry = item && item.entries && item.entries[entryIndex]; if (!entry) return; entry.source_space = value === 'local' ? 'local' : 'world'; if (item.maintain_offset === true) captureArmatureOffset(bone, item, entry); }); },
+            setArmatureField(index, field, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item[field] = value; if (item.maintain_offset === true && field === 'target_space') item.entries.forEach(entry => captureArmatureOffset(bone, item, entry)); }); },
+            setArmatureChannel(index, channel, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) item.channels[channel] = value; }); },
+            setArmatureAxis(index, channel, axis, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) item[channel + '_axes'][axis] = value; }); },
+            setArmatureOffset(index, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item) return; item.maintain_offset = value; item.entries.forEach(entry => entry.offset_matrix = value && captureArmatureOffset(bone, item, entry) ? entry.offset_matrix : new THREE.Matrix4().toArray()); }); },
+            captureArmatureEntry(index, entryIndex) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; const entry = item && item.entries && item.entries[entryIndex]; if (entry) captureArmatureOffset(bone, item, entry); }); },
+            captureAllArmatureOffsets(index) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (item) item.entries.forEach(entry => captureArmatureOffset(bone, item, entry)); }); },
             setNumber(index, field, value) { this.set(index, field, THREE.MathUtils.clamp(Number(value), 0, 1)); },
-            setVector(index, field, axis, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { if (stack[index] && Array.isArray(stack[index][field])) stack[index][field][axis] = Number(value); }); },
+            setVector(index, field, axis, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const item = stack[index]; if (!item || !Array.isArray(item[field])) return; const number = Number(value); if (!Number.isFinite(number)) return; item[field][axis] = field === 'scale_min' || field === 'scale_max' ? Math.max(0, number) : number; if (field === 'scale_min' || field === 'scale_max') { const min = finiteNonNegative(item.scale_min[axis], 0); const max = finiteNonNegative(item.scale_max[axis], 0); item.scale_min[axis] = Math.min(min, max); item.scale_max[axis] = Math.max(min, max); } }); },
+            setMappingAxis(index, axis, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { if (stack[index] && Array.isArray(stack[index].axis_mapping)) stack[index].axis_mapping[axis] = Number(value); }); },
             setAxis(index, field, axis, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { if (stack[index] && stack[index][field]) stack[index][field][axis] = value; }); },
             setCopyAxis(index, channel, axis, value) { const bone = this.bone; mutate(bone, tl('ef.constraint.edit_undo'), stack => { const axes = stack[index] && stack[index].axes; if (axes && axes[channel + '_axes']) axes[channel + '_axes'][axis] = value; }); },
+            keyArmatureWeight(index, entryIndex) {
+                const bone = this.bone;
+                const item = bone && getStack(bone)[index];
+                const entry = item && item.entries && item.entries[entryIndex];
+                const animation = Animation.selected;
+                if (!bone || !item || !entry || !animation) return;
+                const animator = animation.getBoneAnimator(bone);
+                if (!animator.group) animator.group = bone;
+                const channel = ensureArmatureWeightChannel(animator, item, entry);
+                const time = Number(Timeline.time) || 0;
+                const existing = getArmatureWeightKeyframes(bone, item, entry).find(keyframe => Math.abs(keyframe.time - time) < 0.000001);
+                let editing = false;
+                try {
+                    Undo.initEdit({animations: [animation], keyframes: existing ? [existing] : []});
+                    editing = true;
+                    const value = THREE.MathUtils.clamp(Number(entry.weight), 0, 1);
+                    const keyframe = existing || animator.createKeyframe({x: value, y: 0, z: 0}, time, channel, false, false);
+                    keyframe.ef_constraint_id = item.id;
+                    if (existing) keyframe.set('x', value);
+                    animator.addToTimeline();
+                    Undo.finishEdit(tl('ef.constraint.key_undo'), {animations: [animation], keyframes: [keyframe]});
+                    editing = false;
+                } catch (error) {
+                    if (editing && typeof Undo.cancelEdit === 'function') Undo.cancelEdit(true);
+                    throw error;
+                }
+                Animator.preview();
+            },
+            keySpaceWeight(index, entryIndex) {
+                const bone = this.bone;
+                const item = bone && getStack(bone)[index];
+                const entry = item && item.entries && item.entries[entryIndex];
+                const animation = Animation.selected;
+                if (!bone || !item || !entry || !animation) return;
+                const animator = animation.getBoneAnimator(bone);
+                if (!animator.group) animator.group = bone;
+                const channel = ensureSpaceWeightChannel(animator, item, entry);
+                const time = Number(Timeline.time) || 0;
+                const existing = getSpaceWeightKeyframes(bone, item, entry).find(keyframe => Math.abs(keyframe.time - time) < 0.000001);
+                let editing = false;
+                try {
+                    Undo.initEdit({animations: [animation], keyframes: existing ? [existing] : []});
+                    editing = true;
+                    const value = THREE.MathUtils.clamp(Number(entry.weight), 0, 1);
+                    const keyframe = existing || animator.createKeyframe({x: value, y: 0, z: 0}, time, channel, false, false);
+                    keyframe.ef_constraint_id = item.id;
+                    if (existing) keyframe.set('x', value);
+                    animator.addToTimeline();
+                    Undo.finishEdit(tl('ef.constraint.key_undo'), {animations: [animation], keyframes: [keyframe]});
+                    editing = false;
+                } catch (error) {
+                    if (editing && typeof Undo.cancelEdit === 'function') Undo.cancelEdit(true);
+                    throw error;
+                }
+                Animator.preview();
+            },
+            keyPathProgress(index) {
+                const bone = this.bone;
+                const item = bone && getStack(bone)[index];
+                const animation = Animation.selected;
+                if (!bone || !item || item.type !== 'follow_path' || !animation) return;
+                const animator = animation.getBoneAnimator(bone);
+                if (!animator.group) animator.group = bone;
+                const channel = ensurePathProgressChannel(animator, item);
+                const time = Number(Timeline.time) || 0;
+                const existing = getPathProgressKeyframes(bone, item).find(keyframe => Math.abs(keyframe.time - time) < 0.000001);
+                let editing = false;
+                try {
+                    Undo.initEdit({animations: [animation], keyframes: existing ? [existing] : []});
+                    editing = true;
+                    const value = THREE.MathUtils.clamp(Number(item.progress), 0, 1);
+                    const keyframe = existing || animator.createKeyframe({x: value, y: 0, z: 0}, time, channel, false, false);
+                    keyframe.ef_constraint_id = item.id;
+                    if (existing) keyframe.set('x', value);
+                    animator.addToTimeline();
+                    Undo.finishEdit(tl('ef.constraint.key_undo'), {animations: [animation], keyframes: [keyframe]});
+                    editing = false;
+                } catch (error) {
+                    if (editing && typeof Undo.cancelEdit === 'function') Undo.cancelEdit(true);
+                    throw error;
+                }
+                Animator.preview();
+            },
             keyInfluence(index) {
                 const bone = this.bone;
                 const item = bone && getStack(bone)[index];
@@ -5946,20 +8722,46 @@ function efSetupConstraintSupport() {
             <div v-if="!bone" class="ef_constraint_empty">{{ tl('ef.constraint.select_bone') }}</div>
             <template v-else>
                 <div class="ef_constraint_owner">{{ bone.name }}</div>
-                <div class="ef_constraint_add"><button @click="add('copy_position')">{{ tl('ef.constraint.copy_position') }}</button><button @click="add('copy_rotation')">{{ tl('ef.constraint.copy_rotation') }}</button><button @click="add('copy_scale')">{{ tl('ef.constraint.copy_scale') }}</button><button @click="add('limit_position')">{{ tl('ef.constraint.limit_position') }}</button><button @click="add('limit_rotation')">{{ tl('ef.constraint.limit_rotation') }}</button><button @click="add('limit_scale')">{{ tl('ef.constraint.limit_scale') }}</button><button @click="add('child_of')">{{ tl('ef.constraint.child_of') }}</button></div>
+                <div class="ef_constraint_add"><details open><summary>{{ tl('ef.constraint.group_transform') }}</summary><div class="ef_constraint_group"><button :title="tl('ef.constraint.copy_transform.desc')" @click="add('copy_transform')">{{ tl('ef.constraint.copy_transform') }}</button><button :title="tl('ef.constraint.copy_position.desc')" @click="add('copy_position')">{{ tl('ef.constraint.copy_position') }}</button><button :title="tl('ef.constraint.copy_rotation.desc')" @click="add('copy_rotation')">{{ tl('ef.constraint.copy_rotation') }}</button><button :title="tl('ef.constraint.copy_scale.desc')" @click="add('copy_scale')">{{ tl('ef.constraint.copy_scale') }}</button><button :title="tl('ef.constraint.copy_quaternion.desc')" @click="add('copy_quaternion')">{{ tl('ef.constraint.copy_quaternion') }}</button><button :title="tl('ef.constraint.transform_mapping.desc')" @click="add('transform_mapping')">{{ tl('ef.constraint.transform_mapping') }}</button></div></details><details open><summary>{{ tl('ef.constraint.group_blend') }}</summary><div class="ef_constraint_group"><button :title="tl('ef.constraint.position_blend.desc')" @click="add('position_blend')">{{ tl('ef.constraint.position_blend') }}</button><button :title="tl('ef.constraint.rotation_blend.desc')" @click="add('rotation_blend')">{{ tl('ef.constraint.rotation_blend') }}</button><button :title="tl('ef.constraint.scale_blend.desc')" @click="add('scale_blend')">{{ tl('ef.constraint.scale_blend') }}</button><button :title="tl('ef.constraint.rotation_difference.desc')" @click="add('rotation_difference')">{{ tl('ef.constraint.rotation_difference') }}</button></div></details><details open><summary>{{ tl('ef.constraint.group_limit') }}</summary><div class="ef_constraint_group"><button :title="tl('ef.constraint.limit_position.desc')" @click="add('limit_position')">{{ tl('ef.constraint.limit_position') }}</button><button :title="tl('ef.constraint.limit_rotation.desc')" @click="add('limit_rotation')">{{ tl('ef.constraint.limit_rotation') }}</button><button :title="tl('ef.constraint.limit_scale.desc')" @click="add('limit_scale')">{{ tl('ef.constraint.limit_scale') }}</button><button :title="tl('ef.constraint.limit_distance.desc')" @click="add('limit_distance')">{{ tl('ef.constraint.limit_distance') }}</button><button :title="tl('ef.constraint.floor.desc')" @click="add('floor')">{{ tl('ef.constraint.floor') }}</button><button :title="tl('ef.constraint.floor_drop.desc')" @click="add('floor_drop')">{{ tl('ef.constraint.floor_drop') }}</button><button :title="tl('ef.constraint.shrinkwrap.desc')" @click="add('shrinkwrap')">{{ tl('ef.constraint.shrinkwrap') }}</button></div></details><details open><summary>{{ tl('ef.constraint.group_track') }}</summary><div class="ef_constraint_group"><button :title="tl('ef.constraint.track_to.desc')" @click="add('track_to')">{{ tl('ef.constraint.track_to') }}</button><button :title="tl('ef.constraint.locked_track.desc')" @click="add('locked_track')">{{ tl('ef.constraint.locked_track') }}</button><button :title="tl('ef.constraint.damped_track.desc')" @click="add('damped_track')">{{ tl('ef.constraint.damped_track') }}</button><button :title="tl('ef.constraint.follow_path.desc')" @click="add('follow_path')">{{ tl('ef.constraint.follow_path') }}</button><button :title="tl('ef.constraint.spline_ik.desc')" @click="add('spline_ik')">{{ tl('ef.constraint.spline_ik') }}</button><button :title="tl('ef.constraint.clamp_to.desc')" @click="add('clamp_to')">{{ tl('ef.constraint.clamp_to') }}</button><button :title="tl('ef.constraint.stretch_to.desc')" @click="add('stretch_to')">{{ tl('ef.constraint.stretch_to') }}</button></div></details><details open><summary>{{ tl('ef.constraint.group_relation') }}</summary><div class="ef_constraint_group"><button :title="tl('ef.constraint.child_of.desc')" @click="add('child_of')">{{ tl('ef.constraint.child_of') }}</button><button :title="tl('ef.constraint.space_switch.desc')" @click="add('space_switch')">{{ tl('ef.constraint.space_switch') }}</button><button :title="tl('ef.constraint.armature_blend.desc')" @click="add('armature_blend')">{{ tl('ef.constraint.armature_blend') }}</button><button :title="tl('ef.constraint.action_constraint.desc')" @click="add('action_constraint')">{{ tl('ef.constraint.action_constraint') }}</button></div></details><details open><summary>{{ tl('ef.constraint.group_advanced') }}</summary><div class="ef_constraint_group"><button :title="tl('ef.constraint.maintain_volume.desc')" @click="add('maintain_volume')">{{ tl('ef.constraint.maintain_volume') }}</button><button :title="tl('ef.constraint.pivot.desc')" @click="add('pivot')">{{ tl('ef.constraint.pivot') }}</button></div></details>
                 <div class="ef_constraint_stack">
                     <div class="ef_constraint_card" v-for="(item, index) in stack" :key="item.id">
-                        <div class="ef_constraint_head"><button @click="toggle(index)">{{ item.enabled === false ? '○' : '●' }}</button><strong>{{ item.name }}</strong><span></span><button :disabled="index === 0" @click="move(index, -1)">↑</button><button :disabled="index === stack.length - 1" @click="move(index, 1)">↓</button><button @click="remove(index)">×</button></div>
-                        <label v-if="item.type !== 'limit_transform'">{{ tl('ef.constraint.target') }}<select :value="item.target" @change="setTarget(index, $event.target.value)"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button @click="pickTarget(index)">⌖</button></label>
-                        <label>{{ tl('ef.ik.influence') }}<input type="number" min="0" max="1" step="0.01" :value="item.influence" @change="setNumber(index, 'influence', $event.target.value)"><button @click="keyInfluence(index)">◆</button></label>
-                        <label v-if="item.type === 'copy_transform'">{{ tl('ef.constraint.space') }}<select :value="item.space" @change="setCopySpace(index, $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label>
-                        <label v-if="item.type === 'copy_transform'"><input type="checkbox" :checked="item.maintain_offset === true" @change="setMaintainOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_offset') }}<button :disabled="!item.maintain_offset" @click="resetCopyOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label>
-                        <template v-if="item.type === 'copy_transform'"><div class="ef_constraint_checks" v-for="channel in ['position', 'rotation', 'scale']" v-if="item.axes[channel]"><b>{{ tl('ef.constraint.' + channel) }}</b><label v-for="axis in ['x','y','z']"><input type="checkbox" :checked="item.axes[channel + '_axes'][axis]" @change="setCopyAxis(index, channel, axis, $event.target.checked)">{{ axis.toUpperCase() }}</label></div></template>
+                        <div class="ef_constraint_head"><button :title="item.enabled === false ? tl('ef.constraint.enable') : tl('ef.constraint.disable')" @click="toggle(index)">{{ item.enabled === false ? '○' : '●' }}</button><strong>{{ item.name }}</strong><span></span><button :title="tl('ef.constraint.move_up')" :disabled="index === 0" @click="move(index, -1)">↑</button><button :title="tl('ef.constraint.move_down')" :disabled="index === stack.length - 1" @click="move(index, 1)">↓</button><button :title="tl('ef.constraint.remove')" @click="remove(index)">×</button></div>
+                        <label v-if="!['action_constraint', 'limit_transform', 'position_blend', 'rotation_blend', 'scale_blend', 'rotation_difference', 'maintain_volume', 'armature_blend', 'space_switch', 'follow_path', 'clamp_to'].includes(item.type)" :title="tl(item.type === 'floor_drop' ? 'ef.constraint.floor_drop_target.desc' : 'ef.constraint.target.desc')">{{ tl('ef.constraint.target') }}<select :value="item.target" @change="setTarget(index, $event.target.value)"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickTarget(index)">⌖</button></label>
+                        <label :title="tl('ef.constraint.influence.desc')">{{ tl('ef.ik.influence') }}<input type="number" min="0" max="1" step="0.01" :value="item.influence" @change="setNumber(index, 'influence', $event.target.value)"><button :title="tl('ef.constraint.key_influence')" @click="keyInfluence(index)">◆</button></label>
+                        <template v-if="['follow_path', 'clamp_to', 'spline_ik'].includes(item.type)"><div class="ef_constraint_path_header"><b :title="tl('ef.constraint.path_points.desc')">{{ tl('ef.constraint.path_points') }}</b><button :title="tl('ef.constraint.path_points.desc')" @click="addPathPoint(index)">{{ tl('ef.constraint.add_path_point') }}</button></div><div class="ef_constraint_path_warning" v-if="!pathValid(item)">{{ tl('ef.constraint.valid_path_required') }}</div><div class="ef_constraint_path_points"><div class="ef_constraint_path_point" v-for="(point, pointIndex) in item.path_points" :key="point.id"><div class="ef_constraint_path_point_head"><b>{{ tl('ef.constraint.path_point') }} {{ pointIndex + 1 }}</b><span></span><button :title="tl('ef.constraint.move_up')" :disabled="pointIndex === 0" @click="movePathPoint(index, pointIndex, -1)">↑</button><button :title="tl('ef.constraint.move_down')" :disabled="pointIndex === item.path_points.length - 1" @click="movePathPoint(index, pointIndex, 1)">↓</button><button :title="tl('ef.constraint.remove_path_point')" @click="removePathPoint(index, pointIndex)">×</button></div><label :title="tl('ef.constraint.path_point.desc')">{{ tl('ef.constraint.target') }}<select :value="point.target" @change="setPathTarget(index, pointIndex, $event.target.value)"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickPathTarget(index, pointIndex)">⌖</button></label></div></div><div class="ef_constraint_path_options"><label v-if="item.type === 'clamp_to'" :title="tl('ef.constraint.clamp_driver_axis.desc')">{{ tl('ef.constraint.driver_axis') }}<select :value="item.driver_axis" @change="setPathField(index, 'driver_axis', $event.target.value)"><option v-for="axis in ['x','-x','y','-y','z','-z']" :value="axis">{{ axis.toUpperCase() }}</option></select></label><label v-if="item.type === 'clamp_to'" :title="tl('ef.constraint.owner_space.desc')">{{ tl('ef.constraint.owner_space') }}<select :value="item.owner_space" @change="setPathField(index, 'owner_space', $event.target.value)"><option value="local">{{ tl('ef.constraint.local') }}</option><option value="world">{{ tl('ef.constraint.world') }}</option></select></label><label v-if="item.type === 'clamp_to'" :title="tl('ef.constraint.clamp_input_range.desc')">{{ tl('ef.constraint.input_min') }}<input type="number" step="0.1" :value="item.input_min" @change="setPathNumber(index, 'input_min', $event.target.value)"><button :title="tl('ef.constraint.capture_input_range.desc')" @click="captureClampInput(index, 'input_min')">⌖</button></label><label v-if="item.type === 'clamp_to'" :title="tl('ef.constraint.clamp_input_range.desc')">{{ tl('ef.constraint.input_max') }}<input type="number" step="0.1" :value="item.input_max" @change="setPathNumber(index, 'input_max', $event.target.value)"><button :title="tl('ef.constraint.capture_input_range.desc')" @click="captureClampInput(index, 'input_max')">⌖</button></label><label v-if="item.type === 'clamp_to'" :title="tl('ef.constraint.clamp_reverse.desc')"><input type="checkbox" :checked="item.reverse === true" @change="setPathField(index, 'reverse', $event.target.checked)">{{ tl('ef.constraint.reverse') }}</label><label v-if="item.type === 'follow_path'" :title="tl('ef.constraint.progress.desc')">{{ tl('ef.constraint.progress') }}<input type="number" min="0" max="1" step="0.01" :value="item.progress" @change="setPathNumber(index, 'progress', $event.target.value)"><button :title="tl('ef.constraint.key_progress')" @click="keyPathProgress(index)">◆</button></label><label :title="tl('ef.constraint.interpolation.desc')">{{ tl('ef.constraint.interpolation') }}<select :value="item.interpolation" @change="setPathField(index, 'interpolation', $event.target.value)"><option value="linear">{{ tl('ef.constraint.linear') }}</option><option value="catmull_rom">{{ tl('ef.constraint.catmull_rom') }}</option></select></label><label :title="tl('ef.constraint.closed.desc')"><input type="checkbox" :checked="item.closed === true" @change="setPathField(index, 'closed', $event.target.checked)">{{ tl('ef.constraint.closed') }}</label><label v-if="item.type === 'follow_path'" :title="tl('ef.constraint.position_weight.desc')">{{ tl('ef.constraint.position_weight') }}<input type="number" min="0" max="1" step="0.01" :value="item.position_weight" @change="setPathNumber(index, 'position_weight', $event.target.value)"></label></div><div class="ef_constraint_path_offset" :title="tl('ef.constraint.path_offset.desc')"><b>{{ tl('ef.constraint.offset') }}</b><label v-for="axis in [0,1,2]">{{ ['X','Y','Z'][axis] }}<input type="number" step="0.1" :value="item.offset[axis]" @change="setPathOffset(index, axis, $event.target.value)"></label></div><label v-if="item.type === 'follow_path'" :title="tl('ef.constraint.follow_path_rotation.desc')"><input type="checkbox" :checked="item.follow_rotation === true" @change="setPathField(index, 'follow_rotation', $event.target.checked)">{{ tl('ef.constraint.follow_rotation') }}</label><div class="ef_constraint_path_rotation" v-if="item.type === 'follow_path' && item.follow_rotation === true"><label :title="tl('ef.constraint.forward_axis.desc')">{{ tl('ef.constraint.forward_axis') }}<select :value="item.forward_axis" @change="setPathField(index, 'forward_axis', $event.target.value)"><option v-for="axis in ['x','-x','y','-y','z','-z']" :value="axis" :disabled="item.up_axis === axis.replace('-', '')">{{ axis.toUpperCase() }}</option></select></label><label :title="tl('ef.constraint.path_up_axis.desc')">{{ tl('ef.constraint.up_axis') }}<select :value="item.up_axis" @change="setPathField(index, 'up_axis', $event.target.value)"><option v-for="axis in ['x','y','z']" :value="axis" :disabled="item.forward_axis.replace('-', '') === axis">{{ axis.toUpperCase() }}</option></select></label><label :title="tl('ef.constraint.bank.desc')">{{ tl('ef.constraint.bank') }}<input type="number" step="1" :value="item.bank" @change="setPathNumber(index, 'bank', $event.target.value)"></label><label :title="tl('ef.constraint.path_rotation_weight.desc')">{{ tl('ef.constraint.rotation_weight') }}<input type="number" min="0" max="1" step="0.01" :value="item.rotation_weight" @change="setPathNumber(index, 'rotation_weight', $event.target.value)"></label></div><label v-if="item.type === 'follow_path' && item.follow_rotation === true" :title="tl('ef.constraint.maintain_rotation_offset.desc')"><input type="checkbox" :checked="item.maintain_rotation_offset === true" @change="setPathRotationOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_rotation_offset') }}<button :title="tl('ef.constraint.maintain_rotation_offset.desc')" :disabled="!item.maintain_rotation_offset" @click="resetPathRotationOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label></template>
+                        <div v-if="item.type === 'spline_ik'" class="ef_constraint_path_rotation"><label :title="tl('ef.constraint.forward_axis.desc')">{{ tl('ef.constraint.forward_axis') }}<select :value="item.forward_axis" @change="setPathField(index, 'forward_axis', $event.target.value)"><option v-for="axis in ['x','-x','y','-y','z','-z']" :value="axis" :disabled="item.up_axis === axis.replace('-', '')">{{ axis.toUpperCase() }}</option></select></label><label :title="tl('ef.constraint.path_up_axis.desc')">{{ tl('ef.constraint.up_axis') }}<select :value="item.up_axis" @change="setPathField(index, 'up_axis', $event.target.value)"><option v-for="axis in ['x','y','z']" :value="axis" :disabled="item.forward_axis.replace('-', '') === axis">{{ axis.toUpperCase() }}</option></select></label><label :title="tl('ef.constraint.roll.desc')">{{ tl('ef.constraint.roll') }}<input type="number" step="1" :value="item.roll" @change="setPathNumber(index, 'roll', $event.target.value)"></label><label :title="tl('ef.constraint.root_follow.desc')"><input type="checkbox" :checked="item.root_follow !== false" @change="setPathField(index, 'root_follow', $event.target.checked)">{{ tl('ef.constraint.root_follow') }}</label><label :title="tl('ef.constraint.stretch.desc')"><input type="checkbox" :checked="item.stretch === true" @change="setPathField(index, 'stretch', $event.target.checked)">{{ tl('ef.constraint.stretch') }}</label><label :title="tl('ef.constraint.volume.desc')"><input type="checkbox" :checked="item.volume === true" @change="setPathField(index, 'volume', $event.target.checked)">{{ tl('ef.constraint.volume') }}</label><button :title="tl('ef.constraint.spline_bake.desc')" @click="bakeSpline(index)">{{ tl('ef.constraint.spline_bake') }}</button></div><template v-if="item.type === 'armature_blend'"><div class="ef_constraint_armature_header"><b :title="tl('ef.constraint.armature_entries.desc')">{{ tl('ef.constraint.armature_entries') }}</b><button :title="tl('ef.constraint.armature_entries.desc')" @click="addArmatureEntry(index)">{{ tl('ef.constraint.add_armature_entry') }}</button></div><div class="ef_constraint_armature_entries"><div class="ef_constraint_armature_entry" v-for="(entry, entryIndex) in item.entries" :key="entry.id"><div class="ef_constraint_armature_entry_head"><b>{{ tl('ef.constraint.armature_entry') }} {{ entryIndex + 1 }}</b><span></span><button :title="tl('ef.constraint.move_up')" :disabled="entryIndex === 0" @click="moveArmatureEntry(index, entryIndex, -1)">↑</button><button :title="tl('ef.constraint.move_down')" :disabled="entryIndex === item.entries.length - 1" @click="moveArmatureEntry(index, entryIndex, 1)">↓</button><button :title="tl('ef.constraint.remove_armature_entry')" @click="removeArmatureEntry(index, entryIndex)">×</button></div><label :title="tl('ef.constraint.armature_entry.desc')">{{ tl('ef.constraint.target') }}<select :value="entry.target" @change="setArmatureTarget(index, entryIndex, $event.target.value)"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickArmatureTarget(index, entryIndex)">⌖</button></label><label :title="tl('ef.constraint.source_space.desc')">{{ tl('ef.constraint.source_space') }}<select :value="entry.source_space" @change="setArmatureSourceSpace(index, entryIndex, $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.armature_weight.desc')">{{ tl('ef.constraint.blend_weight') }}<input type="number" min="0" max="1" step="0.01" :value="entry.weight" @change="setArmatureWeight(index, entryIndex, $event.target.value)"><button :title="tl('ef.constraint.key_armature_weight')" @click="keyArmatureWeight(index, entryIndex)">◆</button></label><button :title="tl('ef.constraint.armature_offset.desc')" :disabled="!item.maintain_offset" @click="captureArmatureEntry(index, entryIndex)">{{ tl('ef.constraint.capture_armature_offset') }}</button></div></div><div class="ef_constraint_armature_options"><label :title="tl('ef.constraint.armature_target_space.desc')">{{ tl('ef.constraint.target_space') }}<select :value="item.target_space" @change="setArmatureField(index, 'target_space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.normalize_weights.desc')"><input type="checkbox" :checked="item.normalize_weights !== false" @change="setArmatureField(index, 'normalize_weights', $event.target.checked)">{{ tl('ef.constraint.normalize_weights') }}</label></div><div class="ef_constraint_armature_channels" :title="tl('ef.constraint.armature_channels.desc')"><div v-for="channel in ['position','rotation','scale']"><label><input type="checkbox" :checked="item.channels[channel] !== false" @change="setArmatureChannel(index, channel, $event.target.checked)"><b>{{ tl('ef.constraint.' + channel) }}</b></label><label v-for="axis in ['x','y','z']"><input type="checkbox" :disabled="item.channels[channel] === false" :checked="item[channel + '_axes'][axis] !== false" @change="setArmatureAxis(index, channel, axis, $event.target.checked)">{{ axis.toUpperCase() }}</label></div></div><label :title="tl('ef.constraint.armature_offset.desc')"><input type="checkbox" :checked="item.maintain_offset === true" @change="setArmatureOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_offset') }}<button :title="tl('ef.constraint.armature_offset.desc')" :disabled="!item.maintain_offset" @click="captureAllArmatureOffsets(index)">{{ tl('ef.constraint.capture_all_offsets') }}</button></label></template>
+                        <template v-if="item.type === 'space_switch'"><div class="ef_constraint_space_header"><b :title="tl('ef.constraint.space_entries.desc')">{{ tl('ef.constraint.space_entries') }}</b><button :title="tl('ef.constraint.space_entries.desc')" @click="addSpaceEntry(index)">{{ tl('ef.constraint.add_space') }}</button></div><div class="ef_constraint_space_entries"><div class="ef_constraint_space_entry" v-for="(entry, entryIndex) in item.entries" :key="entry.id"><div class="ef_constraint_space_entry_head"><b>{{ tl('ef.constraint.space_entry') }} {{ entryIndex + 1 }}</b><span></span><button :title="tl('ef.constraint.move_up')" :disabled="entryIndex === 0" @click="moveSpaceEntry(index, entryIndex, -1)">↑</button><button :title="tl('ef.constraint.move_down')" :disabled="entryIndex === item.entries.length - 1" @click="moveSpaceEntry(index, entryIndex, 1)">↓</button><button :title="tl('ef.constraint.remove_space')" @click="removeSpaceEntry(index, entryIndex)">×</button></div><label :title="tl('ef.constraint.space_entry.desc')">{{ tl('ef.constraint.target') }}<select :value="entry.target" @change="setSpaceTarget(index, entryIndex, $event.target.value)"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickSpaceTarget(index, entryIndex)">⌖</button></label><label :title="tl('ef.constraint.key_space_weight')">{{ tl('ef.ik.influence') }}<input type="number" min="0" max="1" step="0.01" :value="entry.weight" @change="setSpaceWeight(index, entryIndex, $event.target.value)"><button :title="tl('ef.constraint.key_space_weight')" @click="keySpaceWeight(index, entryIndex)">◆</button></label><div class="ef_constraint_space_actions"><button :title="tl('ef.constraint.capture_space_offset.desc')" @click="captureSpaceEntry(index, entryIndex)">{{ tl('ef.constraint.capture_space_offset') }}</button><button :title="tl('ef.constraint.switch_to_space.desc')" @click="switchToSpace(index, entryIndex)">{{ tl('ef.constraint.switch_to_space') }}</button></div></div></div></template>
+                        <template v-if="item.type === 'action_constraint'"><div class="ef_constraint_action_options"><label :title="tl('ef.constraint.target.desc')">{{ tl('ef.constraint.target') }}<select :value="item.target" @change="setActionTarget(index, $event.target.value)"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickActionTarget(index)">⌖</button></label><label :title="tl('ef.constraint.action.desc')">{{ tl('ef.constraint.action') }}<select :value="item.action_uuid" @change="setActionField(index, 'action_uuid', $event.target.value)"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="action in actionOptions(item)" :value="action.uuid">{{ action.name }}</option></select></label><label :title="tl('ef.constraint.driver_channel.desc')">{{ tl('ef.constraint.driver_channel') }}<select :value="item.driver_channel" @change="setActionField(index, 'driver_channel', $event.target.value)"><option v-for="channel in ['position','rotation','scale']" :value="channel">{{ tl('ef.constraint.' + channel) }}</option></select></label><label :title="tl('ef.constraint.driver_axis.desc')">{{ tl('ef.constraint.driver_axis') }}<select :value="item.driver_axis" @change="setActionField(index, 'driver_axis', $event.target.value)"><option v-for="axis in ['x','-x','y','-y','z','-z']" :value="axis">{{ axis.toUpperCase() }}</option></select></label><label :title="tl('ef.constraint.action_source_space.desc')">{{ tl('ef.constraint.source_space') }}<select :value="item.source_space" @change="setActionField(index, 'source_space', $event.target.value)"><option value="local">{{ tl('ef.constraint.local') }}</option><option value="world">{{ tl('ef.constraint.world') }}</option></select></label><label :title="tl('ef.constraint.input_range.desc')">{{ tl('ef.constraint.input_min') }}<input type="number" step="0.1" :value="item.input_min" @change="setActionNumber(index, 'input_min', $event.target.value)"></label><label :title="tl('ef.constraint.input_range.desc')">{{ tl('ef.constraint.input_max') }}<input type="number" step="0.1" :value="item.input_max" @change="setActionNumber(index, 'input_max', $event.target.value)"></label><label :title="tl('ef.constraint.action_range.desc')">{{ tl('ef.constraint.action_start') }}<input type="number" min="0" step="0.01" :value="item.action_start" @change="setActionNumber(index, 'action_start', $event.target.value)"></label><label :title="tl('ef.constraint.action_range.desc')">{{ tl('ef.constraint.action_end') }}<input type="number" min="0" step="0.01" :value="item.action_end" @change="setActionNumber(index, 'action_end', $event.target.value)"></label><label :title="tl('ef.constraint.mapping_mode.desc')">{{ tl('ef.constraint.mapping_mode') }}<select :value="item.mapping" @change="setActionField(index, 'mapping', $event.target.value)"><option v-for="mode in ['clamp','loop','pingpong']" :value="mode">{{ tl('ef.constraint.mapping_' + mode) }}</option></select></label><label :title="tl('ef.constraint.reverse.desc')"><input type="checkbox" :checked="item.reverse === true" @change="setActionField(index, 'reverse', $event.target.checked)">{{ tl('ef.constraint.reverse') }}</label></div><div class="ef_constraint_action_channels" :title="tl('ef.constraint.sample_channels.desc')"><div v-for="channel in ['position','rotation','scale']"><label><input type="checkbox" :checked="item.channels[channel] !== false" @change="setActionChannel(index, channel, $event.target.checked)"><b>{{ tl('ef.constraint.' + channel) }}</b></label><label v-for="axis in ['x','y','z']"><input type="checkbox" :disabled="item.channels[channel] === false" :checked="item[channel + '_axes'][axis] !== false" @change="setActionAxis(index, channel, axis, $event.target.checked)">{{ axis.toUpperCase() }}</label></div></div><label :title="tl('ef.constraint.action_offset.desc')"><input type="checkbox" :checked="item.maintain_offset === true" @change="setActionOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_offset') }}<button :title="tl('ef.constraint.action_offset.desc')" :disabled="!item.maintain_offset" @click="resetActionOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label></template>
+                        <label v-if="item.type === 'copy_channels'" :title="tl('ef.constraint.space.desc')">{{ tl('ef.constraint.space') }}<select :value="item.space" @change="setCopySpace(index, $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label>
+                        <label v-if="item.type === 'copy_channels'" :title="tl('ef.constraint.maintain_offset.desc')"><input type="checkbox" :checked="item.maintain_offset === true" @change="setMaintainOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_offset') }}<button :title="tl('ef.constraint.reset_offset.desc')" :disabled="!item.maintain_offset" @click="resetCopyOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label>
+                        <template v-if="item.type === 'copy_transform'"><div class="ef_constraint_copy_transform_options"><label :title="tl('ef.constraint.copy_transform_source_space.desc')">{{ tl('ef.constraint.source_space') }}<select :value="item.source_space" @change="setCopyTransformField(index, 'source_space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.copy_transform_target_space.desc')">{{ tl('ef.constraint.target_space') }}<select :value="item.target_space" @change="setCopyTransformField(index, 'target_space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.copy_transform_mix_mode.desc')">{{ tl('ef.constraint.mix_mode') }}<select :value="item.mix_mode" @change="setCopyTransformField(index, 'mix_mode', $event.target.value)"><option v-for="mode in ['replace','before','after']" :value="mode">{{ tl('ef.constraint.' + mode) }}</option></select></label></div><div class="ef_constraint_copy_transform_channels" :title="tl('ef.constraint.copy_transform_channels.desc')"><div v-for="channel in ['position','rotation','scale']"><label><input type="checkbox" :checked="!item.channels || item.channels[channel] !== false" @change="setCopyTransformChannel(index, channel, $event.target.checked)"><b>{{ tl('ef.constraint.' + channel) }}</b></label><label v-for="axis in ['x','y','z']"><input type="checkbox" :disabled="item.channels && item.channels[channel] === false" :checked="!item[channel + '_axes'] || item[channel + '_axes'][axis] !== false" @change="setCopyTransformAxis(index, channel, axis, $event.target.checked)">{{ axis.toUpperCase() }}</label></div></div><label :title="tl('ef.constraint.copy_transform_offset.desc')"><input type="checkbox" :checked="item.maintain_offset === true" @change="setCopyTransformOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_offset') }}<button :title="tl('ef.constraint.copy_transform_offset.desc')" :disabled="!item.maintain_offset" @click="resetCopyTransformOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label></template>
+                        <template v-if="item.type === 'position_blend'"><div class="ef_constraint_position_blend_targets"><label :title="tl('ef.constraint.position_blend_target_a.desc')">{{ tl('ef.constraint.target_a') }}<select :value="item.target_a" @change="setTarget(index, $event.target.value, 'target_a')"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickTarget(index, 'target_a')">⌖</button></label><label :title="tl('ef.constraint.position_blend_target_b.desc')">{{ tl('ef.constraint.target_b') }}<select :value="item.target_b" @change="setTarget(index, $event.target.value, 'target_b')"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickTarget(index, 'target_b')">⌖</button></label></div><div class="ef_constraint_position_blend_options"><label :title="tl('ef.constraint.position_blend_source_space_a.desc')">{{ tl('ef.constraint.source_space_a') }}<select :value="item.source_space_a" @change="setPositionBlendField(index, 'source_space_a', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.position_blend_source_space_b.desc')">{{ tl('ef.constraint.source_space_b') }}<select :value="item.source_space_b" @change="setPositionBlendField(index, 'source_space_b', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.position_blend_target_space.desc')">{{ tl('ef.constraint.target_space') }}<select :value="item.target_space" @change="setPositionBlendField(index, 'target_space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.position_blend_weight.desc')">{{ tl('ef.constraint.blend_weight') }}<input type="number" min="0" max="1" step="0.01" :value="item.blend_weight" @change="setPositionBlendField(index, 'blend_weight', $event.target.value)"></label></div><div class="ef_constraint_position_blend_flags"><label :title="tl('ef.constraint.invert_position_a.desc')"><input type="checkbox" :checked="item.invert_target_a === true" @change="setPositionBlendField(index, 'invert_target_a', $event.target.checked)">{{ tl('ef.constraint.invert_position_a') }}</label><label :title="tl('ef.constraint.invert_position_b.desc')"><input type="checkbox" :checked="item.invert_target_b === true" @change="setPositionBlendField(index, 'invert_target_b', $event.target.checked)">{{ tl('ef.constraint.invert_position_b') }}</label></div><div class="ef_constraint_position_blend_axes" :title="tl('ef.constraint.position_blend_axes.desc')"><b>{{ tl('ef.constraint.position_axes') }}</b><label v-for="axis in ['x','y','z']"><input type="checkbox" :checked="!item.position_axes || item.position_axes[axis] !== false" @change="setPositionBlendAxis(index, axis, $event.target.checked)">{{ axis.toUpperCase() }}</label></div><label :title="tl('ef.constraint.position_blend_offset.desc')"><input type="checkbox" :checked="item.maintain_offset === true" @change="setPositionBlendOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_offset') }}<button :title="tl('ef.constraint.position_blend_offset.desc')" :disabled="!item.maintain_offset" @click="resetPositionBlendOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label></template>
+                        <template v-if="item.type === 'copy_quaternion'"><div class="ef_constraint_quaternion"><label :title="tl('ef.constraint.quaternion_source_space.desc')">{{ tl('ef.constraint.source_space') }}<select :value="item.source_space" @change="setQuaternionField(index, 'source_space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.quaternion_target_space.desc')">{{ tl('ef.constraint.target_space') }}<select :value="item.target_space" @change="setQuaternionField(index, 'target_space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.quaternion_mix_mode.desc')">{{ tl('ef.constraint.mix_mode') }}<select :value="item.mix_mode" @change="set(index, 'mix_mode', $event.target.value)"><option value="slerp">{{ tl('ef.constraint.shortest_slerp') }}</option><option value="nlerp">{{ tl('ef.constraint.normalized_nlerp') }}</option></select></label></div><label :title="tl('ef.constraint.invert_target.desc')"><input type="checkbox" :checked="item.invert_target === true" @change="setQuaternionField(index, 'invert_target', $event.target.checked)">{{ tl('ef.constraint.invert_target') }}</label><label :title="tl('ef.constraint.maintain_offset.desc')"><input type="checkbox" :checked="item.maintain_offset === true" @change="setQuaternionOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_offset') }}<button :title="tl('ef.constraint.reset_offset.desc')" :disabled="!item.maintain_offset" @click="resetQuaternionOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label></template>
+                        <template v-if="item.type === 'rotation_blend'"><div class="ef_constraint_rotation_blend_targets"><label :title="tl('ef.constraint.target_a.desc')">{{ tl('ef.constraint.target_a') }}<select :value="item.target_a" @change="setTarget(index, $event.target.value, 'target_a')"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickTarget(index, 'target_a')">⌖</button></label><label :title="tl('ef.constraint.target_b.desc')">{{ tl('ef.constraint.target_b') }}<select :value="item.target_b" @change="setTarget(index, $event.target.value, 'target_b')"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickTarget(index, 'target_b')">⌖</button></label></div><div class="ef_constraint_rotation_blend_options"><label :title="tl('ef.constraint.source_space_a.desc')">{{ tl('ef.constraint.source_space_a') }}<select :value="item.source_space_a" @change="setRotationBlendField(index, 'source_space_a', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.source_space_b.desc')">{{ tl('ef.constraint.source_space_b') }}<select :value="item.source_space_b" @change="setRotationBlendField(index, 'source_space_b', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label v-if="item.type === 'rotation_blend'" :title="tl('ef.constraint.rotation_blend_target_space.desc')">{{ tl('ef.constraint.target_space') }}<select :value="item.target_space" @change="setRotationBlendField(index, 'target_space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.rotation_blend_mix_mode.desc')">{{ tl('ef.constraint.mix_mode') }}<select :value="item.mix_mode" @change="setRotationBlendField(index, 'mix_mode', $event.target.value)"><option value="slerp">{{ tl('ef.constraint.shortest_slerp') }}</option><option value="nlerp">{{ tl('ef.constraint.normalized_nlerp') }}</option></select></label><label v-if="item.type === 'rotation_blend'" :title="tl('ef.constraint.blend_weight.desc')">{{ tl('ef.constraint.blend_weight') }}<input type="number" min="0" max="1" step="0.01" :value="item.blend_weight" @change="setRotationBlendField(index, 'blend_weight', Math.max(0, Math.min(1, Number($event.target.value))))"></label></div><div class="ef_constraint_rotation_blend_flags"><label :title="tl('ef.constraint.invert_target_a.desc')"><input type="checkbox" :checked="item.invert_target_a === true" @change="setRotationBlendField(index, 'invert_target_a', $event.target.checked)">{{ tl('ef.constraint.invert_target_a') }}</label><label :title="tl('ef.constraint.invert_target_b.desc')"><input type="checkbox" :checked="item.invert_target_b === true" @change="setRotationBlendField(index, 'invert_target_b', $event.target.checked)">{{ tl('ef.constraint.invert_target_b') }}</label></div><label v-if="item.type === 'rotation_blend'" :title="tl('ef.constraint.rotation_blend_offset.desc')"><input type="checkbox" :checked="item.maintain_offset === true" @change="setRotationBlendOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_offset') }}<button :title="tl('ef.constraint.rotation_blend_offset.desc')" :disabled="!item.maintain_offset" @click="resetRotationBlendOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label></template>
+                        <template v-if="item.type === 'scale_blend'"><div class="ef_constraint_scale_blend_targets"><label :title="tl('ef.constraint.scale_blend_target_a.desc')">{{ tl('ef.constraint.target_a') }}<select :value="item.target_a" @change="setTarget(index, $event.target.value, 'target_a')"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickTarget(index, 'target_a')">⌖</button></label><label :title="tl('ef.constraint.scale_blend_target_b.desc')">{{ tl('ef.constraint.target_b') }}<select :value="item.target_b" @change="setTarget(index, $event.target.value, 'target_b')"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickTarget(index, 'target_b')">⌖</button></label></div><div class="ef_constraint_scale_blend_options"><label :title="tl('ef.constraint.scale_blend_source_space_a.desc')">{{ tl('ef.constraint.source_space_a') }}<select :value="item.source_space_a" @change="setScaleBlendField(index, 'source_space_a', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.scale_blend_source_space_b.desc')">{{ tl('ef.constraint.source_space_b') }}<select :value="item.source_space_b" @change="setScaleBlendField(index, 'source_space_b', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.scale_blend_target_space.desc')">{{ tl('ef.constraint.target_space') }}<select :value="item.target_space" @change="setScaleBlendField(index, 'target_space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.scale_blend_weight.desc')">{{ tl('ef.constraint.blend_weight') }}<input type="number" min="0" max="1" step="0.01" :value="item.blend_weight" @change="setScaleBlendField(index, 'blend_weight', $event.target.value)"></label><label :title="tl('ef.constraint.scale_blend_mix_mode.desc')">{{ tl('ef.constraint.mix_mode') }}<select :value="item.mix_mode" @change="setScaleBlendField(index, 'mix_mode', $event.target.value)"><option value="linear">{{ tl('ef.constraint.linear') }}</option><option value="logarithmic">{{ tl('ef.constraint.logarithmic') }}</option></select></label></div><div class="ef_constraint_scale_blend_flags"><label :title="tl('ef.constraint.reciprocal_scale_a.desc')"><input type="checkbox" :checked="item.reciprocal_target_a === true" @change="setScaleBlendField(index, 'reciprocal_target_a', $event.target.checked)">{{ tl('ef.constraint.reciprocal_scale_a') }}</label><label :title="tl('ef.constraint.reciprocal_scale_b.desc')"><input type="checkbox" :checked="item.reciprocal_target_b === true" @change="setScaleBlendField(index, 'reciprocal_target_b', $event.target.checked)">{{ tl('ef.constraint.reciprocal_scale_b') }}</label></div><div class="ef_constraint_scale_blend_axes" :title="tl('ef.constraint.scale_blend_axes.desc')"><b>{{ tl('ef.constraint.scale_axes') }}</b><label v-for="axis in ['x','y','z']"><input type="checkbox" :checked="!item.scale_axes || item.scale_axes[axis] !== false" @change="setScaleBlendAxis(index, axis, $event.target.checked)">{{ axis.toUpperCase() }}</label></div><label :title="tl('ef.constraint.scale_blend_offset.desc')"><input type="checkbox" :checked="item.maintain_offset === true" @change="setScaleBlendOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_offset') }}<button :title="tl('ef.constraint.scale_blend_offset.desc')" :disabled="!item.maintain_offset" @click="resetScaleBlendOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label></template>
+                        <template v-if="item.type === 'rotation_difference'"><div class="ef_constraint_rotation_blend_targets"><label :title="tl('ef.constraint.target_a.desc')">{{ tl('ef.constraint.target_a') }}<select :value="item.target_a" @change="setTarget(index, $event.target.value, 'target_a')"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickTarget(index, 'target_a')">⌖</button></label><label :title="tl('ef.constraint.target_b.desc')">{{ tl('ef.constraint.target_b') }}<select :value="item.target_b" @change="setTarget(index, $event.target.value, 'target_b')"><option value="">{{ tl('ef.ik.none') }}</option><option v-for="target in targets" :value="target.uuid">{{ target.name }}</option></select><button :title="tl('ef.constraint.pick_target')" @click="pickTarget(index, 'target_b')">⌖</button></label></div><div class="ef_constraint_rotation_blend_options"><label :title="tl('ef.constraint.source_space_a.desc')">{{ tl('ef.constraint.source_space_a') }}<select :value="item.source_space_a" @change="setRotationDifferenceField(index, 'source_space_a', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.source_space_b.desc')">{{ tl('ef.constraint.source_space_b') }}<select :value="item.source_space_b" @change="setRotationDifferenceField(index, 'source_space_b', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.rotation_difference_target_space.desc')">{{ tl('ef.constraint.target_space') }}<select :value="item.target_space" @change="setRotationDifferenceField(index, 'target_space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="local">{{ tl('ef.constraint.local') }}</option></select></label><label :title="tl('ef.constraint.direction.desc')">{{ tl('ef.constraint.direction') }}<select :value="item.direction" @change="setRotationDifferenceField(index, 'direction', $event.target.value)"><option value="a_to_b">{{ tl('ef.constraint.a_to_b') }}</option><option value="b_to_a">{{ tl('ef.constraint.b_to_a') }}</option></select></label><label :title="tl('ef.constraint.application_mode.desc')">{{ tl('ef.constraint.application_mode') }}<select :value="item.application_mode" @change="setRotationDifferenceField(index, 'application_mode', $event.target.value)"><option value="replace">{{ tl('ef.constraint.replace') }}</option><option value="add">{{ tl('ef.constraint.add') }}</option></select></label><label :title="tl('ef.constraint.difference_strength.desc')">{{ tl('ef.constraint.difference_strength') }}<input type="number" min="0" max="1" step="0.01" :value="item.difference_strength" @change="setRotationDifferenceField(index, 'difference_strength', Math.max(0, Math.min(1, Number($event.target.value))))"></label></div><label :title="tl('ef.constraint.rotation_difference_offset.desc')"><input type="checkbox" :checked="item.maintain_offset === true" @change="setRotationDifferenceOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_offset') }}<button :title="tl('ef.constraint.rotation_difference_offset.desc')" :disabled="!item.maintain_offset" @click="resetRotationDifferenceOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label></template>
+                        <template v-if="item.type === 'maintain_volume'"><div class="ef_constraint_maintain_volume"><label :title="tl('ef.constraint.maintain_volume_main_axis.desc')">{{ tl('ef.constraint.main_axis') }}<select :value="item.main_axis" @change="setMaintainVolumeAxis(index, $event.target.value)"><option v-for="axis in ['x','y','z']" :value="axis">{{ axis.toUpperCase() }}</option></select></label><label :title="tl('ef.constraint.reference_scale.desc')">{{ tl('ef.constraint.reference_scale') }}<input type="number" min="0" step="0.01" :value="item.reference_scale" disabled><button :title="tl('ef.constraint.reset_reference_scale.desc')" @click="resetMaintainVolumeReference(index)">{{ tl('ef.constraint.reset_reference_scale') }}</button></label><label :title="tl('ef.constraint.compensation_mode.desc')">{{ tl('ef.constraint.compensation_mode') }}<select :value="item.mode" @change="set(index, 'mode', $event.target.value)"><option v-for="mode in ['volume','area','uniform','custom']" :value="mode">{{ tl('ef.constraint.compensation_' + mode) }}</option></select></label><label :title="tl('ef.constraint.exponent.desc')">{{ tl('ef.constraint.exponent') }}<input type="number" min="0" max="2" step="0.1" :value="item.exponent" @change="setMaintainVolumeNumber(index, 'exponent', $event.target.value)"></label><label v-for="axis in ['x','y','z']" v-if="item.mode === 'custom'" :title="tl('ef.constraint.custom_weight.desc')">{{ tl('ef.constraint.custom_' + axis) }}<input type="number" min="0" max="1" step="0.05" :disabled="item.main_axis === axis" :value="item['custom_' + axis]" @change="setMaintainVolumeNumber(index, 'custom_' + axis, $event.target.value)"></label><label :title="tl('ef.constraint.min_factor.desc')">{{ tl('ef.constraint.min_factor') }}<input type="number" min="0" step="0.01" :value="item.min_factor" @change="setMaintainVolumeNumber(index, 'min_factor', $event.target.value)"></label><label :title="tl('ef.constraint.max_factor.desc')">{{ tl('ef.constraint.max_factor') }}<input type="number" min="0" step="0.01" :value="item.max_factor" @change="setMaintainVolumeNumber(index, 'max_factor', $event.target.value)"></label><label :title="tl('ef.constraint.compensation_weight.desc')">{{ tl('ef.constraint.compensation_weight') }}<input type="number" min="0" max="1" step="0.01" :value="item.compensation_weight" @change="setMaintainVolumeNumber(index, 'compensation_weight', $event.target.value)"></label></div></template>
+                        <template v-if="item.type === 'stretch_to'"><div class="ef_constraint_stretch"><label :title="tl('ef.constraint.main_axis.desc')">{{ tl('ef.constraint.main_axis') }}<select :value="item.main_axis" @change="setStretchField(index, 'main_axis', $event.target.value)"><option v-for="axis in ['x','-x','y','-y','z','-z']" :value="axis" :disabled="item.up_axis === axis.replace('-', '')">{{ axis.toUpperCase() }}</option></select></label><label :title="tl('ef.constraint.up_axis.desc')">{{ tl('ef.constraint.up_axis') }}<select :value="item.up_axis" @change="setStretchField(index, 'up_axis', $event.target.value)"><option v-for="axis in ['x','y','z']" :value="axis" :disabled="item.main_axis.replace('-', '') === axis">{{ axis.toUpperCase() }}</option></select></label><label :title="tl('ef.constraint.original_length.desc')">{{ tl('ef.constraint.original_length') }}<input type="number" min="0" step="0.1" :value="item.original_length" disabled></label><label :title="tl('ef.constraint.rotation_weight.desc')">{{ tl('ef.constraint.rotation_weight') }}<input type="number" min="0" max="1" step="0.01" :value="item.rotation_weight" @change="setNumber(index, 'rotation_weight', $event.target.value)"></label><label :title="tl('ef.constraint.stretch_weight.desc')">{{ tl('ef.constraint.stretch_weight') }}<input type="number" min="0" max="1" step="0.01" :value="item.stretch_weight" @change="setNumber(index, 'stretch_weight', $event.target.value)"></label><label :title="tl('ef.constraint.min_stretch_ratio.desc')">{{ tl('ef.constraint.min_stretch_ratio') }}<input type="number" min="0" step="0.01" :value="item.min_stretch_ratio" @change="setStretchNumber(index, 'min_stretch_ratio', $event.target.value)"></label><label :title="tl('ef.constraint.max_stretch_ratio.desc')">{{ tl('ef.constraint.max_stretch_ratio') }}<input type="number" min="0" step="0.01" :value="item.max_stretch_ratio" @change="setStretchNumber(index, 'max_stretch_ratio', $event.target.value)"></label><label :title="tl('ef.constraint.volume_mode.desc')">{{ tl('ef.constraint.volume_mode') }}<select :value="item.volume_mode" @change="setStretchField(index, 'volume_mode', $event.target.value)"><option value="none">{{ tl('ef.constraint.volume_none') }}</option><option value="preserve">{{ tl('ef.constraint.volume_preserve') }}</option></select></label><label :title="tl('ef.constraint.volume_exponent.desc')">{{ tl('ef.constraint.volume_exponent') }}<input type="number" min="0" max="1" step="0.1" :value="item.volume_exponent" @change="setStretchNumber(index, 'volume_exponent', $event.target.value)"></label></div><label :title="tl('ef.constraint.maintain_offset.desc')"><input type="checkbox" :checked="item.maintain_offset === true" @change="setStretchField(index, 'maintain_offset', $event.target.checked)">{{ tl('ef.constraint.maintain_offset') }}<button :title="tl('ef.constraint.capture_stretch.desc')" @click="captureStretch(index)">{{ tl('ef.constraint.capture_stretch') }}</button></label></template>
+                        <template v-if="['track_to', 'locked_track', 'damped_track'].includes(item.type)"><div class="ef_constraint_track"><label :title="tl('ef.constraint.track_axis.desc')">{{ tl('ef.constraint.track_axis') }}<select :value="item.track_axis" @change="setTrackField(index, 'track_axis', $event.target.value)"><option v-for="axis in ['x','-x','y','-y','z','-z']" :value="axis">{{ axis.toUpperCase() }}</option></select></label><label v-if="item.type === 'track_to'" :title="tl('ef.constraint.up_axis.desc')">{{ tl('ef.constraint.up_axis') }}<select :value="item.up_axis" @change="setTrackField(index, 'up_axis', $event.target.value)"><option v-for="axis in ['x','y','z']" :value="axis" :disabled="item.track_axis.replace('-', '') === axis">{{ axis.toUpperCase() }}</option></select></label><label v-if="item.type === 'locked_track'" :title="tl('ef.constraint.lock_axis.desc')">{{ tl('ef.constraint.lock_axis') }}<select :value="item.lock_axis" @change="setTrackField(index, 'lock_axis', $event.target.value)"><option v-for="axis in ['x','y','z']" :value="axis" :disabled="item.track_axis.replace('-', '') === axis">{{ axis.toUpperCase() }}</option></select></label><label v-if="item.type === 'track_to'" :title="tl('ef.constraint.up_space.desc')">{{ tl('ef.constraint.up_space') }}<select :value="item.up_space" @change="setTrackField(index, 'up_space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world_up') }}</option><option value="target">{{ tl('ef.constraint.target_local_up') }}</option></select></label><label v-if="item.type === 'damped_track'" :title="tl('ef.constraint.damping_angle.desc')">{{ tl('ef.constraint.damping_angle') }}<input type="number" min="0" max="180" step="1" :value="item.damping_angle" @change="setTrackField(index, 'damping_angle', Math.max(0, Math.min(180, Number($event.target.value))))"></label></div><label :title="tl('ef.constraint.maintain_offset.desc')"><input type="checkbox" :checked="item.maintain_offset === true" @change="setTrackOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_offset') }}<button :title="tl('ef.constraint.reset_offset.desc')" :disabled="!item.maintain_offset" @click="resetTrackOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label></template>
+                        <template v-if="item.type === 'limit_distance'"><div class="ef_constraint_distance"><label :title="tl('ef.constraint.distance_mode.desc')">{{ tl('ef.constraint.distance_mode') }}<select :value="item.mode" @change="setDistanceMode(index, $event.target.value)"><option v-for="mode in ['exact','minimum','maximum','initial']" :value="mode">{{ tl('ef.constraint.distance_mode_' + mode) }}</option></select></label><label v-if="item.mode !== 'initial'" :title="tl('ef.constraint.distance_value.desc')">{{ tl('ef.constraint.distance_value') }}<input type="number" min="0" step="0.1" :value="item.distance" @change="setDistanceValue(index, 'distance', $event.target.value)"></label><label v-else :title="tl('ef.constraint.initial_distance.desc')">{{ tl('ef.constraint.initial_distance') }}<input type="number" min="0" step="0.1" :value="item.initial_distance" disabled><button :title="tl('ef.constraint.reset_initial_distance.desc')" @click="resetInitialDistance(index)">{{ tl('ef.constraint.reset_initial_distance') }}</button></label><label :title="tl('ef.constraint.softness.desc')">{{ tl('ef.constraint.softness') }}<input type="number" min="0" step="0.1" :value="item.softness" @change="setDistanceValue(index, 'softness', $event.target.value)"></label></div></template>
+                        <template v-if="item.type === 'copy_channels'"><div class="ef_constraint_checks" v-for="channel in ['position', 'rotation', 'scale']" v-if="item.axes[channel]"><b>{{ tl('ef.constraint.' + channel) }}</b><label v-for="axis in ['x','y','z']"><input type="checkbox" :checked="item.axes[channel + '_axes'][axis]" @change="setCopyAxis(index, channel, axis, $event.target.checked)">{{ axis.toUpperCase() }}</label></div></template>
+                        <template v-if="item.type === 'transform_mapping'">
+                            <div class="ef_constraint_mapping_options"><label :title="tl('ef.constraint.source_channel.desc')">{{ tl('ef.constraint.source_channel') }}<select :value="item.source_channel" @change="set(index, 'source_channel', $event.target.value)"><option v-for="channel in ['position','rotation','scale']" :value="channel">{{ tl('ef.constraint.' + channel) }}</option></select></label><label :title="tl('ef.constraint.target_channel.desc')">{{ tl('ef.constraint.target_channel') }}<select :value="item.target_channel" @change="set(index, 'target_channel', $event.target.value)"><option v-for="channel in ['position','rotation','scale']" :value="channel">{{ tl('ef.constraint.' + channel) }}</option></select></label><label :title="tl('ef.constraint.source_space.desc')">{{ tl('ef.constraint.source_space') }}<select :value="item.source_space" @change="set(index, 'source_space', $event.target.value)"><option value="local">{{ tl('ef.constraint.local') }}</option><option value="world">{{ tl('ef.constraint.world') }}</option></select></label><label :title="tl('ef.constraint.target_space.desc')">{{ tl('ef.constraint.target_space') }}<select :value="item.target_space" @change="set(index, 'target_space', $event.target.value)"><option value="local">{{ tl('ef.constraint.local') }}</option><option value="world">{{ tl('ef.constraint.world') }}</option></select></label><label :title="tl('ef.constraint.mix_mode.desc')">{{ tl('ef.constraint.mix_mode') }}<select :value="item.mix_mode" @change="set(index, 'mix_mode', $event.target.value)"><option v-for="mode in ['replace','add','multiply']" :value="mode">{{ tl('ef.constraint.' + mode) }}</option></select></label><label :title="item.extrapolate ? tl('ef.constraint.extrapolate.desc') : tl('ef.constraint.clamp.desc')"><input type="checkbox" :checked="item.extrapolate === true" @change="set(index, 'extrapolate', $event.target.checked)">{{ item.extrapolate ? tl('ef.constraint.extrapolate') : tl('ef.constraint.clamp') }}</label></div>
+                            <div class="ef_constraint_mapping"><b>{{ tl('ef.constraint.axis_mapping') }}</b><div class="ef_constraint_mapping_head"><span></span><span :title="tl('ef.constraint.axis_mapping.desc')">{{ tl('ef.constraint.axis_mapping') }}</span><span :title="tl('ef.constraint.from_min.desc')">{{ tl('ef.constraint.from_min') }}</span><span :title="tl('ef.constraint.from_max.desc')">{{ tl('ef.constraint.from_max') }}</span><span :title="tl('ef.constraint.to_min.desc')">{{ tl('ef.constraint.to_min') }}</span><span :title="tl('ef.constraint.to_max.desc')">{{ tl('ef.constraint.to_max') }}</span></div><div v-for="axis in [0,1,2]"><b>{{ ['X','Y','Z'][axis] }}</b><select :value="item.axis_mapping[axis]" @change="setMappingAxis(index, axis, $event.target.value)"><option v-for="sourceAxis in [0,1,2]" :value="sourceAxis">{{ ['X','Y','Z'][sourceAxis] }}</option></select><input type="number" :value="item.from_min[axis]" @change="setVector(index, 'from_min', axis, $event.target.value)"><input type="number" :value="item.from_max[axis]" @change="setVector(index, 'from_max', axis, $event.target.value)"><input type="number" :value="item.to_min[axis]" @change="setVector(index, 'to_min', axis, $event.target.value)"><input type="number" :value="item.to_max[axis]" @change="setVector(index, 'to_max', axis, $event.target.value)"></div></div>
+                        </template>
+                        <template v-if="item.type === 'shrinkwrap'"><div class="ef_constraint_shrinkwrap"><label :title="tl('ef.constraint.shrinkwrap_mode.desc')">{{ tl('ef.constraint.shrinkwrap_mode') }}<select :value="item.mode" @change="setShrinkwrapField(index, 'mode', $event.target.value)"><option value="nearest_surface">{{ tl('ef.constraint.shrinkwrap_nearest') }}</option><option value="project">{{ tl('ef.constraint.shrinkwrap_project') }}</option></select></label><label v-if="item.mode === 'project'" :title="tl('ef.constraint.project_axis.desc')">{{ tl('ef.constraint.project_axis') }}<select :value="item.project_axis" @change="setShrinkwrapField(index, 'project_axis', $event.target.value)"><option v-for="axis in ['x','-x','y','-y','z','-z']" :value="axis">{{ axis.toUpperCase() }}</option></select></label><label v-if="item.mode === 'project'" :title="tl('ef.constraint.direction_space.desc')">{{ tl('ef.constraint.direction_space') }}<select :value="item.direction_space" @change="setShrinkwrapField(index, 'direction_space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="target">{{ tl('ef.constraint.target_local') }}</option></select></label><label v-if="item.mode === 'project'" :title="tl('ef.constraint.bidirectional.desc')"><input type="checkbox" :checked="item.bidirectional === true" @change="setShrinkwrapField(index, 'bidirectional', $event.target.checked)">{{ tl('ef.constraint.bidirectional') }}</label><label :title="tl('ef.constraint.surface_offset.desc')">{{ tl('ef.constraint.surface_offset') }}<input type="number" step="0.1" :value="item.surface_offset" @change="setShrinkwrapNumber(index, 'surface_offset', $event.target.value)"></label><label :title="tl('ef.constraint.max_distance.desc')">{{ tl('ef.constraint.max_distance') }}<input type="number" min="0" step="0.1" :value="item.max_distance" @change="setShrinkwrapNumber(index, 'max_distance', $event.target.value)"></label><label v-if="item.type === 'follow_path'" :title="tl('ef.constraint.position_weight.desc')">{{ tl('ef.constraint.position_weight') }}<input type="number" min="0" max="1" step="0.01" :value="item.position_weight" @change="setShrinkwrapNumber(index, 'position_weight', $event.target.value)"></label></div><label :title="tl('ef.constraint.flip_normal.desc')"><input type="checkbox" :checked="item.flip_normal === true" @change="setShrinkwrapField(index, 'flip_normal', $event.target.checked)">{{ tl('ef.constraint.flip_normal') }}</label><label :title="tl('ef.constraint.align_rotation.desc')"><input type="checkbox" :checked="item.align_rotation === true" @change="setShrinkwrapField(index, 'align_rotation', $event.target.checked)">{{ tl('ef.constraint.align_rotation') }}</label><div class="ef_constraint_shrinkwrap_rotation" v-if="item.align_rotation === true"><label :title="tl('ef.constraint.shrinkwrap_up_axis.desc')">{{ tl('ef.constraint.up_axis') }}<select :value="item.up_axis" @change="setShrinkwrapField(index, 'up_axis', $event.target.value)"><option v-for="axis in ['x','y','z']" :value="axis">{{ axis.toUpperCase() }}</option></select></label><label :title="tl('ef.constraint.shrinkwrap_rotation_weight.desc')">{{ tl('ef.constraint.rotation_weight') }}<input type="number" min="0" max="1" step="0.01" :value="item.rotation_weight" @change="setShrinkwrapNumber(index, 'rotation_weight', $event.target.value)"></label></div><label v-if="item.align_rotation === true" :title="tl('ef.constraint.shrinkwrap_rotation_offset.desc')"><input type="checkbox" :checked="item.maintain_rotation_offset === true" @change="setShrinkwrapRotationOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_rotation_offset') }}<button :title="tl('ef.constraint.shrinkwrap_rotation_offset.desc')" :disabled="!item.maintain_rotation_offset" @click="resetShrinkwrapRotationOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label></template>
+                        <template v-if="item.type === 'floor_drop'"><div class="ef_constraint_floor_drop"><label :title="tl('ef.constraint.drop_axis.desc')">{{ tl('ef.constraint.drop_axis') }}<select :value="item.drop_axis" @change="setFloorDropField(index, 'drop_axis', $event.target.value)"><option v-for="axis in ['x','-x','y','-y','z','-z']" :value="axis">{{ axis.toUpperCase() }}</option></select></label><label :title="tl('ef.constraint.direction_space.desc')">{{ tl('ef.constraint.direction_space') }}<select :value="item.direction_space" @change="setFloorDropField(index, 'direction_space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="target">{{ tl('ef.constraint.target_local') }}</option></select></label><label :title="tl('ef.constraint.floor_drop_mode.desc')">{{ tl('ef.constraint.floor_drop_mode') }}<select :value="item.mode" @change="setFloorDropField(index, 'mode', $event.target.value)"><option value="snap">{{ tl('ef.constraint.floor_drop_mode_snap') }}</option><option value="above_only">{{ tl('ef.constraint.floor_drop_mode_above_only') }}</option></select></label><label :title="tl('ef.constraint.surface_offset.desc')">{{ tl('ef.constraint.surface_offset') }}<input type="number" step="0.1" :value="item.surface_offset" @change="setFloorDropNumber(index, 'surface_offset', $event.target.value)"></label><label :title="tl('ef.constraint.max_distance.desc')">{{ tl('ef.constraint.max_distance') }}<input type="number" min="0" step="0.1" :value="item.max_distance" @change="setFloorDropNumber(index, 'max_distance', $event.target.value)"></label><label v-if="item.type === 'follow_path'" :title="tl('ef.constraint.position_weight.desc')">{{ tl('ef.constraint.position_weight') }}<input type="number" min="0" max="1" step="0.01" :value="item.position_weight" @change="setFloorDropNumber(index, 'position_weight', $event.target.value)"></label></div><label :title="tl('ef.constraint.align_rotation.desc')"><input type="checkbox" :checked="item.align_rotation === true" @change="setFloorDropField(index, 'align_rotation', $event.target.checked)">{{ tl('ef.constraint.align_rotation') }}</label><div class="ef_constraint_floor_drop_rotation" v-if="item.align_rotation === true"><label :title="tl('ef.constraint.floor_drop_up_axis.desc')">{{ tl('ef.constraint.up_axis') }}<select :value="item.up_axis" @change="setFloorDropField(index, 'up_axis', $event.target.value)"><option v-for="axis in ['x','y','z']" :value="axis">{{ axis.toUpperCase() }}</option></select></label><label :title="tl('ef.constraint.floor_drop_rotation_weight.desc')">{{ tl('ef.constraint.rotation_weight') }}<input type="number" min="0" max="1" step="0.01" :value="item.rotation_weight" @change="setFloorDropNumber(index, 'rotation_weight', $event.target.value)"></label></div><label v-if="item.align_rotation === true" :title="tl('ef.constraint.floor_drop_rotation_offset.desc')"><input type="checkbox" :checked="item.maintain_rotation_offset === true" @change="setFloorDropRotationOffset(index, $event.target.checked)">{{ tl('ef.constraint.maintain_rotation_offset') }}<button :title="tl('ef.constraint.floor_drop_rotation_offset.desc')" :disabled="!item.maintain_rotation_offset" @click="resetFloorDropRotationOffset(index)">{{ tl('ef.constraint.reset_offset') }}</button></label></template>
+                        <template v-if="item.type === 'floor' || item.type === 'pivot'">
+                            <label :title="tl('ef.constraint.axis.desc')">{{ tl('ef.constraint.axis') }}<select :value="item.axis" @change="set(index, 'axis', $event.target.value)"><option v-for="axis in ['x','-x','y','-y','z','-z']" :value="axis">{{ axis.toUpperCase() }}</option></select></label>
+                            <label :title="tl('ef.constraint.space.desc')">{{ tl('ef.constraint.space') }}<select :value="item.space" @change="set(index, 'space', $event.target.value)"><option value="world">{{ tl('ef.constraint.world') }}</option><option value="target">{{ tl('ef.constraint.target_local') }}</option></select></label>
+                        </template>
+                        <template v-if="item.type === 'floor'"><label :title="tl('ef.constraint.offset.desc')">{{ tl('ef.constraint.offset') }}<input type="number" step="0.1" :value="item.offset" @change="set(index, 'offset', Number($event.target.value))"></label><label :title="tl('ef.constraint.prevent_penetration.desc')"><input type="checkbox" :checked="item.prevent_penetration !== false" @change="set(index, 'prevent_penetration', $event.target.checked)">{{ item.prevent_penetration !== false ? tl('ef.constraint.prevent_penetration') : tl('ef.constraint.snap_to_plane') }}</label></template>
+                        <template v-if="item.type === 'pivot'"><label :title="tl('ef.constraint.angle.desc')">{{ tl('ef.constraint.angle') }}<input type="number" step="1" :value="item.angle" @change="set(index, 'angle', Number($event.target.value))"></label><label :title="tl('ef.constraint.keep_radius.desc')"><input type="checkbox" :checked="item.keep_radius !== false" @change="set(index, 'keep_radius', $event.target.checked)">{{ tl('ef.constraint.keep_radius') }}</label><label :title="tl('ef.constraint.follow_rotation.desc')"><input type="checkbox" :checked="item.follow_rotation === true" @change="set(index, 'follow_rotation', $event.target.checked)">{{ tl('ef.constraint.follow_rotation') }}</label></template>
                         <template v-if="item.type === 'limit_transform'"><div class="ef_constraint_limit" v-for="channel in ['position', 'rotation', 'scale']" v-if="!item.limit_channel || item.limit_channel === channel"><b>{{ tl('ef.constraint.' + channel) }}</b><div v-for="axis in [0,1,2]"><input type="checkbox" :checked="item[channel + '_axes'][axis]" @change="setAxis(index, channel + '_axes', axis, $event.target.checked)"><span>{{ ['X','Y','Z'][axis] }}</span><input type="number" :value="item[channel + '_min'][axis]" @change="setVector(index, channel + '_min', axis, $event.target.value)"><input type="number" :value="item[channel + '_max'][axis]" @change="setVector(index, channel + '_max', axis, $event.target.value)"></div></div></template>
-                        <button v-if="item.type === 'child_of'" @click="setInverse(index)">{{ tl('ef.constraint.set_inverse') }}</button>
+                        <button v-if="item.type === 'child_of'" :title="tl('ef.constraint.set_inverse.desc')" @click="setInverse(index)">{{ tl('ef.constraint.set_inverse') }}</button>
                     </div>
                 </div>
-                <div class="ef_constraint_bake"><button @click="bakeSelected(false)">{{ tl('ef.constraint.bake_selected') }}</button><button @click="bakeSelected(true)">{{ tl('ef.constraint.bake_clear') }}</button><button @click="bakeAll(true)">{{ tl('ef.constraint.bake_all') }}</button></div>
+                <div class="ef_constraint_bake"><button :title="tl('ef.constraint.bake_selected.desc')" @click="bakeSelected(false)">{{ tl('ef.constraint.bake_selected') }}</button><button :title="tl('ef.constraint.bake_clear.desc')" @click="bakeSelected(true)">{{ tl('ef.constraint.bake_clear') }}</button><button :title="tl('ef.constraint.bake_all.desc')" @click="bakeAll(true)">{{ tl('ef.constraint.bake_all') }}</button></div>
             </template>
         </div>`
     };
@@ -5972,19 +8774,24 @@ function efSetupConstraintSupport() {
         default_position: {slot: 'left_bar', height: 420, sidebar_index: 100},
         component: panelComponent
     });
-    const css = Blockbench.addCSS(`.ef_constraint_panel{padding:8px;display:flex;flex-direction:column;gap:8px;overflow:auto;height:100%;box-sizing:border-box}.ef_constraint_owner{font-weight:700;padding:5px 0}.ef_constraint_add,.ef_constraint_bake{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.ef_constraint_stack{display:flex;flex-direction:column;gap:6px}.ef_constraint_card{border:1px solid var(--color-border);background:var(--color-back);padding:6px;display:flex;flex-direction:column;gap:5px}.ef_constraint_head{display:flex;align-items:center;gap:4px}.ef_constraint_head span{flex:1}.ef_constraint_head button{min-width:24px}.ef_constraint_card label{display:flex;align-items:center;gap:5px}.ef_constraint_card label select,.ef_constraint_card label input[type=number]{flex:1;min-width:0}.ef_constraint_checks{display:flex;gap:12px;align-items:center}.ef_constraint_limit{display:grid;gap:3px}.ef_constraint_limit>div{display:grid;grid-template-columns:18px 18px 1fr 1fr;gap:3px}.ef_constraint_limit input{min-width:0;width:100%}.ef_constraint_empty{opacity:.7;padding:12px;text-align:center}`);
+    const css = Blockbench.addCSS(`.ef_constraint_panel{padding:8px;display:flex;flex-direction:column;gap:8px;overflow:auto;height:100%;box-sizing:border-box}.ef_constraint_owner{font-weight:700;padding:5px 0}.ef_constraint_add,.ef_constraint_bake{display:grid;gap:6px}.ef_constraint_add details{border:1px solid var(--color-border);background:var(--color-back);border-radius:3px;padding:4px}.ef_constraint_add summary{cursor:pointer;font-weight:700;padding:4px;user-select:none}.ef_constraint_group{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;padding-top:4px}.ef_constraint_add button,.ef_constraint_bake button{height:auto;min-height:44px;padding:6px 8px;line-height:1.25;white-space:normal;overflow-wrap:anywhere}.ef_constraint_stack{display:flex;flex-direction:column;gap:6px}.ef_constraint_card{border:1px solid var(--color-border);background:var(--color-back);padding:6px;display:flex;flex-direction:column;gap:5px}.ef_constraint_head{display:flex;align-items:center;gap:4px}.ef_constraint_head span{flex:1}.ef_constraint_head button{min-width:24px}.ef_constraint_card label{display:flex;align-items:center;gap:5px}.ef_constraint_card label select,.ef_constraint_card label input[type=number]{flex:1;min-width:0}.ef_constraint_checks{display:flex;gap:12px;align-items:center}.ef_constraint_limit{display:grid;gap:3px}.ef_constraint_limit>div{display:grid;grid-template-columns:18px 18px 1fr 1fr;gap:3px}.ef_constraint_limit input{min-width:0;width:100%}.ef_constraint_mapping_options,.ef_constraint_action_options,.ef_constraint_track,.ef_constraint_stretch,.ef_constraint_maintain_volume,.ef_constraint_distance,.ef_constraint_floor_drop,.ef_constraint_floor_drop_rotation,.ef_constraint_shrinkwrap,.ef_constraint_shrinkwrap_rotation,.ef_constraint_quaternion,.ef_constraint_copy_transform_options,.ef_constraint_position_blend_targets,.ef_constraint_position_blend_options,.ef_constraint_rotation_blend_targets,.ef_constraint_rotation_blend_options,.ef_constraint_scale_blend_targets,.ef_constraint_scale_blend_options{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:5px}.ef_constraint_copy_transform_channels,.ef_constraint_action_channels{display:grid;gap:5px}.ef_constraint_copy_transform_channels>div,.ef_constraint_action_channels>div{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}.ef_constraint_copy_transform_channels>div>label:first-child,.ef_constraint_action_channels>div>label:first-child{flex:1 1 120px}.ef_constraint_position_blend_flags,.ef_constraint_position_blend_axes,.ef_constraint_rotation_blend_flags,.ef_constraint_scale_blend_flags,.ef_constraint_scale_blend_axes{display:flex;flex-wrap:wrap;gap:8px 16px}.ef_constraint_position_blend_flags label,.ef_constraint_rotation_blend_flags label,.ef_constraint_scale_blend_flags label{flex:1 1 150px}.ef_constraint_position_blend_axes b,.ef_constraint_scale_blend_axes b{margin-right:auto}.ef_constraint_position_blend_axes label,.ef_constraint_scale_blend_axes label{flex:0 0 auto}.ef_constraint_armature_header,.ef_constraint_armature_entry_head,.ef_constraint_space_header,.ef_constraint_space_entry_head,.ef_constraint_path_header,.ef_constraint_path_point_head{display:flex;align-items:center;gap:5px}.ef_constraint_armature_header b,.ef_constraint_armature_entry_head span,.ef_constraint_space_header b,.ef_constraint_space_entry_head span,.ef_constraint_path_header b,.ef_constraint_path_point_head span{flex:1}.ef_constraint_armature_entries,.ef_constraint_space_entries,.ef_constraint_path_points{display:grid;gap:6px}.ef_constraint_path_point{display:grid;gap:5px;padding:6px;border:1px solid var(--color-border);background:var(--color-ui)}.ef_constraint_path_options,.ef_constraint_path_rotation{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:5px}.ef_constraint_path_offset{display:grid;grid-template-columns:auto repeat(3,minmax(70px,1fr));gap:6px;align-items:center}.ef_constraint_path_offset label{min-width:0}.ef_constraint_path_warning{padding:5px;color:var(--color-accent);border:1px solid var(--color-accent);overflow-wrap:anywhere}.ef_constraint_armature_entry,.ef_constraint_space_entry{display:grid;gap:5px;padding:6px;border:1px solid var(--color-border);background:var(--color-ui)}.ef_constraint_armature_options{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:5px}.ef_constraint_armature_channels{display:grid;gap:5px}.ef_constraint_armature_channels>div{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}.ef_constraint_armature_channels>div>label:first-child{flex:1 1 120px}.ef_constraint_space_actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:5px}.ef_constraint_space_actions button{height:auto;white-space:normal}.ef_constraint_mapping{display:grid;gap:4px;overflow-x:auto}.ef_constraint_mapping>div{display:grid;grid-template-columns:24px minmax(60px,.7fr) repeat(4,minmax(76px,1fr));gap:4px;align-items:center;min-width:430px}.ef_constraint_mapping input,.ef_constraint_mapping select{min-width:0;width:100%}.ef_constraint_mapping_head{font-size:11px;opacity:.8;text-align:center}.ef_constraint_empty{opacity:.7;padding:12px;text-align:center}@media(max-width:520px){.ef_constraint_mapping_options,.ef_constraint_action_options,.ef_constraint_track,.ef_constraint_stretch,.ef_constraint_maintain_volume,.ef_constraint_distance,.ef_constraint_floor_drop,.ef_constraint_floor_drop_rotation,.ef_constraint_shrinkwrap,.ef_constraint_shrinkwrap_rotation,.ef_constraint_quaternion,.ef_constraint_copy_transform_options,.ef_constraint_position_blend_targets,.ef_constraint_position_blend_options,.ef_constraint_rotation_blend_targets,.ef_constraint_rotation_blend_options,.ef_constraint_scale_blend_targets,.ef_constraint_scale_blend_options,.ef_constraint_armature_options,.ef_constraint_path_options,.ef_constraint_path_rotation{grid-template-columns:1fr}.ef_constraint_path_offset{grid-template-columns:1fr}.ef_constraint_mapping>div{grid-template-columns:22px 55px repeat(4,72px)}}`);
     const refreshHandler = () => refresh();
     function refresh() {
         const animation = typeof Animation !== 'undefined' && Animation.selected;
         ArmatureBone.all.forEach(bone => {
             const animator = animation && animation.animators && animation.animators[bone.uuid];
-            getStack(bone).forEach(constraint => ensureInfluenceChannel(animator, constraint));
+            getStack(bone).forEach(constraint => {
+                ensureInfluenceChannel(animator, constraint);
+                if (constraint.type === 'follow_path') ensurePathProgressChannel(animator, constraint);
+                if (constraint.type === 'armature_blend' && Array.isArray(constraint.entries)) constraint.entries.forEach(entry => ensureArmatureWeightChannel(animator, constraint, entry));
+                if (constraint.type === 'space_switch' && Array.isArray(constraint.entries)) constraint.entries.forEach(entry => ensureSpaceWeightChannel(animator, constraint, entry));
+            });
         });
         if (!panel || !panel.vue) return;
         const bone = selectedBone();
         panel.vue.bone = bone || null;
         panel.vue.stack = bone ? cloneValue(getStack(bone)) : [];
-        panel.vue.targets = [...ArmatureBone.all, ...(typeof NullObject !== 'undefined' ? NullObject.all : []), ...(typeof Locator !== 'undefined' ? Locator.all : [])].filter(item => item !== bone && item.mesh);
+        panel.vue.targets = allConstraintTargets().filter(item => item !== bone && item.mesh);
         panel.vue.version++;
     }
     Blockbench.on('update_selection', refreshHandler);
