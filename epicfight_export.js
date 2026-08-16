@@ -208,6 +208,9 @@ function buildEFMeshObjects(vertices, vertexWeights, fileName) {
     const uvs = vertices.uvs && Array.isArray(vertices.uvs.array)
         ? vertices.uvs.array.map(value => Number(value) || 0)
         : [];
+    const normals = vertices.normals && Array.isArray(vertices.normals.array)
+        ? vertices.normals.array.map(value => Number(value) || 0)
+        : [];
     const parts = vertices.parts && typeof vertices.parts === 'object'
         ? vertices.parts
         : { mesh: { stride: 3, count: 0, array: [] } };
@@ -229,42 +232,33 @@ function buildEFMeshObjects(vertices, vertexWeights, fileName) {
         ];
     }
 
-    // 所有 parts 合并到单个 Mesh, 与导出逻辑保持对称
-    // EpicFight 的 parts 共享同一套 positions/uvs/normals, 只是按 vertex group 分组的三角形索引
-    const localVertexMap = {};
-    const localPositions = [];
-    const localPolygons = [];
-    const localVertexWeights = {};
-    // 用 Project.getUVWidth/Height 代替 Project.texture_width/height
-    // per_texture_uv_size 格式下, getBoundingRect() 用 texture.getUVWidth() 作为 min_x 初始值
-    // 如果 texW 和 texture.uv_width 不一致, UV 超出范围时 min_x 会被钳制, 导致 UV 框大小异常
-    var texW = (typeof Project !== 'undefined' && typeof Project.getUVWidth === 'function')
-        ? Project.getUVWidth() : ((typeof Project !== 'undefined' && Project.texture_width) || 16);
-    var texH = (typeof Project !== 'undefined' && typeof Project.getUVHeight === 'function')
-        ? Project.getUVHeight() : ((typeof Project !== 'undefined' && Project.texture_height) || 16);
-
-    function ensureLocalVertex(globalIndex) {
-        if (localVertexMap[globalIndex] !== undefined) {
-            return localVertexMap[globalIndex];
-        }
-        const localIndex = localPositions.length / 3;
-        const corrected = correctedPositions[globalIndex];
-        if (!corrected) {
-            throw new Error('Mesh references invalid position index: ' + globalIndex);
-        }
-        localVertexMap[globalIndex] = localIndex;
-        localPositions.push(corrected[0], corrected[1], corrected[2]);
-        if (vertexWeights[globalIndex]) {
-            localVertexWeights[localIndex] = vertexWeights[globalIndex].map(entry => ({
-                boneName: entry.boneName,
-                weight: entry.weight
-            }));
-        }
-        return localIndex;
-    }
+    // EF parts 的数组是逐 loop 的 (position, uv, normal) 三元组。按 part 建立
+    // Blockbench Mesh，避免合并后丢失面的 part 归属；位置可共享，但 UV/normal 索引不可按位置复用。
+    const meshes = [];
 
     for (const [partName, partData] of Object.entries(parts)) {
         if (!partData || !Array.isArray(partData.array) || partData.array.length < 9) continue;
+
+        const localVertexMap = {};
+        const localPositions = [];
+        const localPolygons = [];
+        const localVertexWeights = {};
+
+        function ensureLocalVertex(globalIndex) {
+            if (localVertexMap[globalIndex] !== undefined) return localVertexMap[globalIndex];
+            const corrected = correctedPositions[globalIndex];
+            if (!corrected) throw new Error('Mesh references invalid position index: ' + globalIndex);
+            const localIndex = localPositions.length / 3;
+            localVertexMap[globalIndex] = localIndex;
+            localPositions.push(corrected[0], corrected[1], corrected[2]);
+            if (vertexWeights[globalIndex]) {
+                localVertexWeights[localIndex] = vertexWeights[globalIndex].map(entry => ({
+                    boneName: entry.boneName,
+                    weight: entry.weight
+                }));
+            }
+            return localIndex;
+        }
 
         const array = partData.array;
         const triangleCount = Math.floor(array.length / 9);
@@ -272,42 +266,47 @@ function buildEFMeshObjects(vertices, vertexWeights, fileName) {
             const base = triIndex * 9;
             const faceVertices = [];
             const faceUvs = [];
-
+            const faceNormals = [];
             for (let corner = 0; corner < 3; corner++) {
-                const tripleIndex = base + corner * 3;
-                const positionIndex = Math.floor(Number(array[tripleIndex]) || 0);
-                const uvIndex = Math.floor(Number(array[tripleIndex + 1]) || 0);
+                const loopBase = base + corner * 3;
+                const positionIndex = Math.floor(Number(array[loopBase]) || 0);
+                const uvIndex = Math.floor(Number(array[loopBase + 1]) || 0);
+                const normalIndex = Math.floor(Number(array[loopBase + 2]) || 0);
                 faceVertices.push(ensureLocalVertex(positionIndex));
-
                 const u = uvs[uvIndex * 2];
                 const v = uvs[uvIndex * 2 + 1];
-                // EpicFight JSON: 归一化 UV (0-1), V=0 在顶部
-                // Blockbench MeshFace: 像素 UV (0 ~ texture_width/height), V=0 在顶部
-                // 两者 V 方向一致, 只需把归一化坐标乘以纹理尺寸转换为像素坐标
+                // 官方 Blender exporter 写出 (u, 1-v_blender)，所以 EF V=0 在顶部。
+                // 暂存归一化值，创建 MeshFace 并解析其实际 texture 后再转 Blockbench UV 单位。
                 faceUvs.push([
-                    roundNumber(u === undefined ? 0 : (Number(u) || 0) * texW, 6),
-                    roundNumber(v === undefined ? 0 : (Number(v) || 0) * texH, 6)
+                    roundNumber(u === undefined ? 0 : (Number(u) || 0), 6),
+                    roundNumber(v === undefined ? 0 : (Number(v) || 0), 6)
+                ]);
+                faceNormals.push([
+                    normals[normalIndex * 3] || 0,
+                    normals[normalIndex * 3 + 1] || 0,
+                    normals[normalIndex * 3 + 2] || 0
                 ]);
             }
-
             localPolygons.push({
                 vertices: faceVertices,
-                uvs: faceUvs
+                uvs: faceUvs,
+                normals: faceNormals,
+                normalizedUvs: true
+            });
+        }
+
+        if (localPolygons.length) {
+            meshes.push({
+                name: fileName + '_' + partName + '_Mesh',
+                partName: partName,
+                positions: localPositions,
+                polygons: localPolygons,
+                vertexWeights: localVertexWeights
             });
         }
     }
 
-    if (!localPolygons.length) {
-        throw new Error('EpicFight mesh JSON contains no importable parts.');
-    }
-
-    const meshes = [{
-        name: fileName + '_Mesh',
-        positions: localPositions,
-        polygons: localPolygons,
-        vertexWeights: localVertexWeights
-    }];
-
+    if (!meshes.length) throw new Error('EpicFight mesh JSON contains no importable parts.');
     return meshes;
 }
 
@@ -524,6 +523,8 @@ function createBlockBenchFromImportData(importData, fileName) {
             name: geo.name || (fileName + '_Mesh'),
             visibility: true
         }).addTo(armature || 'root').init();
+        // Preserve the EF part independently from the Blockbench parent hierarchy.
+        mesh._efPartName = geo.partName || 'noGroups';
         // Blockbench Mesh constructor creates a default cube when no vertices are provided.
         // Clear it before filling imported geometry, otherwise its faces get merged into the import.
         mesh.vertices = {};
@@ -585,6 +586,17 @@ function createBlockBenchFromImportData(importData, fileName) {
                 vertices: faceKeys,
                 uv: uv
             });
+            if (polygon.normalizedUvs) {
+                const texture = typeof face.getTexture === 'function' ? face.getTexture() : null;
+                const texW = texture && typeof texture.getUVWidth === 'function'
+                    ? texture.getUVWidth() : ((typeof Project !== 'undefined' && Project.texture_width) || 16);
+                const texH = texture && typeof texture.getUVHeight === 'function'
+                    ? texture.getUVHeight() : ((typeof Project !== 'undefined' && Project.texture_height) || 16);
+                for (const key of faceKeys) {
+                    face.uv[key][0] = roundNumber(face.uv[key][0] * texW, 6);
+                    face.uv[key][1] = roundNumber(face.uv[key][1] * texH, 6);
+                }
+            }
             mesh.addFaces(face);
             createdFaces++;
             // #region debug-point C:create-heartbeat
@@ -1468,6 +1480,7 @@ function getAllMeshes() {
 }
 
 function getPartNameForElement(element) {
+    if (element && element._efPartName) return element._efPartName;
     let parent = element.parent;
     while (parent) {
         if (parent instanceof Group) {
@@ -1490,27 +1503,29 @@ function getAllElements() {
     return elements;
 }
 
+// Must match CubeFace.getVertexIndices() and THREE.BoxGeometry's four UV slots.
 var CUBE_FACE_DEFS = {
-    north: { corners: [0, 1, 2, 3], normal: [0, 0, -1] },
-    south: { corners: [4, 5, 6, 7], normal: [0, 0, 1] },
-    east:  { corners: [1, 5, 6, 2], normal: [1, 0, 0] },
-    west:  { corners: [0, 4, 7, 3], normal: [-1, 0, 0] },
-    up:    { corners: [3, 2, 6, 7], normal: [0, 1, 0] },
-    down:  { corners: [0, 1, 5, 4], normal: [0, -1, 0] }
+    north: { corners: [1, 4, 6, 3] },
+    east:  { corners: [0, 1, 3, 2] },
+    south: { corners: [5, 0, 2, 7] },
+    west:  { corners: [4, 5, 7, 6] },
+    up:    { corners: [4, 1, 0, 5] },
+    down:  { corners: [7, 2, 3, 6] }
 };
 
 function getCubeCorners(cube) {
     var from = cube.from;
     var to = cube.to;
+    // 索引与应用对象变换前的 Cube.getGlobalVertexPositions() 一致。
     var corners = [
-        [from[0], from[1], from[2]],
-        [to[0],   from[1], from[2]],
-        [to[0],   to[1],   from[2]],
-        [from[0], to[1],   from[2]],
-        [from[0], from[1], to[2]],
-        [to[0],   from[1], to[2]],
         [to[0],   to[1],   to[2]],
-        [from[0], to[1],   to[2]]
+        [to[0],   to[1],   from[2]],
+        [to[0],   from[1], to[2]],
+        [to[0],   from[1], from[2]],
+        [from[0], to[1],   from[2]],
+        [from[0], to[1],   to[2]],
+        [from[0], from[1], from[2]],
+        [from[0], from[1], to[2]]
     ];
 
     var rotation = cube.rotation;
@@ -1866,10 +1881,29 @@ function stringifyEpicFightJson(value, indentLevel = 0) {
 
 function getFaceVertices(face) {
     if (!face) return [];
-    if (typeof face.getSortedVertices === 'function') {
-        return face.getSortedVertices();
-    }
+    if (typeof face.getSortedVertices === 'function') return face.getSortedVertices();
     return face.vertices || [];
+}
+
+function getFaceUVSize(face) {
+    const texture = face && typeof face.getTexture === 'function' ? face.getTexture() : null;
+    return [
+        texture && typeof texture.getUVWidth === 'function'
+            ? texture.getUVWidth() : ((typeof Project !== 'undefined' && Project.texture_width) || 16),
+        texture && typeof texture.getUVHeight === 'function'
+            ? texture.getUVHeight() : ((typeof Project !== 'undefined' && Project.texture_height) || 16)
+    ];
+}
+
+function getCubeFaceCornerUVs(face) {
+    const uv = face && face.uv && face.uv.length >= 4 ? face.uv : [0, 0, 0, 0];
+    let result = [[uv[0], uv[1]], [uv[2], uv[1]], [uv[0], uv[3]], [uv[2], uv[3]]];
+    let rotation = ((Number(face && face.rotation) || 0) % 360 + 360) % 360;
+    while (rotation > 0) {
+        result = [result[2], result[0], result[3], result[1]];
+        rotation -= 90;
+    }
+    return result;
 }
 
 function getAnimationFps(animation) {
@@ -2016,7 +2050,7 @@ function buildMeshExportPayload() {
             for (var fi = 0; fi < faceNames.length; fi++) {
                 var faceName = faceNames[fi];
                 var faceObj = element.faces[faceName];
-                if (!faceObj) continue;
+                if (!faceObj || faceObj.texture === null || faceObj.enabled === false) continue;
                 var faceDef = CUBE_FACE_DEFS[faceName];
                 var ci = faceDef.corners;
 
@@ -2040,7 +2074,7 @@ function buildMeshExportPayload() {
                 var vIdx3 = vertexIdx + 3;
                 vertexIdx += 4;
 
-                var efNormal = convertBlockbenchNormalToEF(faceDef.normal);
+                var efNormal = convertBlockbenchNormalToEF(computeFaceNormal(v0, v2, v1));
                 var normalKey = vec3Key(efNormal).join(',');
                 var normalIdx = normalMap[normalKey];
                 if (normalIdx === undefined) {
@@ -2049,42 +2083,28 @@ function buildMeshExportPayload() {
                     normalList.push(efNormal[0], efNormal[1], efNormal[2]);
                 }
 
-                var uvData = faceObj.uv;
-                var uv0, uv1, uv2, uv3;
-                if (uvData && uvData.length >= 4) {
-                    var texW = (typeof Project !== 'undefined' && Project.texture_width) || 16;
-                    var texH = (typeof Project !== 'undefined' && Project.texture_height) || 16;
-                    // EpicFight JSON 约定: V=0 在纹理顶部, 归一化坐标
-                    // Blockbench Cube face.uv = [x1, y1, x2, y2] 像素坐标, V=0 在顶部
-                    // 两者方向一致, 只需归一化, 不需 V 翻转
-                    var uxLeft = uvData[0] / texW;
-                    var uxRight = uvData[2] / texW;
-                    var vyTop = uvData[1] / texH;
-                    var vyBottom = uvData[3] / texH;
-                    // 顶点顺序: v0=左下, v1=右下, v2=右上, v3=左上 (对于侧面)
-                    uv0 = [uxLeft, vyBottom];
-                    uv1 = [uxRight, vyBottom];
-                    uv2 = [uxRight, vyTop];
-                    uv3 = [uxLeft, vyTop];
-                } else {
-                    uv0 = [0, 0];
-                    uv1 = [0, 0];
-                    uv2 = [0, 0];
-                    uv3 = [0, 0];
-                }
+                const faceUVSize = getFaceUVSize(faceObj);
+                const cornerUVs = getCubeFaceCornerUVs(faceObj);
+                // Blockbench 的四个 UV 槽按 BoxGeometry 顺序排列，face.rotation 每 90°
+                // 轮换一次槽位。EF 与 Blockbench 都是顶部原点 V，故只按面的纹理尺寸归一化。
+                var uv0 = [cornerUVs[0][0] / faceUVSize[0], cornerUVs[0][1] / faceUVSize[1]];
+                var uv1 = [cornerUVs[1][0] / faceUVSize[0], cornerUVs[1][1] / faceUVSize[1]];
+                var uv2 = [cornerUVs[2][0] / faceUVSize[0], cornerUVs[2][1] / faceUVSize[1]];
+                var uv3 = [cornerUVs[3][0] / faceUVSize[0], cornerUVs[3][1] / faceUVSize[1]];
 
                 var uvIdx0 = getOrCreateUvIdx(uv0);
                 var uvIdx1 = getOrCreateUvIdx(uv1);
                 var uvIdx2 = getOrCreateUvIdx(uv2);
                 var uvIdx3 = getOrCreateUvIdx(uv3);
 
+                // THREE.BoxGeometry / Blockbench cube winding: 0,2,1 and 2,3,1.
                 pushTriangleToParts(currentPart, vIdx0, uvIdx0, normalIdx);
-                pushTriangleToParts(currentPart, vIdx1, uvIdx1, normalIdx);
                 pushTriangleToParts(currentPart, vIdx2, uvIdx2, normalIdx);
+                pushTriangleToParts(currentPart, vIdx1, uvIdx1, normalIdx);
 
-                pushTriangleToParts(currentPart, vIdx0, uvIdx0, normalIdx);
                 pushTriangleToParts(currentPart, vIdx2, uvIdx2, normalIdx);
                 pushTriangleToParts(currentPart, vIdx3, uvIdx3, normalIdx);
+                pushTriangleToParts(currentPart, vIdx1, uvIdx1, normalIdx);
 
                 var parentBone = findParentBoneForElement(element);
                 var weightBoneName = parentBone ? parentBone.name : fallbackBoneName;
@@ -2161,17 +2181,14 @@ function buildMeshExportPayload() {
                     : computeFaceNormal(p0, p1, p2);
                 const efNormal = convertBlockbenchNormalToEF(normal);
 
-                var texW = (typeof Project !== 'undefined' && Project.texture_width) || 16;
-                var texH = (typeof Project !== 'undefined' && Project.texture_height) || 16;
+                const faceUVSize = getFaceUVSize(face);
 
                 for (const vkey of tri) {
                     const vi = vkeyToIdx[vkey];
                     const rawUv = (face.uv && face.uv[vkey]) ? face.uv[vkey] : [0, 0];
-                    // EpicFight JSON 约定: V=0 在纹理顶部, 归一化坐标
-                    // Blockbench face.uv 也是像素坐标, V=0 在顶部
-                    // 两者方向一致, 只需归一化, 不需 V 翻转
-                    const normU = rawUv[0] / texW;
-                    const normV = rawUv[1] / texH;
+                    // MeshFace UV 也是顶部原点；必须使用该面的 texture UV 尺寸。
+                    const normU = rawUv[0] / faceUVSize[0];
+                    const normV = rawUv[1] / faceUVSize[1];
                     const uvKey = `${Math.round(normU*1e4)},${Math.round(normV*1e4)}`;
                     const normalKey = vec3Key(efNormal).join(',');
 
