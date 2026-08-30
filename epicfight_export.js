@@ -586,6 +586,9 @@ function createBlockBenchFromImportData(importData, fileName) {
                 vertices: faceKeys,
                 uv: uv
             });
+            // Keep the imported EF part on each face so later merge/split operations
+            // can preserve part ownership even when the Mesh is reused.
+            face._efPartName = geo.partName || mesh._efPartName || 'noGroups';
             if (polygon.normalizedUvs) {
                 const texture = typeof face.getTexture === 'function' ? face.getTexture() : null;
                 const texW = texture && typeof texture.getUVWidth === 'function'
@@ -1481,7 +1484,7 @@ function getAllMeshes() {
 
 function getPartNameForElement(element) {
     if (element && element._efPartName) return element._efPartName;
-    let parent = element.parent;
+    let parent = element && element.parent;
     while (parent) {
         if (parent instanceof Group) {
             return parent.name;
@@ -1489,6 +1492,12 @@ function getPartNameForElement(element) {
         parent = parent.parent;
     }
     return 'noGroups';
+}
+
+function getPartNameForMeshFace(face, element) {
+    if (face && face._efPartName) return face._efPartName;
+    if (element && element._efPartName) return element._efPartName;
+    return getPartNameForElement(element);
 }
 
 function getAllElements() {
@@ -2156,6 +2165,7 @@ function buildMeshExportPayload() {
         const faces = Object.values(element.faces || {});
 
         for (const face of faces) {
+            const facePart = getPartNameForMeshFace(face, element);
             let verts = getFaceVertices(face);
             if (verts.length < 3) continue;
 
@@ -2209,7 +2219,7 @@ function buildMeshExportPayload() {
                         normalList.push(efNormal[2]);
                     }
 
-                    pushTriangleToParts(currentPart, vi, uvIdx, normalIdx);
+                    pushTriangleToParts(facePart, vi, uvIdx, normalIdx);
                 }
             }
         }
@@ -2962,6 +2972,11 @@ const EF_I18N = {
         'ef.ik.min_deg': 'Min (deg)',
         'ef.ik.max_deg': 'Max (deg)',
         'ef.ik.chain_length': 'Chain Length (0 = All Ancestors)',
+        'ef.ik.chain_length.desc': 'Each selected bone is clamped to its own maximum chain length.',
+        'ef.ik.create_pole': 'Create Pole Target',
+        'ef.ik.create_pole.desc': 'Create a pole target for each newly created controller.',
+        'ef.ik.controllers_created': 'IK controllers processed: %s',
+        'ef.ik.create_batch_undo': 'Create IK controllers',
         'ef.ik.influence': 'IK Influence',
         'ef.ik.iterations': 'CCD Iterations',
         'ef.ik.pole_iterations': 'Pole Convergence Passes',
@@ -3510,6 +3525,11 @@ const EF_I18N = {
         'ef.ik.min_deg': '最小 (度)',
         'ef.ik.max_deg': '最大 (度)',
         'ef.ik.chain_length': '链长（0 = 全部祖先）',
+        'ef.ik.chain_length.desc': '每根选中骨骼都会按自身最大链长进行限制。',
+        'ef.ik.create_pole': '创建 Pole 目标',
+        'ef.ik.create_pole.desc': '为每个新建控制器创建 Pole 目标。',
+        'ef.ik.controllers_created': '已处理 IK 控制器：%s',
+        'ef.ik.create_batch_undo': '创建 IK 控制器',
         'ef.ik.influence': 'IK 影响权重',
         'ef.ik.iterations': 'CCD 迭代次数',
         'ef.ik.pole_iterations': 'Pole 二次收敛次数',
@@ -4867,34 +4887,36 @@ function efSetupIKSupportInner() {
         ];
         controller.preview_controller.updateTransform(controller);
 
-        // 创建 pole target，默认位置放在 knee/elbow 关节的偏移方向，避免与控制器重叠
-        const pole = new NullObject().addTo(parent).init();
-        pole.name = targetBone.name + '_ik_pole';
-        controller.ef_ik.pole = pole.uuid;
-        pole.ef_ik = {
-            version: 2,
-            role: 'pole',
-            controller: controller.uuid,
-            rig: settings.rig || '',
-            limb: settings.limb || ''
-        };
+        if (settings.create_pole !== false) {
+            const pole = new NullObject().addTo(parent).init();
+            pole.name = targetBone.name + '_ik_pole';
+            controller.ef_ik.pole = pole.uuid;
+            pole.ef_ik = {
+                version: 2,
+                role: 'pole',
+                controller: controller.uuid,
+                rig: settings.rig || '',
+                limb: settings.limb || ''
+            };
 
-        const helperBone = efFindPoleHelperBone(chainBones[0], targetBone);
-        const poleWorld = efComputePoleWorldPosition(chainBones, targetBone, helperBone);
-        let poleLocal = poleWorld.clone();
-        if (parent !== 'root' && parent.mesh) {
-            if (typeof parent.mesh.updateWorldMatrix === 'function') parent.mesh.updateWorldMatrix(true, false);
-            else if (scene) scene.updateMatrixWorld(true);
-            parent.mesh.worldToLocal(poleLocal);
+            const helperBone = efFindPoleHelperBone(chainBones[0], targetBone);
+            const poleWorld = efComputePoleWorldPosition(chainBones, targetBone, helperBone);
+            let poleLocal = poleWorld.clone();
+            if (parent !== 'root' && parent.mesh) {
+                if (typeof parent.mesh.updateWorldMatrix === 'function') parent.mesh.updateWorldMatrix(true, false);
+                else if (scene) scene.updateMatrixWorld(true);
+                parent.mesh.worldToLocal(poleLocal);
+            }
+            pole.position[0] = poleLocal.x;
+            pole.position[1] = poleLocal.y;
+            pole.position[2] = poleLocal.z;
+            pole.preview_controller.updateTransform(pole);
+            pole.preview_controller.updateSelection(pole);
+            created.push(controller, pole);
+        } else {
+            created.push(controller);
         }
-        pole.position[0] = poleLocal.x;
-        pole.position[1] = poleLocal.y;
-        pole.position[2] = poleLocal.z;
-        pole.preview_controller.updateTransform(pole);
         controller.preview_controller.updateSelection(controller);
-        pole.preview_controller.updateSelection(pole);
-
-        created.push(controller, pole);
         if (!settings.created) {
             Undo.finishEdit(tl('ef.ik.create_undo'));
             Blockbench.showQuickMessage(tl('ef.ik.controller_created'));
@@ -6010,32 +6032,56 @@ function efSetupIKSupportInner() {
         condition: () => Modes.animate && ArmatureBone.selected.length > 0,
         searchable: true,
         click() {
-            const targetBone = ArmatureBone.selected[0];
-            const maximum = efGetMaximumChainLength(targetBone);
-            if (!maximum) return;
-            const existing = efFindController(targetBone);
-            const existingConfig = efGetIKConfig(existing);
+            const selectedBones = [...new Set((ArmatureBone.selected || []).filter(bone => bone instanceof ArmatureBone))];
+            const bones = selectedBones.filter(bone => efGetMaximumChainLength(bone) > 0);
+            if (!bones.length) return;
+            const maximum = Math.max(...bones.map(efGetMaximumChainLength));
+            const firstExisting = efFindController(bones[0]);
+            const firstConfig = efGetIKConfig(firstExisting);
             new Dialog('ef_create_ik_controller_dialog', {
                 title: tl('ef.ik.create_controller'),
                 form: {
                     chain_length: {
                         type: 'number',
                         label: tl('ef.ik.chain_length'),
-                        value: existingConfig ? existingConfig.chain_length : Math.min(2, maximum),
+                        description: tl('ef.ik.chain_length.desc'),
+                        value: firstConfig ? firstConfig.chain_length : Math.min(2, maximum),
                         min: 0,
                         max: maximum,
                         step: 1
+                    },
+                    create_pole: {
+                        type: 'checkbox',
+                        label: tl('ef.ik.create_pole'),
+                        description: tl('ef.ik.create_pole.desc'),
+                        value: true
                     }
                 },
                 onConfirm(result) {
-                    const chainLength = THREE.MathUtils.clamp(Math.floor(Number(result.chain_length) || 0), 0, maximum);
-                    if (existingConfig) {
-                        Undo.initEdit({elements: [existing]});
-                        existingConfig.chain_length = chainLength;
-                        existing.ef_ik = Object.assign({}, existingConfig);
-                        Undo.finishEdit(tl('ef.ik.change_source_undo'));
-                    } else {
-                        efCreateController(targetBone, chainLength);
+                    const chainLength = Math.floor(Number(result.chain_length) || 0);
+                    const affected = bones.map(efFindController).filter(controller => efGetIKConfig(controller));
+                    const editedElements = affected.slice();
+                    const createdTargets = [];
+                    Undo.initEdit({elements: editedElements, outliner: true});
+                    bones.forEach(targetBone => {
+                        const maximumForBone = efGetMaximumChainLength(targetBone);
+                        const clampedLength = THREE.MathUtils.clamp(chainLength, 0, maximumForBone);
+                        const existing = efFindController(targetBone);
+                        const existingConfig = efGetIKConfig(existing);
+                        if (existingConfig) {
+                            existingConfig.chain_length = clampedLength;
+                            existing.ef_ik = Object.assign({}, existingConfig);
+                        } else {
+                            const controller = efCreateController(targetBone, clampedLength, {created: editedElements, create_pole: result.create_pole !== false});
+                            if (controller) createdTargets.push(targetBone);
+                        }
+                    });
+                    if (editedElements.length) {
+                        if (affected.length) {
+                            affected.forEach(controller => controller.ef_ik = Object.assign({}, controller.ef_ik));
+                        }
+                        Undo.finishEdit(tl('ef.ik.create_batch_undo'));
+                        Blockbench.showQuickMessage(tl('ef.ik.controllers_created') + ': ' + (createdTargets.length + affected.length));
                     }
                     Animator.preview();
                 }
@@ -6072,13 +6118,10 @@ function efSetupIKSupportInner() {
         name: tl('ef.ik.bake'),
         icon: 'cake',
         category: 'edit',
-        condition: () => Modes.animate && Animation.selected && ArmatureBone.selected.some(b => efFindController(b)),
-        click() {
-            if (BarItems.bake_ik_animation && BarItems.bake_ik_animation.condition && BarItems.bake_ik_animation.click) {
-                BarItems.bake_ik_animation.click();
-            }
-        }
+        condition: () => Modes.animate && Animation.selected && ArmatureBone.all.length > 0,
+        click: efShowBakeIKDialog
     }));
+    MenuBar.addAction(ikActions[5], 'tools');
 
     // 切换 IK 控制器启用/禁用：禁用后可手动调整骨骼旋转
     ikActions.push(new Action('ef_toggle_ik_controller', {
