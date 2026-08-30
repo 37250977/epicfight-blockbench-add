@@ -5635,9 +5635,13 @@ function efSetupIKSupportInner() {
                 Timeline.time = time;
                 Animator.preview();
                 bones.forEach(bone => {
-                    const rest = bone.mesh.fix_rotation ? new THREE.Quaternion().setFromEuler(bone.mesh.fix_rotation) : new THREE.Quaternion();
-                    const euler = new THREE.Euler().setFromQuaternion(rest.invert().multiply(bone.mesh.quaternion.clone()), Format.euler_order || 'ZYX');
-                    const rotation = [Math.radToDeg(euler.x), Math.radToDeg(euler.y), Math.radToDeg(euler.z)];
+                    const restRotation = bone.mesh.fix_rotation || new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+                    const currentRotation = bone.mesh.rotation || new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+                    const rotation = [
+                        Math.radToDeg(currentRotation.x - restRotation.x),
+                        Math.radToDeg(currentRotation.y - restRotation.y),
+                        Math.radToDeg(currentRotation.z - restRotation.z)
+                    ];
                     const prior = previous[bone.uuid];
                     if (prior) for (let axis = 0; axis < 3; axis++) {
                         while (rotation[axis] - prior[axis] > 180) rotation[axis] -= 360;
@@ -5860,18 +5864,19 @@ function efSetupIKSupportInner() {
                         samples[node.uuid].push(sample);
                         return;
                     }
-                    const restRotation = node.mesh.fix_rotation ? new THREE.Quaternion().setFromEuler(node.mesh.fix_rotation) : new THREE.Quaternion();
-                    const deltaQuaternion = restRotation.invert().multiply(node.mesh.quaternion.clone()).normalize();
-                    const priorQuaternion = priorRotations[node.uuid] && priorRotations[node.uuid].quaternion;
-                    if (priorQuaternion && priorQuaternion.dot(deltaQuaternion) < 0) deltaQuaternion.set(-deltaQuaternion.x, -deltaQuaternion.y, -deltaQuaternion.z, -deltaQuaternion.w);
-                    const euler = new THREE.Euler().setFromQuaternion(deltaQuaternion, Format.euler_order || 'ZYX');
-                    const rotation = [Math.radToDeg(euler.x), Math.radToDeg(euler.y), Math.radToDeg(euler.z)];
+                    const restRotation = node.mesh.fix_rotation || new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+                    const currentRotation = node.mesh.rotation || new THREE.Euler(0, 0, 0, Format.euler_order || 'ZYX');
+                    const rotation = [
+                        Math.radToDeg(currentRotation.x - restRotation.x),
+                        Math.radToDeg(currentRotation.y - restRotation.y),
+                        Math.radToDeg(currentRotation.z - restRotation.z)
+                    ];
                     const prior = priorRotations[node.uuid] && priorRotations[node.uuid].rotation;
                     if (prior) for (let axis = 0; axis < 3; axis++) {
                         while (rotation[axis] - prior[axis] > 180) rotation[axis] -= 360;
                         while (rotation[axis] - prior[axis] < -180) rotation[axis] += 360;
                     }
-                    priorRotations[node.uuid] = {rotation: rotation.slice(), quaternion: deltaQuaternion.clone()};
+                    priorRotations[node.uuid] = {rotation: rotation.slice()};
                     const restPosition = node.mesh.fix_position || new THREE.Vector3().fromArray(node.origin || [0, 0, 0]);
                     samples[node.uuid].push({
                         time,
@@ -5932,7 +5937,10 @@ function efSetupIKSupportInner() {
             nodes.forEach(node => {
                 const animator = targetAnimation.getBoneAnimator(node);
                 if (!animator.group) animator.group = node;
-                animator.quaternion_interpolation = true;
+                const sourceAnimator = sourceAnimation.animators && sourceAnimation.animators[node.uuid];
+                animator.quaternion_interpolation = sourceAnimator
+                    ? sourceAnimator.quaternion_interpolation
+                    : false;
                 channels.forEach(channel => {
                     const channelSamples = samples[node.uuid].filter(sample => Array.isArray(sample[channel]));
                     const cleanedSamples = options.clean_curves ? efCleanBakeChannel(channelSamples, channel) : channelSamples;
@@ -5975,7 +5983,7 @@ function efSetupIKSupportInner() {
                 bake_data: {type: 'select', label: tl('ef.ik.bake_data'), value: 'pose', options: {pose: tl('ef.ik.pose'), object: tl('ef.ik.object')}},
                 only_selected: {type: 'checkbox', label: tl('ef.ik.only_selected'), value: false, condition: result => result.bake_data === 'pose'},
                 visual_keying: {type: 'checkbox', label: tl('ef.ik.visual_keying'), value: true, condition: result => result.bake_data === 'pose'},
-                clear_constraints: {type: 'checkbox', label: tl('ef.ik.clear_constraints'), value: false, condition: result => result.bake_data === 'pose' && result.visual_keying},
+                clear_constraints: {type: 'checkbox', label: tl('ef.ik.clear_constraints'), value: true, condition: result => result.bake_data === 'pose' && result.visual_keying},
                 clear_parents: {type: 'checkbox', label: tl('ef.ik.clear_parents'), value: false, condition: result => result.bake_data === 'object'},
                 overwrite: {type: 'checkbox', label: tl('ef.ik.overwrite'), value: true},
                 clean_curves: {type: 'checkbox', label: tl('ef.ik.clean_curves'), value: true}
