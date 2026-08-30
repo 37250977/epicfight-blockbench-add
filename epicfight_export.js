@@ -5798,8 +5798,13 @@ function efSetupIKSupportInner() {
                 });
             });
         }
-        const nodes = externalNodes || (bakeObjects ? controllers.slice() : [...new Set([...efGetBakeBones(controllers, options.only_selected), ...drivenBones, ...constraintBones])]);
-        if (!sourceAnimation || (!externalNodes && !controllers.length && !constraintBones.length) || !nodes.length) {
+        const poseBones = options.only_selected
+            ? (ArmatureBone.selected || []).filter(bone => bone instanceof ArmatureBone)
+            : ArmatureBone.all.slice();
+        const nodes = externalNodes || (bakeObjects
+            ? controllers.slice()
+            : [...new Set([...poseBones, ...efGetBakeBones(controllers, options.only_selected), ...drivenBones, ...constraintBones])]);
+        if (!sourceAnimation || !nodes.length) {
             Blockbench.showQuickMessage(tl('ef.ik.nothing_to_bake'));
             return false;
         }
