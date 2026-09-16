@@ -8887,19 +8887,118 @@ function efSetupConstraintSupport() {
     };
 }
 
+function efSetupMeshMergeWeightSupport() {
+    const action = typeof BarItems !== 'undefined' && BarItems.merge_meshes;
+    if (!action || typeof action.click !== 'function') return null;
+    const originalClick = action.click;
+
+    function mergeWithWeights(...args) {
+        const meshes = Blockbench.Mesh.selected.slice();
+        if (meshes.length < 2 || typeof ArmatureBone === 'undefined') {
+            return originalClick.apply(this, args);
+        }
+        const bones = ArmatureBone.all.slice();
+        // 必须在改动前快照：不同 Mesh 可以使用相同顶点键，旧项目还可能使用无前缀权重。
+        const entries = meshes.map(mesh => {
+            const keys = Object.keys(mesh.vertices);
+            return {
+                mesh, keys,
+                weights: bones.map(bone => keys.map(key => bone.getVertexWeight(mesh, key)))
+            };
+        });
+        if (!entries.some(entry => entry.weights.some(values => values.some(weight => weight > 0)))) {
+            return originalClick.apply(this, args);
+        }
+        const target = meshes[0];
+        const armature = target.getArmature();
+        if (!armature || meshes.some(mesh => mesh.getArmature() !== armature)) {
+            Blockbench.showMessageBox({
+                title: 'EpicFight',
+                message: '带权重的网格必须位于同一骨架下才能合并。请先统一骨架，原模型未修改。'
+            });
+            return;
+        }
+
+        // 骨骼持有 vertex_weights，必须与几何一起保存，才能完整撤销和重做。
+        const elements = [...meshes, ...bones];
+        Undo.initEdit({ elements, outliner: true, selection: true });
+        try {
+            const targetPrefix = target.uuid.substring(0, 6) + ':';
+            target.mesh.updateWorldMatrix?.(true, false);
+            for (const entry of entries.slice(1)) {
+                const source = entry.mesh;
+                source.mesh.updateWorldMatrix?.(true, false);
+                const vector = new THREE.Vector3();
+                const newKeys = target.addVertices(...entry.keys.map(key => {
+                    vector.fromArray(source.vertices[key]);
+                    source.mesh.localToWorld(vector);
+                    target.mesh.worldToLocal(vector);
+                    return vector.toArray();
+                }));
+                const keyMap = new Map(entry.keys.map((key, index) => [key, newKeys[index]]));
+                for (const oldFace of Object.values(source.faces)) {
+                    const face = new Blockbench.MeshFace(target, oldFace);
+                    face.extend({
+                        vertices: oldFace.vertices.map(key => keyMap.get(key)),
+                        uv: Object.fromEntries(Object.entries(oldFace.uv).map(([key, uv]) =>
+                            [keyMap.get(key), uv.slice()]))
+                    });
+                    face._efPartName = getPartNameForMeshFace(oldFace, source);
+                    target.addFaces(face);
+                }
+                const sourcePrefix = source.uuid.substring(0, 6) + ':';
+                bones.forEach((bone, boneIndex) => {
+                    newKeys.forEach((key, index) => {
+                        const weight = entry.weights[boneIndex][index];
+                        // 仅在旧式无前缀权重冲突时写入 0；不归一化或修改其他 Mesh 的旧权重。
+                        if (weight > 0 || bone.vertex_weights[key]) {
+                            bone.vertex_weights[targetPrefix + key] = weight;
+                        } else {
+                            delete bone.vertex_weights[targetPrefix + key];
+                        }
+                    });
+                    if (sourcePrefix !== targetPrefix) {
+                        entry.keys.forEach(key => delete bone.vertex_weights[sourcePrefix + key]);
+                    }
+                });
+                source.remove();
+                elements.splice(elements.indexOf(source), 1);
+            }
+            updateSelection();
+            Canvas.updateView({
+                elements: [target],
+                element_aspects: { geometry: true, uv: true, faces: true },
+                selection: true
+            });
+            Undo.finishEdit('Merge meshes');
+        } catch (error) {
+            Undo.cancelEdit(true);
+            throw error;
+        }
+    }
+
+    action.click = mergeWithWeights;
+    return {
+        cleanup() {
+            if (action.click === mergeWithWeights) action.click = originalClick;
+        }
+    };
+}
+
 // ============================================================
 //  Plugin Registration
 // ============================================================
 
 let efIKCleanup = null;
 let efConstraintCleanup = null;
+let efMeshMergeCleanup = null;
 
 Plugin.register('epicfight_export', {
     title: 'EpicFight Tools',
     author: 'zi_dou',
     description: 'Import EpicFight JSON assets and export to EpicFight JSON format',
     icon: 'gamepad',
-    version: '0.4.0',
+    version: '0.4.1',
     variant: 'both',
     tags: ['Minecraft: Java Edition'],
 
@@ -8973,9 +9072,14 @@ Plugin.register('epicfight_export', {
         // 注册 ArmatureBone IK 支持
         efIKCleanup = efSetupIKSupport();
         efConstraintCleanup = efSetupConstraintSupport();
+        efMeshMergeCleanup = efSetupMeshMergeWeightSupport();
     },
 
     onunload() {
+        if (efMeshMergeCleanup) {
+            efMeshMergeCleanup.cleanup();
+            efMeshMergeCleanup = null;
+        }
         ['ef_import_mesh', 'ef_import_armature', 'ef_import_animation', 'ef_export_model', 'ef_export_animation', 'ef_export_animation_batch', 'ef_export_entity'].forEach(function(id) {
             const action = Action.actions[id];
             if (action) action.delete();
